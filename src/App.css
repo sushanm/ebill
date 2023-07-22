@@ -46,5 +46,13 @@
   border-bottom: 1px solid rgb(5, 0, 0);
 }
 .row{
-  padding: 5px 0px;
+  padding: 5px 5px;
+  text-align: left;
+}
+.product-btn{
+  float: right;
+}
+.product-name-row{
+  border-bottom: 1px solid rgb(5, 0, 0);
+  cursor: pointer;
 }
