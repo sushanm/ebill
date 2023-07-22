@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+.batch-custom-row{
+  border-bottom: 1px solid rgb(5, 0, 0);
+}
+.batch-custom-col-h{
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(5, 0, 0);
+}
+.row{
+  padding: 5px 0px;
+}
