@@ -6,14 +6,34 @@ import StockDataService from "../services/stock.services"
 function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
 
     const [saledata, SetSaleData] = useState();
+    const [isDisabled, SetDisabled] = useState(true);
     const [isDataUpdated, SetIsDataUpdated] = useState(false);
+    const [totalPrice, SetTotalPrice] = useState(0);
+    const [discount, SetDiscount] = useState(0);
+
     useEffect(() => {
         SetSaleData(sales);
+        updateTotalPrice(sales)
     }, [sales])
+
+    useEffect(() => {
+        try {
+            if (saledata.length === 0) {
+                SetDisabled(true)
+            }
+            else {
+                SetDisabled(false)
+            }
+        } catch (error) {
+            SetDisabled(true)
+        }
+
+    }, [saledata])
 
     useEffect(() => {
         if (isDataUpdated) {
             callbackSalesUpdate(saledata)
+            updateTotalPrice(saledata)
             SetIsDataUpdated(false);
         }
     }, [callbackSalesUpdate, isDataUpdated, saledata])
@@ -28,6 +48,25 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         const cloneSaleData = [...saledata];
         cloneSaleData[index].quantity = value;
         SetSaleData(cloneSaleData)
+        updateTotalPrice(cloneSaleData)
+        SetIsDataUpdated(true);
+    }
+
+    const changeTotalPrice = (value) => {
+        console.log(Number(totalPrice) - Number(value))
+        SetDiscount(Number(totalPrice) - Number(value))
+       // SetTotalPrice(value)
+    }
+
+    const updateTotalPrice = (salesData) => {
+        try {
+            SetIsDataUpdated(true);
+            let totalPrice = 0
+            salesData.forEach((item) => {
+                totalPrice = totalPrice + item.price * item.quantity;
+            })
+            SetTotalPrice(totalPrice);
+        } catch (error) { }
     }
 
     const addTransation = async () => {
@@ -37,7 +76,9 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 const cloneSaleData = [...saledata];
                 const newTransaction = {
                     items: cloneSaleData,
-                    saleDate: new Date()
+                    saleDate: new Date(),
+                    totalPrice: totalPrice,
+                    discount: discount
                 };
                 await TransactionDataService.addNewTransation(newTransaction);
                 cloneSaleData.forEach(async item => {
@@ -74,26 +115,26 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
     }
 
     return (
-        <div>
-            <div className="row">
-                <div className="col">Product Name</div>
-                <div className="col">Unit Price</div>
-                <div className="col">Quantity</div>
-                <div className="col">Total Price</div>
-                <div className="col">Action</div>
+        <div className='sale-row'>
+            <div className="row sale-row-h">
+                <div className="col-5">Product Name</div>
+                <div className="col-2">Unit Price</div>
+                <div className="col-2">Quantity</div>
+                <div className="col-2">Total Price</div>
+                <div className="col-1">Action</div>
             </div>
             {
                 saledata &&
                 saledata.map((item, i) => {
                     return (
-                        <div className='row product-name-row' key={i} >
-                            <div className="col">{item.name}</div>
-                            <div className="col">{item.price}</div>
-                            <div className="col">
-                                <input type={'number'} onChange={(val) => changeQuantity(val.target.value, i)} value={item.quantity}></input>
+                        <div className='row product-name-row-sale' key={i} >
+                            <div className="col-5">{item.name}</div>
+                            <div className="col-2">{item.price}</div>
+                            <div className="col-2">
+                                <input type={'number'} className='quantity-sale' onChange={(val) => changeQuantity(val.target.value, i)} value={item.quantity}></input>
                             </div>
-                            <div className="col">{item.price * item.quantity}</div>
-                            <div className="col">
+                            <div className="col-2">{item.price * item.quantity}</div>
+                            <div className="col-1">
                                 <button onClick={() => removeItem(item.id)}>X</button>
                             </div>
                         </div>
@@ -101,10 +142,32 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 })
             }
             <div className="row">
-                <div className="col-3">
+                <div className="col-5"></div>
+                <div className="col-5">
+                    <div className="row">
+                        <div className="col">
+                            Total Price
+                        </div>
+                        <div className="col">
+                            {totalPrice}
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            Billed Price
+                        </div>
+                        <div className="col">
+                            <input type={'number'}  onChange={(e) => changeTotalPrice(e.target.value)}></input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-9"></div>
+                <div className="col-3 btn-right">
                     {
                         saledata &&
-                        <button onClick={() => addTransation()} className='btn btn-primary'> Add Sale </button>
+                        <button onClick={() => addTransation()} disabled={isDisabled} className='btn btn-primary'> Add Sale </button>
                     }
 
                 </div>

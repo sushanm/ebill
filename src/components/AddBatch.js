@@ -3,7 +3,7 @@ import StockDataService from "../services/stock.services"
 import { useEffect, useState } from 'react';
 import AddSale from './AddSale';
 
-function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName,callbackaftersalesFromBatch }) {
+function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName, callbackaftersalesFromBatch }) {
     const [batch, SetBatch] = useState([]);
     const [editBatchRow, SetEditBatchRow] = useState();
 
@@ -12,7 +12,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     const [expiryDate, SetExpiryDate] = useState();
     const [price, SetPrice] = useState();
     const [quantity, SetQuantity] = useState();
-    const [sales, SetSales]=useState([])
+    const [sales, SetSales] = useState([])
 
     const getProduct = async (id) => {
         try {
@@ -30,11 +30,11 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
         getProduct(productId)
     }, [productId])
 
-    const callbackaftersales=(val)=>{
+    const callbackaftersales = (val) => {
         setTimeout(() => {
             getProduct(productId)
-          }, "1000");
-        
+        }, "1000");
+
         callbackaftersalesFromBatch(val);
     }
 
@@ -56,7 +56,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
             };
             await StockDataService.addNewProduct(newProduct).then(res => {
                 console.log(res.id)
-                callBackMethod(res.id,name);
+                callBackMethod(res.id, name);
             });
         } catch (error) {
             console.log(error.message);
@@ -103,18 +103,18 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
         SetUsage();
     }
 
-    const addToSale=(batch)=>{
-        let saleData={
-            id:productId,
-            name:productName,
-            price:batch.price,
-            quantity:1,
-            batchId:batch.id
+    const addToSale = (batch) => {
+        let saleData = {
+            id: productId,
+            name: productName,
+            price: batch.price,
+            quantity: 1,
+            batchId: batch.id
         }
         SetSales([...sales, saleData])
-        
+
     }
-    const callbackSalesUpdate =(salesData)=>{
+    const callbackSalesUpdate = (salesData) => {
 
         SetSales(salesData)
     }
@@ -193,10 +193,16 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                                             </div>
                                             <div className="col batch-custom-col">{item.quantity}</div>
                                             <div className="col batch-custom-col">{item.expiryDate}</div>
-                                            {
-                                                saleMode ? <div className="col batch-custom-col"> <button onClick={() => addToSale(item)} >Add Sale</button></div> :
-                                                    <div className="col batch-custom-col"> <button onClick={() => editBatch(index, item)} >Edit</button></div>
-                                            }
+                                            <div className="col batch-custom-col">
+                                                <div className="row">
+                                                    <div className="col">
+                                                        <button onClick={() => editBatch(index, item)} >Edit</button>
+                                                    </div>
+                                                    <div className="col">
+                                                        <button onClick={() => addToSale(item)} >Add To Sale</button>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         </>
                                     }
@@ -207,10 +213,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                     }
                 </>
             }
-            {
-                saleMode &&
-                <AddSale sales={sales} callbackSalesUpdate={callbackSalesUpdate} callbackaftersales={callbackaftersales}/>
-            }
+            <AddSale sales={sales} callbackSalesUpdate={callbackSalesUpdate} callbackaftersales={callbackaftersales} />
         </div>
     )
 }

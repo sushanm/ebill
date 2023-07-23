@@ -54,8 +54,8 @@ const callbackaftersalesFromBatch=(val)=>{
 }
     return (
         <div>
-            <div class="row">
-                <div class="col-3">
+            <div className="row">
+                <div className="col-3">
                     <div className="row">
                         <div className="col">
                             <div className="row">
@@ -93,7 +93,7 @@ const callbackaftersalesFromBatch=(val)=>{
                         })
                     }
                 </div>
-                <div class="col-8">
+                <div className="col-8">
                     <AddBatch productId={selectedProductId} newProduct={isNewProduct} callBackMethod={newProductAdded} saleMode={saleMode} productName={selectedProductName} callbackaftersalesFromBatch={callbackaftersalesFromBatch} />
                 </div>
             </div>
