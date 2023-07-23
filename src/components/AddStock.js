@@ -78,11 +78,11 @@ const callbackaftersalesFromBatch=(val)=>{
                         productsForSearch.map((doc, index) => {
                             return (
                                 <div className='row product-name-row' style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }} key={doc.id} onClick={() => addNewBatch(doc.id, doc.name)}>
-                                    <div className="col-10">
+                                    <div className="col-9">
                                         {doc.name}
                                     </div>
 
-                                    <div className="col-1">
+                                    <div className="col-2">
                                         {doc.totalQuantity}
                                     </div>
                                     <div className="col-1">

@@ -9,6 +9,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
     const [isDisabled, SetDisabled] = useState(true);
     const [isDataUpdated, SetIsDataUpdated] = useState(false);
     const [totalPrice, SetTotalPrice] = useState(0);
+    const [updatedTotalPrice, SetUpdatedTotalPrice] = useState(0);
     const [discount, SetDiscount] = useState(0);
 
     useEffect(() => {
@@ -53,9 +54,8 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
     }
 
     const changeTotalPrice = (value) => {
-        console.log(Number(totalPrice) - Number(value))
         SetDiscount(Number(totalPrice) - Number(value))
-       // SetTotalPrice(value)
+        SetUpdatedTotalPrice(value)
     }
 
     const updateTotalPrice = (salesData) => {
@@ -66,6 +66,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 totalPrice = totalPrice + item.price * item.quantity;
             })
             SetTotalPrice(totalPrice);
+            SetUpdatedTotalPrice(totalPrice);
         } catch (error) { }
     }
 
@@ -77,7 +78,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 const newTransaction = {
                     items: cloneSaleData,
                     saleDate: new Date(),
-                    totalPrice: totalPrice,
+                    totalPrice:  Number(totalPrice),
                     discount: discount
                 };
                 await TransactionDataService.addNewTransation(newTransaction);
@@ -87,6 +88,8 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 SetSaleData([]);
                 callbackSalesUpdate([]);
                 callbackaftersales(true);
+                SetUpdatedTotalPrice(0);
+                SetDiscount(0);
             }
         } catch (error) {
             console.log(error.message);
@@ -157,7 +160,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                             Billed Price
                         </div>
                         <div className="col">
-                            <input type={'number'}  onChange={(e) => changeTotalPrice(e.target.value)}></input>
+                            <input type={'number'} value={updatedTotalPrice} onChange={(e) => changeTotalPrice(e.target.value)}></input>
                         </div>
                     </div>
                 </div>
