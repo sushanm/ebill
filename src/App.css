@@ -93,3 +93,14 @@
 .btn-right{
   text-align: right;
 }
+
+.edit-img{
+  width: 20px;
+    margin-left: 30px;
+    height: 20px;
+    cursor: pointer;
+}
+.col-3-scroll{
+  overflow: scroll;
+    max-height: 700px;
+}

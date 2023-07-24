@@ -11,6 +11,7 @@ function AddStock({ saleMode }) {
     const [isNewProduct, SetIsNewProduct] = useState(false);
     const [selectedProductId, SetSelectedProductId] = useState('');
     const [selectedProductName, SetSelectedProductName] = useState('');
+    const [selectedProductUsedFor, SetSelectedProductUsedFor]=useState('');
     const getAllProducts = async () => {
         const data = await StockDataService.getAllProducts();
         setProducts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -33,15 +34,17 @@ function AddStock({ saleMode }) {
 
 
 
-    const addNewBatch = async (id, name) => {
+    const addNewBatch = async (id, name, usage) => {
         SetIsNewProduct(false)
         SetSelectedProductId(id)
+        SetSelectedProductUsedFor(usage);
         SetSelectedProductName(name)
     }
-    const newProductAdded = (id, name) => {
+    const newProductAdded = (id, name,usage) => {
         getAllProducts();
         SetIsNewProduct(false)
         SetSelectedProductName(name)
+        SetSelectedProductUsedFor(usage);
         SetSelectedProductId(id)
     }
 const callbackaftersalesFromBatch=(val)=>{
@@ -55,7 +58,7 @@ const callbackaftersalesFromBatch=(val)=>{
     return (
         <div>
             <div className="row">
-                <div className="col-3">
+                <div className="col-3 col-3-scroll">
                     <div className="row">
                         <div className="col">
                             <div className="row">
@@ -77,7 +80,7 @@ const callbackaftersalesFromBatch=(val)=>{
                     {
                         productsForSearch.map((doc, index) => {
                             return (
-                                <div className='row product-name-row' style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }} key={doc.id} onClick={() => addNewBatch(doc.id, doc.name)}>
+                                <div className='row product-name-row' style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }} key={doc.id} onClick={() => addNewBatch(doc.id, doc.name, doc.usage)}>
                                     <div className="col-9">
                                         {doc.name}
                                     </div>
@@ -86,7 +89,7 @@ const callbackaftersalesFromBatch=(val)=>{
                                         {doc.totalQuantity}
                                     </div>
                                     <div className="col-1">
-                                        <button className="product-btn" onClick={() => addNewBatch(doc.id)}>&#x226B;</button>
+                                        <button className="product-btn" onClick={() => addNewBatch(doc.id, doc.name, doc.usage)}>&#x226B;</button>
                                     </div>
                                 </div>
                             )
@@ -94,7 +97,9 @@ const callbackaftersalesFromBatch=(val)=>{
                     }
                 </div>
                 <div className="col-8">
-                    <AddBatch productId={selectedProductId} newProduct={isNewProduct} callBackMethod={newProductAdded} saleMode={saleMode} productName={selectedProductName} callbackaftersalesFromBatch={callbackaftersalesFromBatch} />
+                    <AddBatch productId={selectedProductId} newProduct={isNewProduct} callBackMethod={newProductAdded} 
+                    usedFor={selectedProductUsedFor}
+                    saleMode={saleMode} productName={selectedProductName} callbackaftersalesFromBatch={callbackaftersalesFromBatch} />
                 </div>
             </div>
         </div>

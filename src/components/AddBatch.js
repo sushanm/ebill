@@ -3,7 +3,7 @@ import StockDataService from "../services/stock.services"
 import { useEffect, useState } from 'react';
 import AddSale from './AddSale';
 
-function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName, callbackaftersalesFromBatch }) {
+function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName, callbackaftersalesFromBatch, usedFor }) {
     const [batch, SetBatch] = useState([]);
     const [editBatchRow, SetEditBatchRow] = useState();
 
@@ -13,6 +13,10 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     const [price, SetPrice] = useState();
     const [quantity, SetQuantity] = useState();
     const [sales, SetSales] = useState([])
+    const [disableAdd, SetDisbaleAdd] = useState(false);
+    const [productNameEdit, SetProductNameEdit] = useState(false);
+
+
 
     const getProduct = async (id) => {
         try {
@@ -39,6 +43,12 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     }
 
     const addNewProduct = async () => {
+
+        SetDisbaleAdd(true);
+        setTimeout(() => {
+            SetDisbaleAdd(false);
+        }, "4000");
+
         let batch = [{
             id: 1,
             expiryDate: expiryDate,
@@ -56,7 +66,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
             };
             await StockDataService.addNewProduct(newProduct).then(res => {
                 console.log(res.id)
-                callBackMethod(res.id, name);
+                callBackMethod(res.id, name, usage);
             });
         } catch (error) {
             console.log(error.message);
@@ -65,6 +75,11 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     }
 
     const AddOrEditBatch = async (isedit, id) => {
+        SetDisbaleAdd(true);
+        setTimeout(() => {
+            SetDisbaleAdd(false);
+        }, "4000");
+
         const docSnap = await StockDataService.getProduct(productId);
         let currentData = docSnap.data();
         if (isedit) {
@@ -117,6 +132,26 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     const callbackSalesUpdate = (salesData) => {
 
         SetSales(salesData)
+    }
+
+    const[productNameForEdit, SetProductNameForEdit]=useState(productName);
+    const[productUsageForEdit, SetProductUsageForEdit]=useState(usedFor);
+    const editProductName = () => {
+        SetProductNameEdit(true)
+        SetProductNameForEdit(productName)
+        SetProductUsageForEdit(usedFor)
+    }
+    const saveProductName = async ()=>{
+
+        const docSnap = await StockDataService.getProduct(productId);
+        let currentData = docSnap.data();
+        currentData.name=productNameForEdit;
+        currentData.usage=productUsageForEdit;
+        await StockDataService.updateProduct(productId, currentData);
+        callBackMethod(productId, productNameForEdit, productUsageForEdit);
+        SetProductNameEdit(false)
+        SetProductNameForEdit('');
+        SetProductUsageForEdit('')
     }
 
     return (
@@ -172,7 +207,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                             <div className="col batch-custom-col"><input type={'number'} placeholder="Price" onChange={(evt) => SetPrice(evt.target.value)}></input></div>
                             <div className="col batch-custom-col"> <input type={'number'} placeholder="Quantity" onChange={(evt) => SetQuantity(evt.target.value)}></input></div>
                             <div className="col batch-custom-col"><input type={'month'} placeholder="Expiry Date" onChange={(evt) => SetExpiryDate(evt.target.value)}></input></div>
-                            <div className="col batch-custom-col"> <button onClick={() => AddOrEditBatch(false, -1)} >Add</button></div>
+                            <div className="col batch-custom-col"> <button onClick={() => AddOrEditBatch(false, -1)} disabled={disableAdd} >Add</button></div>
                         </div>
                     }
 
@@ -213,6 +248,31 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                     }
                 </>
             }
+            <div className="row">
+                {
+                    !productNameEdit &&
+                    <div className="row">
+                        <div className="col-2 batch-custom-col-h">Usage</div>
+                        <div className="col-6 ">{usedFor}
+                            <img onClick={editProductName} className='edit-img' alt='edit' src='../../assets/edit.png' />
+                        </div>
+                    </div>
+                }
+                {
+                    productNameEdit &&
+                    <div className="row">
+                        <div className="col-5 ">
+                            <input type="text" style={{'width':'100%'}} value={productNameForEdit} onChange={(e)=>SetProductNameForEdit(e.target.value)} />
+                        </div>
+                        <div className="col-5 ">
+                            <input type="text" value={productUsageForEdit} style={{'width':'100%'}}  onChange={(e)=>SetProductUsageForEdit(e.target.value)}/>
+                        </div>
+                        <div className="col-2 ">
+                        <button onClick={saveProductName}>Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
             <AddSale sales={sales} callbackSalesUpdate={callbackSalesUpdate} callbackaftersales={callbackaftersales} />
         </div>
     )

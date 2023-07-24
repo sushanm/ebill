@@ -35,9 +35,10 @@ function App() {
       <div className="container-fluid text-center">
         <div className="row">
           <div className="col">
-            <button type="button" className="btn btn-primary m-4"  onClick={()=>SetDisplay(0)}>Stock & Sale</button>
-            <button type="button" className="btn btn-secondary  m-4" onClick={()=>SetDisplay(1)}>Near To Expiry</button>
-            <button type="button" className="btn btn-secondary  m-4" onClick={()=>SetDisplay(2)}>Low Stock</button>
+            <button onClick={login} >Login</button>
+            <button type="button" className="btn btn-primary m-4" onClick={() => SetDisplay(0)}>Stock & Sale</button>
+            <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(1)}>Near To Expiry</button>
+            <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(2)}>Low Stock</button>
           </div>
         </div>
         {/* <div className="row">
@@ -49,7 +50,7 @@ function App() {
           diplay === 0 &&
           <div className="row">
             <div className="col">
-              <AddStock saleMode={false}/>
+              <AddStock saleMode={false} />
             </div>
           </div>
         }
@@ -57,8 +58,8 @@ function App() {
           diplay === 1 &&
           <div className="row">
             <div className="col">
-            <h4>These are near to exipry products</h4>
-             <NearToExpiry />
+              <h4>These are near to exipry products</h4>
+              <NearToExpiry />
             </div>
           </div>
         }
@@ -66,8 +67,8 @@ function App() {
           diplay === 2 &&
           <div className="row">
             <div className="col">
-            <h4>These are low stock</h4>
-            <LowStock />
+              <h4>These are low stock</h4>
+              <LowStock />
             </div>
           </div>
         }
