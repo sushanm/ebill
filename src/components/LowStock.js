@@ -11,6 +11,11 @@ function LowStock() {
         const data = await StockDataService.getAllProducts();
         let productData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
         productData = productData.filter(item => item.totalQuantity <= lowStockQantity);
+
+        productData.sort(function (a, b) {
+            return Number(a.totalQuantity) - Number(b.totalQuantity)
+        })
+        
         SetProducts(productData);
     }
     useEffect(() => {

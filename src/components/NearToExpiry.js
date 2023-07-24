@@ -20,7 +20,6 @@ function NearToExpiry() {
             })
         })
         setProducts(tempProd)
-        // setProducts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
     useEffect(() => {
         getAllProducts();
@@ -35,8 +34,17 @@ function NearToExpiry() {
         const batchYear = Number(monthYear[0]);
         const batchMonth = Number(monthYear[1]);
         const yearDiff = Number(batchYear) - Number(currentYear);
-        const monthDiff = Number(batchMonth) - Number(currentMonth);
-        if (yearDiff <= 1) {
+        let monthDiff = Number(batchMonth) - Number(currentMonth);
+
+        if (yearDiff === 0) {
+            monthDiff = Number(batchMonth) - Number(currentMonth);
+            if (Number(monthDiff) < 7) {
+                return true;
+            }
+        }
+        else if (yearDiff === 1) {
+            let tempMonth = 11 - currentMonth;
+            monthDiff = tempMonth + batchMonth
             if (Number(monthDiff) < 7) {
                 return true;
             }
