@@ -8,7 +8,8 @@ import {
     updateDoc,
     deleteDoc,
     doc,
-    Firestore
+    Firestore,
+    query, where
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -18,6 +19,19 @@ class TransactionDataService {
     addNewTransation = (newTransaction) => {
         return addDoc(transactionCollectionRef, newTransaction);
     };
+
+    getAllTransactions = () => {
+        return getDocs(transactionCollectionRef);
+    };
+
+    getTransactionByYear = async (year) => {
+        const citiesRef = collection(db, "transaction");
+        const q = query(citiesRef, where("year", "==", true));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+        });
+    }
 }
 
 export default new TransactionDataService();

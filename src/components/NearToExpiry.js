@@ -1,19 +1,18 @@
 import React from 'react'
 import { useState } from 'react';
-import StockDataService from "../services/stock.services"
+import LocalStorageServices from '../services/localStorage.services';
 import { useEffect } from 'react';
 
 function NearToExpiry() {
     const [products, setProducts] = useState([]);
 
     const getAllProducts = async () => {
-        const data = await StockDataService.getAllProducts();
         let tempProd = new Array();;
-        let allProducts = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+        let allProducts = LocalStorageServices.getAllProducts();
         allProducts.forEach(item => {
             item.batch.forEach(batch => {
                 if (isNearToExpiry(batch.expiryDate)) {
-                    item.batch.expiry = true;
+                    batch.expiry = true;
                     tempProd.push(item);
                     return;
                 }

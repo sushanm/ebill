@@ -2,6 +2,7 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import TransactionDataService from "../services/transaction.services"
 import StockDataService from "../services/stock.services"
+import LocalStorageServices from '../services/localStorage.services';
 
 function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
 
@@ -70,6 +71,17 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         } catch (error) { }
     }
 
+    const getDate = () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1;
+        let dd = today.getDate();
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+        const formattedToday = dd + '-' + mm + '-' + yyyy;
+        return formattedToday;
+    }
+
     const addTransation = async () => {
 
         try {
@@ -77,14 +89,32 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 const cloneSaleData = [...saledata];
                 const newTransaction = {
                     items: cloneSaleData,
-                    saleDate: new Date(),
-                    totalPrice:  Number(totalPrice),
-                    discount: discount
+                    saleDate: getDate(),
+                    totalPrice: Number(totalPrice),
+                    discount: Number(discount)
                 };
                 await TransactionDataService.addNewTransation(newTransaction);
-                cloneSaleData.forEach(async item => {
-                    AddOrEditBatch(item.id, item.quantity, item.batchId);
+                let tempArray = new Array();
+                cloneSaleData.forEach(item => {
+                    const index = tempArray.findIndex(t => t.id === item.id);
+                    if (index >= 0) {
+                        tempArray[index].batch.push({
+                            batchId: item.batchId,
+                            quantity: item.quantity
+                        })
+                    } else {
+                        tempArray.push({
+                            id: item.id,
+                            batch: [{
+                                batchId: item.batchId,
+                                quantity: item.quantity
+                            }]
+                        })
+                    }
                 });
+                tempArray.forEach(item => {
+                    AddOrEditBatch(item.id, item.batch);
+                })
                 SetSaleData([]);
                 callbackSalesUpdate([]);
                 callbackaftersales(true);
@@ -96,16 +126,21 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         }
     }
 
-    const AddOrEditBatch = async (productId, quantity, batchId) => {
+
+    const AddOrEditBatch = async (productId, batch) => {
+
         const docSnap = await StockDataService.getProduct(productId);
         let currentData = docSnap.data();
-        const index = currentData.batch.findIndex(t => t.id === batchId);
-        let qunatityToUpdate = currentData.batch[index].quantity - quantity;
-        if (qunatityToUpdate <= 0) {
-            currentData.batch = currentData.batch.filter((item) => item.id !== batchId)
-        } else {
-            currentData.batch[index].quantity = qunatityToUpdate;
-        }
+        batch.forEach(item => {
+            const index = currentData.batch.findIndex(t => t.id === item.batchId);
+            let qunatityToUpdate = Number(currentData.batch[index].quantity) - item.quantity;
+            if (qunatityToUpdate <= 0) {
+                currentData.batch = currentData.batch.filter((val) => val.id !== item.batchId)
+            } else {
+                currentData.batch[index].quantity = qunatityToUpdate;
+            }
+        })
+
         if (currentData.batch.length > 0) {
             let totalQuantity = Number(currentData.batch.map(item => item.quantity).reduce((prev, next) => Number(prev) + Number(next)));
             currentData.totalQuantity = totalQuantity;
@@ -113,8 +148,9 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         else {
             currentData.totalQuantity = 0;
         }
-
+        LocalStorageServices.addOrEditProduct(productId, currentData);
         await StockDataService.updateProduct(productId, currentData);
+
     }
 
     return (

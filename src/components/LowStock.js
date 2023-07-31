@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import StockDataService from "../services/stock.services"
+import LocalStorageServices from '../services/localStorage.services';
 
 function LowStock() {
 
@@ -8,14 +8,21 @@ function LowStock() {
     const [products, SetProducts] = useState([]);
 
     const getAllProducts = async () => {
-        const data = await StockDataService.getAllProducts();
-        let productData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-        productData = productData.filter(item => item.totalQuantity <= lowStockQantity);
+        let productData = LocalStorageServices.getAllProducts();
+        productData = productData.filter(item => item.totalQuantity <= Number(lowStockQantity));
 
         productData.sort(function (a, b) {
             return Number(a.totalQuantity) - Number(b.totalQuantity)
         })
-        
+
+        productData.forEach(item => {
+            let tempValue = 0
+            item.batch.forEach(batch => {
+                tempValue = tempValue + Number(batch.price) * Number(batch.quantity);
+            })
+            item.value=tempValue;
+        })
+
         SetProducts(productData);
     }
     useEffect(() => {
@@ -41,6 +48,7 @@ function LowStock() {
                     <div className="col-1">No.</div>
                     <div className="col-4">Name</div>
                     <div className="col-1">Quantity</div>
+                    <div className="col-2">Price Value</div>
                 </div>
 
                 {
@@ -50,6 +58,7 @@ function LowStock() {
                                 <div className="col-1">{i + 1}</div>
                                 <div className="col-4">{item.name}</div>
                                 <div className="col-1">{item.totalQuantity}</div>
+                                <div className="col-1" style={{ backgroundColor: item.value >= 500 ? '#fc6666' : '#fff' }}>{item.value}</div>
                             </div>
                         )
                     })
