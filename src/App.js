@@ -15,7 +15,7 @@ import PurchaseOrder from "./components/PurchaseOrder";
 
 function App() {
 
-  const [diplay, SetDisplay] = useState(0);
+  const [diplay, SetDisplay] = useState(1);
   const [showLoading, SetShowLoading] = useState(false);
   const login = async () => {
     const userName = 'kotianayurveda@gmail.com';

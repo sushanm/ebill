@@ -10,10 +10,33 @@ function NearToExpiry() {
         let tempProd = new Array();;
         let allProducts = LocalStorageServices.getAllProducts();
         allProducts.forEach(item => {
+            let previousBatchExpired = false;
             item.batch.forEach(batch => {
-                if (isNearToExpiry(batch.expiryDate)) {
+                // if (isNearToExpiry(batch.expiryDate)) {
+                //     batch.expiry = true;
+                //     if (!previousBatchExpired) {
+                //         tempProd.push(item);
+                //     }
+                //     previousBatchExpired = true
+                //     return;
+                // }
+
+                if (isNearToExpiry(batch.expiryDate) <= 3) {
                     batch.expiry = true;
-                    tempProd.push(item);
+                    batch.colorCode = '#FF3E00';
+                    if (!previousBatchExpired) {
+                        tempProd.push(item);
+                    }
+                    previousBatchExpired = true
+                    return;
+                }
+                if (isNearToExpiry(batch.expiryDate) > 3 && isNearToExpiry(batch.expiryDate) <= 6) {
+                    batch.expiry = true;
+                    batch.colorCode = '#F5B19B';
+                    if (!previousBatchExpired) {
+                        tempProd.push(item);
+                    }
+                    previousBatchExpired = true
                     return;
                 }
             })
@@ -29,6 +52,7 @@ function NearToExpiry() {
     let currentMonth = today.getMonth();
 
     function isNearToExpiry(date) {
+        let monthDiffToShare = 11;
         const monthYear = date.split('-');
         const batchYear = Number(monthYear[0]);
         const batchMonth = Number(monthYear[1]);
@@ -38,14 +62,16 @@ function NearToExpiry() {
         if (yearDiff === 0) {
             monthDiff = Number(batchMonth) - Number(currentMonth);
             if (Number(monthDiff) < 7) {
-                return true;
+                monthDiffToShare = Number(monthDiff)
+                return monthDiffToShare;
             }
         }
         else if (yearDiff === 1) {
             let tempMonth = 11 - currentMonth;
             monthDiff = tempMonth + batchMonth
             if (Number(monthDiff) < 7) {
-                return true;
+                monthDiffToShare = Number(monthDiff)
+                return monthDiffToShare;
             }
         }
     }
@@ -84,7 +110,7 @@ function NearToExpiry() {
                             <div className="col-1">
                                 {index + 1}
                             </div>
-                            <div className="col-4">
+                            <div className="col-4" >
                                 {doc.name}
                             </div>
                             <div className="col-7">
@@ -92,7 +118,7 @@ function NearToExpiry() {
 
                                     doc.batch.map((b, i) => {
                                         return (
-                                            <div className='row product-name-row' key={i} style={{ backgroundColor: b.expiry === true ? '#bdbdbd' : 'white' }}  >
+                                            <div className='row product-name-row' key={i} style={{ backgroundColor: b.expiry === true ? b.colorCode : 'white' }}  >
                                                 <div className="col">
                                                     {b.price}
                                                 </div>
