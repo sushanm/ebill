@@ -12,21 +12,36 @@ function NearToExpiry() {
         allProducts.forEach(item => {
             let previousBatchExpired = false;
             item.batch.forEach(batch => {
-                let expDate=isNearToExpiry(batch.expiryDate);
+                let expDate = isNearToExpiry(batch.expiryDate);
                 if (expDate <= 3) {
                     batch.expiry = true;
                     batch.colorCode = '#FF3E00';
-                    item.monthToExpiry=expDate;
+                    batch.monthToExpiry = expDate;
+                    if (item.monthToExpiry) {
+                        if (Number(item.monthToExpiry) > expDate) {
+                            item.monthToExpiry = expDate;
+                        }
+                    } else {
+                        item.monthToExpiry = expDate;
+                    }
                     if (!previousBatchExpired) {
                         tempProd.push(item);
                     }
                     previousBatchExpired = true
                     return;
                 }
-                if (expDate > 3 && expDate <= 6) {
+                if (expDate > 3 && expDate <= 7) {
                     batch.expiry = true;
                     batch.colorCode = '#F5B19B';
-                    item.monthToExpiry=expDate;
+                    batch.monthToExpiry = expDate;
+                    if (item.monthToExpiry) {
+                        if (Number(item.monthToExpiry) > expDate) {
+                            item.monthToExpiry = expDate;
+                        }
+                    }
+                    else {
+                        item.monthToExpiry = expDate;
+                    }
                     if (!previousBatchExpired) {
                         tempProd.push(item);
                     }
@@ -35,10 +50,11 @@ function NearToExpiry() {
                 }
             })
         })
-        setProducts(sortByKey(tempProd,'monthToExpiry'))
+        console.log(tempProd)
+        setProducts(sortByKey(tempProd, 'monthToExpiry'))
     }
     function sortByKey(array, key) {
-        return array.sort(function(a, b) {
+        return array.sort(function (a, b) {
             var x = a[key]; var y = b[key];
             return ((x < y) ? -1 : ((x > y) ? 1 : 0));
         });
@@ -67,9 +83,9 @@ function NearToExpiry() {
             }
         }
         else if (yearDiff === 1) {
-            let tempMonth = 11 - currentMonth;
+            let tempMonth = 12 - currentMonth;
             monthDiff = tempMonth + batchMonth
-            if (Number(monthDiff) < 7) {
+            if (Number(monthDiff) <= 7) {
                 monthDiffToShare = Number(monthDiff)
                 return monthDiffToShare;
             }
@@ -82,15 +98,15 @@ function NearToExpiry() {
                 <div className="col-1 batch-custom-col-h">
                     No.
                 </div>
-                <div className="col-4 batch-custom-col-h">
+                <div className="col-5 batch-custom-col-h">
                     Name
                 </div>
-                <div className="col-7">
+                <div className="col-6">
                     <div className="row">
-                        <div className="col batch-custom-col-h">Price</div>
-                        <div className="col batch-custom-col-h"> Quantity</div>
-                        <div className="col batch-custom-col-h">Expiry Date</div>
-                        <div className="col batch-custom-col-h">Months Remaining</div>
+                        <div className="col-3 batch-custom-col-h">Price</div>
+                        <div className="col-3 batch-custom-col-h"> Quantity</div>
+                        <div className="col-3 batch-custom-col-h">Expiry Date</div>
+                        <div className="col-3 batch-custom-col-h">Months Remaining</div>
                     </div>
                 </div>
             </div>
@@ -101,22 +117,22 @@ function NearToExpiry() {
                             <div className="col-1">
                                 {index + 1}
                             </div>
-                            <div className="col-4" >
+                            <div className="col-5" >
                                 {doc.name}
                             </div>
-                            <div className="col-7">
+                            <div className="col-6">
                                 {
 
                                     doc.batch.map((b, i) => {
                                         return (
                                             b.expiry &&
                                             <div className='row product-name-row' key={i} style={{ backgroundColor: b.expiry === true ? b.colorCode : 'white' }}  >
-                                                <div className="col">
+                                                <div className="col-3">
                                                     {b.price}
                                                 </div>
-                                                <div className="col">  {b.quantity}</div>
-                                                <div className="col">  {b.expiryDate}</div>
-                                                <div className="col">{doc.monthToExpiry - 1}</div>
+                                                <div className="col-3">  {b.quantity}</div>
+                                                <div className="col-3">  {b.expiryDate}</div>
+                                                <div className="col-3">{b.monthToExpiry - 1}</div>
                                             </div>
                                         )
                                     })
