@@ -12,27 +12,21 @@ function NearToExpiry() {
         allProducts.forEach(item => {
             let previousBatchExpired = false;
             item.batch.forEach(batch => {
-                // if (isNearToExpiry(batch.expiryDate)) {
-                //     batch.expiry = true;
-                //     if (!previousBatchExpired) {
-                //         tempProd.push(item);
-                //     }
-                //     previousBatchExpired = true
-                //     return;
-                // }
-
-                if (isNearToExpiry(batch.expiryDate) <= 3) {
+                let expDate=isNearToExpiry(batch.expiryDate);
+                if (expDate <= 3) {
                     batch.expiry = true;
                     batch.colorCode = '#FF3E00';
+                    item.monthToExpiry=expDate;
                     if (!previousBatchExpired) {
                         tempProd.push(item);
                     }
                     previousBatchExpired = true
                     return;
                 }
-                if (isNearToExpiry(batch.expiryDate) > 3 && isNearToExpiry(batch.expiryDate) <= 6) {
+                if (expDate > 3 && expDate <= 6) {
                     batch.expiry = true;
                     batch.colorCode = '#F5B19B';
+                    item.monthToExpiry=expDate;
                     if (!previousBatchExpired) {
                         tempProd.push(item);
                     }
@@ -41,7 +35,13 @@ function NearToExpiry() {
                 }
             })
         })
-        setProducts(tempProd)
+        setProducts(sortByKey(tempProd,'monthToExpiry'))
+    }
+    function sortByKey(array, key) {
+        return array.sort(function(a, b) {
+            var x = a[key]; var y = b[key];
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+        });
     }
     useEffect(() => {
         getAllProducts();
@@ -76,15 +76,6 @@ function NearToExpiry() {
         }
     }
 
-    const searchProducts = (val) => {
-        let searchValue = val.target.value;
-        if (searchValue.length > 0) {
-            setProducts(products.filter(product => product.name.toLowerCase().includes(searchValue.toLowerCase()) || product.usage.toLowerCase().includes(searchValue.toLowerCase())))
-        }
-        else {
-            getAllProducts();
-        }
-    }
     return (
         <div>
             <div className="row">
@@ -99,7 +90,7 @@ function NearToExpiry() {
                         <div className="col batch-custom-col-h">Price</div>
                         <div className="col batch-custom-col-h"> Quantity</div>
                         <div className="col batch-custom-col-h">Expiry Date</div>
-
+                        <div className="col batch-custom-col-h">Months Remaining</div>
                     </div>
                 </div>
             </div>
@@ -118,12 +109,14 @@ function NearToExpiry() {
 
                                     doc.batch.map((b, i) => {
                                         return (
+                                            b.expiry &&
                                             <div className='row product-name-row' key={i} style={{ backgroundColor: b.expiry === true ? b.colorCode : 'white' }}  >
                                                 <div className="col">
                                                     {b.price}
                                                 </div>
                                                 <div className="col">  {b.quantity}</div>
                                                 <div className="col">  {b.expiryDate}</div>
+                                                <div className="col">{doc.monthToExpiry - 1}</div>
                                             </div>
                                         )
                                     })

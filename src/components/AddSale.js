@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import TransactionDataService from "../services/transaction.services"
 import StockDataService from "../services/stock.services"
 import LocalStorageServices from '../services/localStorage.services';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
 
@@ -120,6 +122,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 callbackaftersales(true);
                 SetUpdatedTotalPrice(0);
                 SetDiscount(0);
+                handleClose();
             }
         } catch (error) {
             console.log(error.message);
@@ -152,6 +155,10 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         await StockDataService.updateProduct(productId, currentData);
 
     }
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     return (
         <div className='sale-row'>
@@ -206,10 +213,69 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 <div className="col-3 btn-right">
                     {
                         saledata &&
-                        <button onClick={() => addTransation()} disabled={isDisabled} className='btn btn-primary'> Add Sale </button>
+                        <button disabled={isDisabled} onClick={handleShow} className='btn btn-primary'> Add Sale </button>
                     }
 
                 </div>
+            </div><div className="row">
+                <Modal show={show} onHide={handleClose} centered size="lg">
+                    <Modal.Header closeButton>
+                        <Modal.Title>Preview the sale</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row sale-row-h">
+                            <div className="col-5">Product Name</div>
+                            <div className="col-2">Unit Price</div>
+                            <div className="col-2">Quantity</div>
+                            <div className="col-2">Total Price</div>
+                        </div>
+                        {
+                            saledata &&
+                            saledata.map((item, i) => {
+                                return (
+                                    <div className='row product-name-row-sale' key={i} >
+                                        <div className="col-5">{item.name}</div>
+                                        <div className="col-2">{item.price}</div>
+                                        <div className="col-2">
+                                            {item.quantity}
+                                        </div>
+                                        <div className="col-2">{item.price * item.quantity}</div>
+                                    </div>
+                                )
+                            })
+                        }
+
+                        <div className="row">
+                            <div className="col-6"></div>
+                            <div className="col-5">
+                                <div className="row">
+                                    <div className="col">
+                                        Total Price
+                                    </div>
+                                    <div className="col">
+                                        {totalPrice}
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col">
+                                        Billed Price
+                                    </div>
+                                    <div className="col">
+                                        {updatedTotalPrice}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={() => addTransation()}>
+                            Save Sales
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         </div>
     )

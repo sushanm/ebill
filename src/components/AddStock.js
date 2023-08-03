@@ -14,7 +14,7 @@ function AddStock({ saleMode }) {
     const [selectedProductId, SetSelectedProductId] = useState('');
     const [selectedProductName, SetSelectedProductName] = useState('');
     const [selectedProductUsedFor, SetSelectedProductUsedFor] = useState('');
-
+    const [totalFiltedCount, SetTotalFiltedCount] = useState(0);
 
 
     function getAllProducts() {
@@ -27,6 +27,7 @@ function AddStock({ saleMode }) {
         else {
             setProducts(data);
             setProductsForSearch(data)
+            SetTotalFiltedCount(data.length)
             SetShowLoading(false);
         }
     }
@@ -34,6 +35,10 @@ function AddStock({ saleMode }) {
     useEffect(() => {
         getAllProducts();
     }, [])
+
+    useEffect(() => {
+        SetTotalFiltedCount(productsForSearch.length)
+    }, [productsForSearch])
 
 
     const searchProducts = (val) => {
@@ -97,6 +102,11 @@ function AddStock({ saleMode }) {
                             <div className="row">
                                 <div className="col-6">
                                     <button className='btn btn-primary' onClick={() => SetIsNewProduct(true)} >Add New Product</button>
+                                </div>
+                                <div className="col-3"></div>
+                                <div className="col-3 count"><p>
+                                {totalFiltedCount}
+                                </p>
                                 </div>
                             </div>
                         }

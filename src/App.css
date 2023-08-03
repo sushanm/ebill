@@ -170,3 +170,9 @@
 .row-po{
   border-bottom: 1px solid rgb(5, 0, 0);
 }
+
+.count{
+  text-align: center;
+  color: red;
+    font-weight: 700;
+}
