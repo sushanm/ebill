@@ -24,7 +24,7 @@ class StockDataService {
         return updateDoc(productDoc, updatedProduct);
     };
 
-    deleteBook = (id) => {
+    deleteProduct = (id) => {
         const bookDoc = doc(db, "stock", id);
         return deleteDoc(bookDoc);
     };

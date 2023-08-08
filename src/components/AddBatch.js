@@ -190,7 +190,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                         <div className="col batch-custom-col"><input type={'number'} placeholder="Price" value={price} onChange={(evt) => SetPrice(evt.target.value)}></input></div>
                         <div className="col batch-custom-col"> <input type={'number'} placeholder="Quantity" value={quantity} onChange={(evt) => SetQuantity(evt.target.value)}></input></div>
                         <div className="col batch-custom-col"><input type={'month'} placeholder="Expiry Date" value={expiryDate} onChange={(evt) => SetExpiryDate(evt.target.value)}></input></div>
-                        <div className="col batch-custom-col"> <button className='btn btn-primary' onClick={() => addNewProduct()} >Add</button></div>
+                        <div className="col batch-custom-col"> <button className='btn btn-primary' onClick={() => addNewProduct()} disabled={disableAdd}>Add</button></div>
                     </div>
 
 

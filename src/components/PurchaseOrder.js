@@ -7,16 +7,23 @@ function PurchaseOrder() {
     const [newPoQauntity, SetNewPoQauntity] = useState("");
     const [poItems, SetPOItems] = useState([]);
 
-    async function getAllPO() {
-        const data = await PurchaseOrderDataService.getAllPurchaseOrder();
-        let poData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-        SetPOItems(poData)
-        console.log(poData)
-    }
 
     useEffect(() => {
         getAllPO();
     }, [])
+
+
+    function getAllPO() {
+        const data = PurchaseOrderDataService.getAllPurchaseOrder();
+        if (!data) {
+            setTimeout(function () {
+                getAllPO();
+            }, 1000)
+        }
+        else {
+            SetPOItems(data)
+        }
+    }
 
     const addNewPO = async () => {
         let newPotoAdd = {
@@ -30,6 +37,7 @@ function PurchaseOrder() {
                 id: res.id
             }
             SetPOItems([...poItems, temp])
+            PurchaseOrderDataService.addNewPurchaseOrderLocalStorage(temp)
             SetNewPo("");
             SetNewPoQauntity("")
         })
@@ -38,6 +46,7 @@ function PurchaseOrder() {
     const itemReceived = async (id) => {
         await PurchaseOrderDataService.deletePO(id).then(res => {
             SetPOItems(poItems.filter(item=>item.id!==id));
+            PurchaseOrderDataService.deletePOLocalStorage(id)
         })
     }
 

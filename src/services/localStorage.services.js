@@ -89,6 +89,12 @@ class LocalStorageService {
             console.log(error)
         }
     }
+
+    removeProduct(id){
+        let dataFromLocal = JSON.parse(localStorage.getItem('drkotianproductdata'));
+        let temp=dataFromLocal.filter(item=>item.id!==id);
+        localStorage.setItem("drkotianproductdata", JSON.stringify(temp));
+    }
 }
 
 export default new LocalStorageService();
