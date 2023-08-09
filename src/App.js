@@ -11,7 +11,9 @@ import NearToExpiry from "./components/NearToExpiry";
 import LowStock from "./components/LowStock";
 import Report from "./components/Report";
 import LocalStorageServices from "./services/localStorage.services";
+import purchaseorderServices from "./services/purchaseorder.services"; 
 import PurchaseOrder from "./components/PurchaseOrder";
+import transactionsServices from "./services/transactions.services";
 
 function App() {
 
@@ -36,6 +38,8 @@ function App() {
   const refresh = () => {
     SetShowLoading(true)
     LocalStorageServices.forceRefresh();
+    purchaseorderServices.forceRefresh();
+    transactionsServices.forceRefresh();
     setTimeout(() => {
       window.location.reload();
       SetShowLoading(false)
@@ -80,7 +84,6 @@ function App() {
               diplay === 1 &&
               <div className="row">
                 <div className="col">
-                  <h4>These are near to exipry products</h4>
                   <NearToExpiry />
                 </div>
               </div>

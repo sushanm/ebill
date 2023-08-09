@@ -5,10 +5,12 @@ import { useEffect } from 'react';
 
 function NearToExpiry() {
     const [products, setProducts] = useState([]);
+    const [totalWorth, SetTotalWorth] = useState(0);
 
     const getAllProducts = async () => {
         let tempProd = new Array();;
         let allProducts = LocalStorageServices.getAllProducts();
+        let tempPrice = 0
         allProducts.forEach(item => {
             let previousBatchExpired = false;
             item.batch.forEach(batch => {
@@ -17,6 +19,7 @@ function NearToExpiry() {
                     batch.expiry = true;
                     batch.colorCode = '#FF3E00';
                     batch.monthToExpiry = expDate;
+                    tempPrice = Number(tempPrice) + Number(batch.price) * Number(batch.quantity);
                     if (item.monthToExpiry) {
                         if (Number(item.monthToExpiry) > expDate) {
                             item.monthToExpiry = expDate;
@@ -34,6 +37,7 @@ function NearToExpiry() {
                     batch.expiry = true;
                     batch.colorCode = '#F5B19B';
                     batch.monthToExpiry = expDate;
+                    tempPrice = Number(tempPrice) + Number(batch.price) * Number(batch.quantity);
                     if (item.monthToExpiry) {
                         if (Number(item.monthToExpiry) > expDate) {
                             item.monthToExpiry = expDate;
@@ -50,6 +54,7 @@ function NearToExpiry() {
                 }
             })
         })
+        SetTotalWorth(tempPrice)
         console.log(tempProd)
         setProducts(sortByKey(tempProd, 'monthToExpiry'))
     }
@@ -94,6 +99,7 @@ function NearToExpiry() {
 
     return (
         <div>
+            <h4>These are near to exipry products - Total Worth Rupees {totalWorth} /-</h4>
             <div className="row">
                 <div className="col-1 batch-custom-col-h">
                     No.

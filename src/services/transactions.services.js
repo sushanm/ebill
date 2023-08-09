@@ -102,6 +102,19 @@ class TransactionsDataService {
         const transactionDoc = doc(db, "transactions", id);
         return getDoc(transactionDoc);
     };
+    forceRefresh = () => {
+        try {
+            this.getAllTransactionsFromDB().then(data => {
+                let tempData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+                localStorage.setItem('drkotianTransdata', JSON.stringify(tempData));
+                localStorage.setItem('drkotianTransRefreshDate', this.getDate());
+            }).catch(err => {
+                console.log(err)
+            });
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 
