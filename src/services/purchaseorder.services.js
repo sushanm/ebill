@@ -79,6 +79,20 @@ class PurchaseOrderDataService {
         let tempData = localData.filter(item => item.id !== id);
         localStorage.setItem('drkotianPOdata', JSON.stringify(tempData));
     };
+
+    forceRefresh = ()=>{
+        try {
+            this.getAllProductsFromBD().then(data => {
+                localStorage.setItem('drkotianPOdata', JSON.stringify(data));
+                localStorage.setItem('drkotianPORefreshDate', this.getDate());
+                console.log(data)
+            }).catch(err => {
+                console.log(err)
+            });
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 export default new PurchaseOrderDataService();

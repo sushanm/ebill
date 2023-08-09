@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import StockDataService from "../services/stock.services"
 import LocalStorageServices from '../services/localStorage.services';
-import TransactionDataService from "../services/transaction.services"
+import TransactionsDataService from "../services/transactions.services"
 import { useEffect } from 'react';
 
 function Report() {
@@ -47,23 +47,9 @@ function Report() {
   }
 
   const getAllTransactions = async () => {
-
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    let mm = today.getMonth() + 1; // Months start at 0!
-    let dd = today.getDate();
-
-    if (dd < 10) dd = '0' + dd;
-    if (mm < 10) mm = '0' + mm;
-
-    const formattedToday = dd + '-' + mm + '-' + yyyy;
-
-
-    const data = await TransactionDataService.getTransactionByYear(yyyy).then((res) => {
-      console.log(res)
-    });
-    // let allTransactions = data.docs.map((doc) => ({ ...doc.data() }));
-    console.log(data)
+    await TransactionsDataService.getAllTransactions().then((data) => {
+      SetTransactionByMonth(data)
+    })
   }
 
   useEffect(() => {
@@ -79,76 +65,81 @@ function Report() {
     }, "1000");
   }
   return (
-    <div className="row">
-      <div className="col col-report">
-        <div className="row row-report">
-          <h4 className='report-title'>Total Products and value</h4>
-          <div className="row row-h">
-            <div className="col">Total Products</div>
-            <div className="col">Total Quantity</div>
-            <div className="col">Total Value</div>
+    <div className="div">
+      <div className="row">
+        <div className="col col-report">
+          <div className="row row-report">
+            <h4 className='report-title'>Total Products and value</h4>
+            <div className="row row-h">
+              <div className="col">Total Products</div>
+              <div className="col">Total Quantity</div>
+              <div className="col">Total Value</div>
+            </div>
+            <div className="row">
+              <div className="col">{totalNumberOfProducts}</div>
+              <div className="col">{totalQuantity}</div>
+              <div className="col">{totalPrice}</div>
+            </div>
           </div>
-          <div className="row">
-            <div className="col">{totalNumberOfProducts}</div>
-            <div className="col">{totalQuantity}</div>
-            <div className="col">{totalPrice}</div>
+        </div>
+        <div className="col">
+          <div className="row row-report">
+            <h4 className='report-title'>Duplicate Products Added</h4>
+            <div className="row row-h">
+              <div className="col-6">Name</div>
+              <div className="col-5">
+                <div className="row">Batch Details</div>
+                <div className="row">
+                  <div className="col-4">
+                    Price
+                  </div>
+                  <div className="col-4">
+                    Quantity
+                  </div>
+                  <div className="col-4">
+                    Expiry
+                  </div>
+                </div>
+              </div>
+              <div className="col-1">Action</div>
+            </div>
+
+
+            {
+              duplicateProducts.map((doc, index) => {
+                return (
+                  doc.duplicate &&
+                  <div className='row product-name-row' key={doc.id} >
+                    <div className="col-6" >
+                      {doc.name}
+                    </div>
+                    <div className="col-5">
+                      {
+                        doc.batch.map((b, i) => {
+                          return (
+                            <div className='row product-name-row' key={i} style={{ backgroundColor: b.expiry === true ? b.colorCode : 'white' }}  >
+                              <div className="col-4">
+                                {b.price}
+                              </div>
+                              <div className="col-4">  {b.quantity}</div>
+                              <div className="col-4">  {b.expiryDate}</div>
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                    <div className="col-1">
+                      <button onClick={() => removeHandler(doc.id)}>Remove</button>
+                    </div>
+                  </div>
+                )
+              })
+            }
           </div>
         </div>
       </div>
-      <div className="col">
-        <div className="row row-report">
-          <h4 className='report-title'>Duplicate Products Added</h4>
-          <div className="row row-h">
-            <div className="col-6">Name</div>
-            <div className="col-5">
-              <div className="row">Batch Details</div>
-              <div className="row">
-                <div className="col-4">
-                  Price
-                </div>
-                <div className="col-4">
-                  Quantity
-                </div>
-                <div className="col-4">
-                  Expiry
-                </div>
-              </div>
-            </div>
-            <div className="col-1">Action</div>
-          </div>
-
-
-          {
-            duplicateProducts.map((doc, index) => {
-              return (
-                doc.duplicate &&
-                <div className='row product-name-row' key={doc.id} >
-                  <div className="col-6" >
-                    {doc.name}
-                  </div>
-                  <div className="col-5">
-                    {
-                      doc.batch.map((b, i) => {
-                        return (
-                          <div className='row product-name-row' key={i} style={{ backgroundColor: b.expiry === true ? b.colorCode : 'white' }}  >
-                            <div className="col-4">
-                              {b.price}
-                            </div>
-                            <div className="col-4">  {b.quantity}</div>
-                            <div className="col-4">  {b.expiryDate}</div>
-                          </div>
-                        )
-                      })
-                    }
-                  </div>
-                  <div className="col-1">
-                    <button onClick={() => removeHandler(doc.id)}>Remove</button>
-                  </div>
-                </div>
-              )
-            })
-          }
-        </div>
+      <div className="row">
+        
       </div>
     </div>
   )

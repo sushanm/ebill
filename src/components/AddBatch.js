@@ -89,7 +89,10 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
             currentData.batch[index].price = price;
         }
         else {
-            let newId = Math.max(...currentData.batch.map(o => o.id)) + 1
+            let newId = 1;
+            if (currentData.batch.length > 0) {
+                newId = Math.max(...currentData.batch.map(o => o.id)) + 1
+            }
             currentData.batch.push({ id: newId, quantity: quantity, expiryDate: expiryDate, price: price })
         }
         let totalQuantity = Number(currentData.batch.map(item => item.quantity).reduce((prev, next) => Number(prev) + Number(next)));

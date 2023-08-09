@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import TransactionDataService from "../services/transaction.services"
+import TransactionsDataService from "../services/transactions.services"
 import StockDataService from "../services/stock.services"
 import LocalStorageServices from '../services/localStorage.services';
 import Button from 'react-bootstrap/Button';
@@ -85,7 +86,6 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
     }
 
     const addTransation = async () => {
-
         try {
             if (saledata.length > 0) {
                 const cloneSaleData = [...saledata];
@@ -95,8 +95,10 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                     totalPrice: Number(totalPrice),
                     discount: Number(discount)
                 };
-                await TransactionDataService.addNewTransation(newTransaction);
+               // await TransactionDataService.addNewTransation(newTransaction);
+                await TransactionsDataService.addNewTransation(newTransaction);
                 let tempArray = new Array();
+
                 cloneSaleData.forEach(item => {
                     const index = tempArray.findIndex(t => t.id === item.id);
                     if (index >= 0) {
@@ -129,6 +131,9 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         }
     }
 
+    // const handleMigrate=async ()=>{
+    //     await TransactionsDataService.handleMigrate();
+    // }
 
     const AddOrEditBatch = async (productId, batch) => {
 
@@ -215,7 +220,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                         saledata &&
                         <button disabled={isDisabled} onClick={handleShow} className='btn btn-primary'> Add Sale </button>
                     }
-
+{/* <button onClick={handleMigrate}>Migrate</button> */}
                 </div>
             </div><div className="row">
                 <Modal show={show} onHide={handleClose} centered size="lg">
