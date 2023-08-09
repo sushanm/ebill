@@ -39,6 +39,7 @@ class TransactionsDataService {
             existingData.totalAmount = Number(existingData.totalAmount) + (Number(newTransaction.totalPrice) - Number(newTransaction.discount))
             await this.updateTransactions(id, existingData).then((res) => {
                 console.log(res)
+                this.addNewTransactionToLocal(id, newTransaction)
             })
         } else {
             this.createNewTransaction(id).then(() => {
@@ -46,6 +47,14 @@ class TransactionsDataService {
             })
         }
     };
+
+    addNewTransactionToLocal = (id, newTransaction) => {
+        let localData = JSON.parse(localStorage.getItem('drkotianTransdata'));
+        const indexToChange = localData.findIndex(item => item.id === id);
+        localData[indexToChange].totalAmount = localData[indexToChange].totalAmount + (Number(newTransaction.totalPrice) - Number(newTransaction.discount))
+        localData[indexToChange].transactions.push(newTransaction)
+        localStorage.setItem('drkotianTransdata', JSON.stringify(localData));
+    }
 
     createNewTransaction = async (yearMonth) => {
         return await setDoc(doc(db, "transactions", yearMonth), {
