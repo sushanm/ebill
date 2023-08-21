@@ -4,6 +4,8 @@ import StockDataService from "../services/stock.services"
 import LocalStorageServices from '../services/localStorage.services';
 import TransactionsDataService from "../services/transactions.services"
 import { useEffect } from 'react';
+import Invoice from './Invoice';
+import { useNavigate } from 'react-router-dom';
 
 function Report() {
 
@@ -182,6 +184,13 @@ function Report() {
       getAllProducts();
     }, "1000");
   }
+
+  const history = useNavigate();
+  const generateInvoice=(details,index)=>{
+    details.lineItem=index+1
+    history('/invoice',{state:details});
+  }
+
   return (
     <div className="div">
       <div className="row">
@@ -215,7 +224,7 @@ function Report() {
           {
             transactioByDate.map((doc, index) => {
               return (
-                <div className='row product-name-row' key={doc.id} >
+                <div className='row product-name-row' key={doc.id} onClick={()=>generateInvoice(doc,index)} >
                   <div className="col-1" >
                     {index + 1}
                   </div>
@@ -239,7 +248,7 @@ function Report() {
                     }
                   </div>
                   <div className="col-2">
-                    {Number(doc.totalPrice) - Number(doc.discount)}
+                    {Number(doc.totalPrice) - Number(doc.discount)}  
                   </div>
                 </div>
               )
@@ -439,6 +448,7 @@ function Report() {
         </div>
         <div className="col col-report row-border"></div>
       </div>
+      <Invoice />
     </div>
   )
 }
