@@ -12,12 +12,14 @@ function Report() {
   const [totalNumberOfProducts, SetTotalNumberOfProducts] = useState();
   const [totalQuantity, SetTotalQuantity] = useState();
   const [totalPrice, SetTotalPrice] = useState();
-  const date = new Date();
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   const [transactioByMonth, SetTransactionByMonth] = useState([]);
   const [transactioByDate, SetTransactionByDate] = useState([]);
+  const [transactionsByItems, SetTransactionsByItems] = useState([]);
   const [transactioByDateTotalPrice, SetTransactionByDateTotalPrice] = useState();
   const [transactionFilterDate, SetTransactionFilterDate] = useState((new Date()).toISOString().substring(0, 10));
+  const [transactionsByItemsDisplay, SetTransactionsByItemsDisplay] = useState([]);
+  const [byMonth, SetByMonth] = useState(3)
+  const [byQuantity, SetByQantity] = useState(3)
 
   const getAllProducts = async () => {
     let allProducts = LocalStorageServices.getAllProducts();
@@ -52,7 +54,92 @@ function Report() {
   const getAllTransactions = async () => {
     await TransactionsDataService.getAllTransactions().then((data) => {
       SetTransactionByMonth(data)
+      let allData = [];
+      data.forEach(element => {
+        if (element.transactions) {
+          element.transactions.forEach(trans => {
+            let saleDate = trans.saleDate;
+            let monthDiff = monthDifference(saleDate)
+            trans.items.forEach(items => {
+              let newObj = {
+                ...items,
+                saleDate: saleDate,
+                monthDiff: monthDiff
+              }
+              allData.push(newObj)
+            });
+          });
+        }
+      });
+      SetTransactionsByItems(allData);
     })
+  }
+
+  const filterItemsByMonthAndQuantity = (month, quantity) => {
+    let itemArrayByMonth = [];
+    if (transactionsByItems) {
+      let itemsByGroup = groupBy(transactionsByItems, 'id');
+      var result = Object.keys(itemsByGroup).map((key) => [key, itemsByGroup[key]]);
+      result.forEach(element => {
+        element[1].forEach(items => {
+          if (items.monthDiff >= month) {
+            itemArrayByMonth.push(items);
+          }
+        });
+      });
+    }
+
+    let groupByItem = groupBy(itemArrayByMonth, 'id');
+    var result2 = Object.keys(groupByItem).map((key) => [key, groupByItem[key]]);
+    console.log(result2)
+    let itemsByMonthAndQantity = [];
+    result2.forEach(element => {
+      let totalQunatity = 0
+      element[1].forEach(items => {
+        totalQunatity = totalQunatity + Number(items.quantity);
+        if (totalQunatity >= quantity) {
+          items.totalQunatity = totalQunatity;
+          if (itemsByMonthAndQantity.filter(val => val.id === items.id).length === 0) {
+            itemsByMonthAndQantity.push(items);
+          }
+          else {
+            let index = itemsByMonthAndQantity.findIndex(i => i.id === items.id)
+            itemsByMonthAndQantity[index].totalQunatity = totalQunatity;
+          }
+        }
+      });
+    });
+    SetTransactionsByItemsDisplay(itemsByMonthAndQantity)
+  }
+
+  var groupBy = function (xs, key) {
+    return xs.reduce(function (rv, x) {
+      (rv[x[key]] = rv[x[key]] || []).push(x);
+      return rv;
+    }, {});
+  };
+
+
+  let today = new Date();
+  let currentYear = today.getFullYear();
+  let currentMonth = today.getMonth();
+
+  function monthDifference(date) {
+    const monthYear = date.split('-');
+    const batchYear = Number(monthYear[2]);
+    const batchMonth = Number(monthYear[1]);
+    const yearDiff = Number(currentYear) - Number(batchYear);
+    let monthDiff = Number(currentMonth) - Number(batchMonth);
+
+    if (yearDiff === 0) {
+      monthDiff = Number(currentMonth) + 1 - Number(batchMonth);
+      return monthDiff;
+    }
+    else if (yearDiff === 1) {
+      let tempMonth = 12 - currentMonth;
+      monthDiff = tempMonth + batchMonth
+      return monthDiff;
+    }
   }
 
   useEffect(() => {
@@ -274,10 +361,84 @@ function Report() {
                 )
               })
             }
+
           </div>
         </div>
       </div>
+      <div className="row">
+        <div className="col col-report row-border">
+          <div className="row row-report">
+            <div className="row ">
+              <div className="col-4"><h4 className='report-title'>Transactions</h4></div>
+              <div className="col">
+                <strong>Months</strong>
+                <select className='report-ddl' onChange={(e) => { SetByMonth(e.target.value); filterItemsByMonthAndQuantity(e.target.value, byQuantity) }}>
+                <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3" selected>3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+              </div>
+              <div className="col">
+                <strong>Quantity</strong>
+                <select className='report-ddl' onChange={(e) => { SetByQantity(e.target.value); filterItemsByMonthAndQuantity(byMonth, e.target.value) }}>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3" selected>3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                </select>
+              </div>
+            </div>
+            <div className="row row-h">
+              <div className="col-2">
+                SL No.
+              </div>
+              <div className="col-8">
+                Name
+              </div>
+              <div className="col-2">
+                Total Qantity
+              </div>
+            </div>
 
+            {
+              transactionsByItemsDisplay.map((b, i) => {
+                        return (
+                          <div className="row">
+                            <div className="col-2">
+                              {i+1}
+                            </div>
+                            <div className="col-8">
+                              {b.name}
+                            </div>
+                            <div className="col-2">
+                              {b.totalQunatity}
+                            </div>
+                          </div>
+                        )
+                      })
+                    }
+
+          </div>
+        </div>
+        <div className="col col-report row-border"></div>
+      </div>
     </div>
   )
 }
