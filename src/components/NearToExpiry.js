@@ -62,7 +62,6 @@ function NearToExpiry() {
             }, 2000)
         }
         SetTotalWorth(tempPrice)
-        console.log(tempProd)
         setProducts(sortByKey(tempProd, 'monthToExpiry'))
     }
     function sortByKey(array, key) {

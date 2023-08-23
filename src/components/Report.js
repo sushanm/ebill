@@ -11,6 +11,7 @@ function Report() {
 
   const [products, setProducts] = useState([]);
   const [productsWithoutGST, setProductsWithoutGST] = useState([]);
+  const [productsCopy, SetproductsCopy] = useState([]);
   const [duplicateProducts, setDuplicateProducts] = useState([]);
   const [totalNumberOfProducts, SetTotalNumberOfProducts] = useState();
   const [totalQuantity, SetTotalQuantity] = useState();
@@ -38,8 +39,8 @@ function Report() {
       })
       SetTotalPrice(tempValue);
       setProducts(allProducts);
-      console.log(allProducts.filter(item=>item.gst==null));
-      setProductsWithoutGST(allProducts.filter(item=>item.gst==null));
+      SetproductsCopy(allProducts);
+      setProductsWithoutGST(allProducts.filter(item => item.gst == null || item.gst== -1));
       SetTotalQuantity(tempQantity);
 
       let temp = allProducts;
@@ -103,7 +104,6 @@ function Report() {
 
     let groupByItem = groupBy(itemArrayByMonth, 'id');
     var result2 = Object.keys(groupByItem).map((key) => [key, groupByItem[key]]);
-    console.log(result2)
     let itemsByMonthAndQantity = [];
     result2.forEach(element => {
       let totalQunatity = 0
@@ -171,7 +171,6 @@ function Report() {
   }
 
   const transactionsByDate = (date) => {
-    console.log(transactioByMonth)
     if (transactioByMonth) {
       let yearMonth = date.split('-')[0] + "-" + date.split('-')[1]
       const dateFormat = date.split('-')[2] + "-" + date.split('-')[1] + "-" + date.split('-')[0]
@@ -203,8 +202,27 @@ function Report() {
   }
 
   const seGst = (value, id) => {
-    console.log(value, id)
-    LocalStorageServices.addTaxInformation(id,value);
+    LocalStorageServices.addTaxInformation(id, value);
+    let tempGstData=[...productsWithoutGST];
+    const index=tempGstData.findIndex(item=>item.id===id)
+    tempGstData[index].gst=value;
+    setProductsWithoutGST(tempGstData);
+
+    let tempGstData1=[...productsCopy];
+    const index1=tempGstData1.findIndex(item=>item.id===id)
+    tempGstData1[index1].gst=value;
+    SetproductsCopy(tempGstData1);
+  }
+
+  const [ShowAllTax, SetShowAllTax] = useState(false);
+  const ShowAllTaxInfo = (value) => {
+    SetShowAllTax(!ShowAllTax)
+    if (!ShowAllTax) {
+      setProductsWithoutGST(productsCopy)
+    } else {
+      setProductsWithoutGST(productsCopy.filter(item => item.gst == null || item.gst == -1));
+    }
+
   }
 
   return (
@@ -471,6 +489,10 @@ function Report() {
             <div className="row row-report">
               <div className="row ">
                 <div className="col-4"><h4 className='report-title'>Tax updation</h4></div>
+                <div className="col-4">
+                  Show All
+                  <input type="checkbox" id="showAll" name="showAll" value={ShowAllTax} onClick={(e) => ShowAllTaxInfo(e.target.value)} />
+                </div>
               </div>
               <div className="row row-h">
                 <div className="col-2">
@@ -497,11 +519,11 @@ function Report() {
                       </div>
                       <div className="col-2">
                         <select className='report-ddl' value={b.gst} onChange={(e) => { seGst(e.target.value, b.id) }}>
-                          <option value="-1" selected>--Select--</option>
-                          <option value="0">0</option>
-                          <option value="5">5</option>
-                          <option value="12">12</option>
-                          <option value="18">18</option>
+                          <option value="-1" selected={b.gst===-1 || b.gst==null}>--Select--</option>
+                          <option value="0" selected={b.gst===0}>0</option>
+                          <option value="5" selected={b.gst===5}>5</option>
+                          <option value="12" selected={b.gst===12}>12</option>
+                          <option value="18" selected={b.gst===18}>18</option>
                         </select>
                       </div>
                     </div>

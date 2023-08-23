@@ -6,7 +6,6 @@ function Invoice() {
     const [invoiceNo, SetInvoiceNo] = useState("")
     const [items, SetItems] = useState([]);
     useEffect(() => {
-        console.log(location)
         if (location.state) {
             SetItems(location.state.items)
             let saleDate = location.state.saleDate.split('-')
