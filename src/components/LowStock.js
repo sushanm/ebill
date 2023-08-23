@@ -9,22 +9,29 @@ function LowStock() {
 
     const getAllProducts = async () => {
         let productData = LocalStorageServices.getAllProducts();
-        productData = productData.filter(item => item.totalQuantity <= Number(lowStockQantity));
+        if (productData) {
+            productData = productData.filter(item => item.totalQuantity <= Number(lowStockQantity));
 
-        productData.sort(function (a, b) {
-            return Number(a.totalQuantity) - Number(b.totalQuantity)
-        })
-
-        productData.forEach(item => {
-            let tempValue = 0
-            item.batch.forEach(batch => {
-                tempValue = tempValue + Number(batch.price) * Number(batch.quantity);
+            productData.sort(function (a, b) {
+                return Number(a.totalQuantity) - Number(b.totalQuantity)
             })
-            item.value=tempValue;
-        })
 
-        SetProducts(productData);
+            productData.forEach(item => {
+                let tempValue = 0
+                item.batch.forEach(batch => {
+                    tempValue = tempValue + Number(batch.price) * Number(batch.quantity);
+                })
+                item.value = tempValue;
+            })
+
+            SetProducts(productData);
+        } else {
+            setTimeout(function () {
+                getAllProducts();
+            }, 2000)
+        }
     }
+
     useEffect(() => {
         getAllProducts();
     }, [])

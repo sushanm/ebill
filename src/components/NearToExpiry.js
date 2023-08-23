@@ -11,49 +11,56 @@ function NearToExpiry() {
         let tempProd = new Array();;
         let allProducts = LocalStorageServices.getAllProducts();
         let tempPrice = 0
-        allProducts.forEach(item => {
-            let previousBatchExpired = false;
-            item.batch.forEach(batch => {
-                let expDate = isNearToExpiry(batch.expiryDate);
-                if (expDate <= 3) {
-                    batch.expiry = true;
-                    batch.colorCode = '#FF3E00';
-                    batch.monthToExpiry = expDate;
-                    tempPrice = Number(tempPrice) + Number(batch.price) * Number(batch.quantity);
-                    if (item.monthToExpiry) {
-                        if (Number(item.monthToExpiry) > expDate) {
+        if (allProducts) {
+            allProducts.forEach(item => {
+                let previousBatchExpired = false;
+                item.batch.forEach(batch => {
+                    let expDate = isNearToExpiry(batch.expiryDate);
+                    if (expDate <= 3) {
+                        batch.expiry = true;
+                        batch.colorCode = '#FF3E00';
+                        batch.monthToExpiry = expDate;
+                        tempPrice = Number(tempPrice) + Number(batch.price) * Number(batch.quantity);
+                        if (item.monthToExpiry) {
+                            if (Number(item.monthToExpiry) > expDate) {
+                                item.monthToExpiry = expDate;
+                            }
+                        } else {
                             item.monthToExpiry = expDate;
                         }
-                    } else {
-                        item.monthToExpiry = expDate;
+                        if (!previousBatchExpired) {
+                            tempProd.push(item);
+                        }
+                        previousBatchExpired = true
+                        return;
                     }
-                    if (!previousBatchExpired) {
-                        tempProd.push(item);
-                    }
-                    previousBatchExpired = true
-                    return;
-                }
-                if (expDate > 3 && expDate <= 7) {
-                    batch.expiry = true;
-                    batch.colorCode = '#F5B19B';
-                    batch.monthToExpiry = expDate;
-                    tempPrice = Number(tempPrice) + Number(batch.price) * Number(batch.quantity);
-                    if (item.monthToExpiry) {
-                        if (Number(item.monthToExpiry) > expDate) {
+                    if (expDate > 3 && expDate <= 7) {
+                        batch.expiry = true;
+                        batch.colorCode = '#F5B19B';
+                        batch.monthToExpiry = expDate;
+                        tempPrice = Number(tempPrice) + Number(batch.price) * Number(batch.quantity);
+                        if (item.monthToExpiry) {
+                            if (Number(item.monthToExpiry) > expDate) {
+                                item.monthToExpiry = expDate;
+                            }
+                        }
+                        else {
                             item.monthToExpiry = expDate;
                         }
+                        if (!previousBatchExpired) {
+                            tempProd.push(item);
+                        }
+                        previousBatchExpired = true
+                        return;
                     }
-                    else {
-                        item.monthToExpiry = expDate;
-                    }
-                    if (!previousBatchExpired) {
-                        tempProd.push(item);
-                    }
-                    previousBatchExpired = true
-                    return;
-                }
+                })
             })
-        })
+        } else {
+
+            setTimeout(function () {
+                getAllProducts();
+            }, 2000)
+        }
         SetTotalWorth(tempPrice)
         console.log(tempProd)
         setProducts(sortByKey(tempProd, 'monthToExpiry'))

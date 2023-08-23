@@ -6,12 +6,12 @@ import {
 import './App.css';
 import AddStock from "./components/AddStock";
 import { auth } from './firebase';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NearToExpiry from "./components/NearToExpiry";
 import LowStock from "./components/LowStock";
 import Report from "./components/Report";
 import LocalStorageServices from "./services/localStorage.services";
-import purchaseorderServices from "./services/purchaseorder.services"; 
+import purchaseorderServices from "./services/purchaseorder.services";
 import PurchaseOrder from "./components/PurchaseOrder";
 import transactionsServices from "./services/transactions.services";
 
@@ -34,6 +34,13 @@ function App() {
       console.log(error.message);
     }
   }
+
+  useEffect(() => {
+    login();
+    LocalStorageServices.forceRefresh();
+    purchaseorderServices.forceRefresh();
+    transactionsServices.forceRefresh();
+  }, [])
 
   const refresh = () => {
     SetShowLoading(true)

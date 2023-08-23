@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 function Report() {
 
   const [products, setProducts] = useState([]);
+  const [productsWithoutGST, setProductsWithoutGST] = useState([]);
   const [duplicateProducts, setDuplicateProducts] = useState([]);
   const [totalNumberOfProducts, SetTotalNumberOfProducts] = useState();
   const [totalQuantity, SetTotalQuantity] = useState();
@@ -25,54 +26,63 @@ function Report() {
 
   const getAllProducts = async () => {
     let allProducts = LocalStorageServices.getAllProducts();
-    let tempQantity = 0;
-    let tempValue = 0;
-    SetTotalNumberOfProducts(allProducts.length)
-    allProducts.forEach(item => {
-      item.batch.forEach(batch => {
-        tempValue = tempValue + Number(batch.price) * Number(batch.quantity);
+    if (allProducts) {
+      let tempQantity = 0;
+      let tempValue = 0;
+      SetTotalNumberOfProducts(allProducts.length)
+      allProducts.forEach(item => {
+        item.batch.forEach(batch => {
+          tempValue = tempValue + Number(batch.price) * Number(batch.quantity);
+        })
+        tempQantity = tempQantity + Number(item.totalQuantity);
       })
-      tempQantity = tempQantity + Number(item.totalQuantity);
-    })
-    SetTotalPrice(tempValue);
-    setProducts(allProducts);
-    SetTotalQuantity(tempQantity);
+      SetTotalPrice(tempValue);
+      setProducts(allProducts);
+      console.log(allProducts.filter(item=>item.gst==null));
+      setProductsWithoutGST(allProducts.filter(item=>item.gst==null));
+      SetTotalQuantity(tempQantity);
 
-    let temp = allProducts;
-    temp.forEach((ele1, index1) => {
-      temp.forEach((ele2, index2) => {
-        if (ele1.name === ele2.name) {
-          if (index1 !== index2) {
-            ele1.duplicate = true;
+      let temp = allProducts;
+      temp.forEach((ele1, index1) => {
+        temp.forEach((ele2, index2) => {
+          if (ele1.name === ele2.name) {
+            if (index1 !== index2) {
+              ele1.duplicate = true;
+            }
           }
-        }
+        });
       });
-    });
 
-    setDuplicateProducts(temp)
-
+      setDuplicateProducts(temp)
+    } else {
+      setTimeout(function () {
+        getAllProducts();
+      }, 2000)
+    }
   }
 
   const getAllTransactions = async () => {
     await TransactionsDataService.getAllTransactions().then((data) => {
       SetTransactionByMonth(data)
       let allData = [];
-      data.forEach(element => {
-        if (element.transactions) {
-          element.transactions.forEach(trans => {
-            let saleDate = trans.saleDate;
-            let monthDiff = monthDifference(saleDate)
-            trans.items.forEach(items => {
-              let newObj = {
-                ...items,
-                saleDate: saleDate,
-                monthDiff: monthDiff
-              }
-              allData.push(newObj)
+      if (data) {
+        data.forEach(element => {
+          if (element.transactions) {
+            element.transactions.forEach(trans => {
+              let saleDate = trans.saleDate;
+              let monthDiff = monthDifference(saleDate)
+              trans.items.forEach(items => {
+                let newObj = {
+                  ...items,
+                  saleDate: saleDate,
+                  monthDiff: monthDiff
+                }
+                allData.push(newObj)
+              });
             });
-          });
-        }
-      });
+          }
+        });
+      }
       SetTransactionsByItems(allData);
     })
   }
@@ -152,7 +162,7 @@ function Report() {
   useEffect(() => {
     setTimeout(() => {
       transactionsByDate((new Date()).toISOString().substring(0, 10))
-    }, "100");
+    }, "1000");
   }, [transactioByMonth])
 
   const filterByDate = (val) => {
@@ -161,6 +171,7 @@ function Report() {
   }
 
   const transactionsByDate = (date) => {
+    console.log(transactioByMonth)
     if (transactioByMonth) {
       let yearMonth = date.split('-')[0] + "-" + date.split('-')[1]
       const dateFormat = date.split('-')[2] + "-" + date.split('-')[1] + "-" + date.split('-')[0]
@@ -186,9 +197,14 @@ function Report() {
   }
 
   const history = useNavigate();
-  const generateInvoice=(details,index)=>{
-    details.lineItem=index+1
-    history('/invoice',{state:details});
+  const generateInvoice = (details, index) => {
+    details.lineItem = index + 1
+    history('/invoice', { state: details });
+  }
+
+  const seGst = (value, id) => {
+    console.log(value, id)
+    LocalStorageServices.addTaxInformation(id,value);
   }
 
   return (
@@ -222,9 +238,10 @@ function Report() {
             </div>
           </div>
           {
+            transactioByDate &&
             transactioByDate.map((doc, index) => {
               return (
-                <div className='row product-name-row' key={doc.id} onClick={()=>generateInvoice(doc,index)} >
+                <div className='row product-name-row' key={doc.id} onClick={() => generateInvoice(doc, index)} >
                   <div className="col-1" >
                     {index + 1}
                   </div>
@@ -248,7 +265,7 @@ function Report() {
                     }
                   </div>
                   <div className="col-2">
-                    {Number(doc.totalPrice) - Number(doc.discount)}  
+                    {Number(doc.totalPrice) - Number(doc.discount)}
                   </div>
                 </div>
               )
@@ -287,6 +304,7 @@ function Report() {
               <div className="col">Total Value</div>
             </div>
             {
+              transactioByMonth &&
               transactioByMonth.map((b, i) => {
                 return (
                   <div className="row">
@@ -341,6 +359,7 @@ function Report() {
 
 
             {
+              duplicateProducts &&
               duplicateProducts.map((doc, index) => {
                 return (
                   doc.duplicate &&
@@ -382,7 +401,7 @@ function Report() {
               <div className="col">
                 <strong>Months</strong>
                 <select className='report-ddl' onChange={(e) => { SetByMonth(e.target.value); filterItemsByMonthAndQuantity(e.target.value, byQuantity) }}>
-                <option value="0">0</option>
+                  <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3" selected>3</option>
@@ -427,28 +446,73 @@ function Report() {
             </div>
 
             {
+              transactionsByItemsDisplay &&
               transactionsByItemsDisplay.map((b, i) => {
-                        return (
-                          <div className="row">
-                            <div className="col-2">
-                              {i+1}
-                            </div>
-                            <div className="col-8">
-                              {b.name}
-                            </div>
-                            <div className="col-2">
-                              {b.totalQunatity}
-                            </div>
-                          </div>
-                        )
-                      })
-                    }
+                return (
+                  <div className="row">
+                    <div className="col-2">
+                      {i + 1}
+                    </div>
+                    <div className="col-8">
+                      {b.name}
+                    </div>
+                    <div className="col-2">
+                      {b.totalQunatity}
+                    </div>
+                  </div>
+                )
+              })
+            }
 
           </div>
         </div>
-        <div className="col col-report row-border"></div>
+        <div className="col col-report row-border">
+          <div className="col col-report row-border">
+            <div className="row row-report">
+              <div className="row ">
+                <div className="col-4"><h4 className='report-title'>Tax updation</h4></div>
+              </div>
+              <div className="row row-h">
+                <div className="col-2">
+                  SL No.
+                </div>
+                <div className="col-8">
+                  Name
+                </div>
+                <div className="col-2">
+                  Tax %
+                </div>
+              </div>
+
+              {
+                productsWithoutGST &&
+                productsWithoutGST.map((b, i) => {
+                  return (
+                    <div className="row border-b">
+                      <div className="col-2">
+                        {i + 1}
+                      </div>
+                      <div className="col-8">
+                        {b.name}
+                      </div>
+                      <div className="col-2">
+                        <select className='report-ddl' value={b.gst} onChange={(e) => { seGst(e.target.value, b.id) }}>
+                          <option value="-1" selected>--Select--</option>
+                          <option value="0">0</option>
+                          <option value="5">5</option>
+                          <option value="12">12</option>
+                          <option value="18">18</option>
+                        </select>
+                      </div>
+                    </div>
+                  )
+                })
+              }
+
+            </div>
+          </div>
+        </div>
       </div>
-      <Invoice />
     </div>
   )
 }

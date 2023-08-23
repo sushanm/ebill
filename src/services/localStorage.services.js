@@ -44,7 +44,7 @@ class LocalStorageService {
         localStorage.setItem("drkotianproductdata", JSON.stringify(dataFromLocal));
     }
 
-    addOrEditProduct(id,data){
+    addOrEditProduct(id, data) {
         let dataFromLocal = JSON.parse(localStorage.getItem('drkotianproductdata'));
         for (var i = 0; i < dataFromLocal.length; i++) {
             if (id === dataFromLocal[i].id) {
@@ -54,6 +54,24 @@ class LocalStorageService {
             }
         }
         localStorage.setItem("drkotianproductdata", JSON.stringify(dataFromLocal));
+    }
+
+    async addTaxInformation(id, value) {
+        const docSnap = await StockDataService.getProduct(id);
+        if (docSnap.data()) {
+            let productData = docSnap.data();
+            productData.gst = Number(value);
+            await StockDataService.updateProduct(id, productData).then(() => {
+                let dataFromLocal = JSON.parse(localStorage.getItem('drkotianproductdata'));
+                for (var i = 0; i < dataFromLocal.length; i++) {
+                    if (id === dataFromLocal[i].id) {
+                        dataFromLocal[i].gst = Number(value);
+                        break;
+                    }
+                }
+                localStorage.setItem("drkotianproductdata", JSON.stringify(dataFromLocal));
+            })
+        }
     }
 
     getAllProducts = () => {
@@ -76,7 +94,7 @@ class LocalStorageService {
         }
     }
 
-    forceRefresh = ()=>{
+    forceRefresh = () => {
         try {
             this.getAllProductsFromBD().then(data => {
                 localStorage.setItem('drkotianproductdata', JSON.stringify(data));
@@ -90,9 +108,9 @@ class LocalStorageService {
         }
     }
 
-    removeProduct(id){
+    removeProduct(id) {
         let dataFromLocal = JSON.parse(localStorage.getItem('drkotianproductdata'));
-        let temp=dataFromLocal.filter(item=>item.id!==id);
+        let temp = dataFromLocal.filter(item => item.id !== id);
         localStorage.setItem("drkotianproductdata", JSON.stringify(temp));
     }
 }
