@@ -4,12 +4,13 @@ import LocalStorageServices from '../services/localStorage.services';
 import { useEffect, useState } from 'react';
 import AddSale from './AddSale';
 
-function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName, callbackaftersalesFromBatch, usedFor }) {
+function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName, callbackaftersalesFromBatch, usedFor, gst }) {
     const [batch, SetBatch] = useState([]);
     const [editBatchRow, SetEditBatchRow] = useState();
 
     const [name, SetName] = useState();
     const [usage, SetUsage] = useState();
+    const [newGST, SetNewGST] = useState();
     const [expiryDate, SetExpiryDate] = useState();
     const [price, SetPrice] = useState();
     const [quantity, SetQuantity] = useState();
@@ -61,12 +62,13 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
             const newProduct = {
                 name,
                 batch,
+                gst: newGST,
                 usage,
                 totalQuantity
             };
             await StockDataService.addNewProduct(newProduct).then(res => {
-                LocalStorageServices.addNewProduct(res.id, name, usage, totalQuantity, batch);
-                callBackMethod(res.id, name, usage);
+                LocalStorageServices.addNewProduct(res.id, name, usage, totalQuantity, batch, newGST);
+                callBackMethod(res.id, name, usage, newGST);
             });
         } catch (error) {
             console.log(error.message);
@@ -129,6 +131,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
         let saleData = {
             id: productId,
             name: productName,
+            gst: gst,
             price: batch.price,
             quantity: 1,
             batchId: batch.id
@@ -137,25 +140,27 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
 
     }
     const callbackSalesUpdate = (salesData) => {
-
         SetSales(salesData)
     }
 
     const [productNameForEdit, SetProductNameForEdit] = useState(productName);
     const [productUsageForEdit, SetProductUsageForEdit] = useState(usedFor);
+    const [productGSTEdit, SetProductGSTEdit] = useState(gst);
     const editProductName = () => {
         SetProductNameEdit(true)
         SetProductNameForEdit(productName)
         SetProductUsageForEdit(usedFor)
+        SetProductGSTEdit(gst)
     }
     const saveProductName = async () => {
         const docSnap = await StockDataService.getProduct(productId);
         let currentData = docSnap.data();
         currentData.name = productNameForEdit;
         currentData.usage = productUsageForEdit;
+        currentData.gst = productGSTEdit;
         await StockDataService.updateProduct(productId, currentData);
-        LocalStorageServices.updateProductName(productId, productNameForEdit, productUsageForEdit);
-        callBackMethod(productId, productNameForEdit, productUsageForEdit);
+        LocalStorageServices.updateProductName(productId, productNameForEdit, productUsageForEdit, productGSTEdit);
+        callBackMethod(productId, productNameForEdit, productUsageForEdit, productGSTEdit);
         SetProductNameEdit(false)
         SetProductNameForEdit('');
         SetProductUsageForEdit('')
@@ -180,6 +185,14 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                         </div>
                         <div className="row">
                             <input type={'text'} placeholder="Product Usage" value={usage} onChange={(evt) => SetUsage(evt.target.value)}></input>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="row">
+                            GST
+                        </div>
+                        <div className="row">
+                            <input type={'number'} placeholder="GST" value={newGST} onChange={(evt) => SetNewGST(evt.target.value)}></input>
                         </div>
                     </div>
                     <div className="row">
@@ -262,29 +275,38 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                         <div className="col-1 batch-custom-col-h">
                             Name
                         </div>
-                        <div className="col-5">
+                        <div className="col-4">
                             {productName}
 
                         </div>
                         <div className="col-1 batch-custom-col-h">Usage</div>
-                        <div className="col-5 ">
+                        <div className="col-4 ">
                             {usedFor}
+
+                        </div>
+                        <div className="col-1 batch-custom-col-h">
+                            GST
+                        </div>
+                        <div className="col-1">
+                            {gst}
                             {
                                 usedFor &&
                                 <img onClick={editProductName} className='edit-img' alt='edit' src='../../assets/edit.png' />
                             }
                         </div>
-
                     </div>
                 }
                 {
                     productNameEdit &&
                     <div className="row">
-                        <div className="col-5 ">
+                        <div className="col-4 ">
                             <input type="text" style={{ 'width': '100%' }} value={productNameForEdit} onChange={(e) => SetProductNameForEdit(e.target.value)} />
                         </div>
-                        <div className="col-5 ">
+                        <div className="col-4 ">
                             <input type="text" value={productUsageForEdit} style={{ 'width': '100%' }} onChange={(e) => SetProductUsageForEdit(e.target.value)} />
+                        </div>
+                        <div className="col-2 ">
+                            <input type="number" value={productGSTEdit} style={{ 'width': '100%' }} onChange={(e) => SetProductGSTEdit(e.target.value)} />
                         </div>
                         <div className="col-2 ">
                             <button onClick={saveProductName}>Save</button>

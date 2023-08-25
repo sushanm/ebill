@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout';
 import Home from './Home';
 import Invoice from './components/Invoice';
+import PrintInvoice from './components/PrintInvoice';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -17,6 +18,7 @@ root.render(
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="invoice" element={<Invoice />} />
+          <Route path="printinvoice" element={<PrintInvoice />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -277,3 +277,19 @@ margin: unset !important;
 .h4-invoice{
   margin-left: 10px;
 }
+
+.print-icon{
+  width: 20px;
+}
+
+.invoice-row-start-p{
+  font-size: 9px !important;
+}
+
+.col-fix{
+  padding: 0px !important;
+  padding-left: 1px !important;
+}
+.print-h{
+  font-weight: bold;
+}

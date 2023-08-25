@@ -3,30 +3,28 @@ import { useEffect, useState } from 'react';
 function Invoice() {
 
     const location = useLocation();
-    const [invoiceNo, SetInvoiceNo] = useState("")
-    const [items, SetItems] = useState([]);
+    const [sales, SetSales] = useState({ date: '', invoiceNo: '', items: [], gst: 0 });
     useEffect(() => {
         if (location.state) {
-            SetItems(location.state.items)
             let saleDate = location.state.saleDate.split('-')
-            SetInvoiceNo(saleDate[2] + saleDate[1] + saleDate[0] + location.state.lineItem);
+            const invoice = saleDate[2] + saleDate[1] + saleDate[0] + location.state.lineItem;
+            let totalGst = 0
+            location.state.items.forEach(element => {
+                totalGst = totalGst + Number(element.gstValue);
+            });
+            let data = {
+                date: location.state.saleDate, invoiceNo: invoice, items: location.state.items, gst: totalGst
+            }
+
+            SetSales(data)
         }
 
     }, [location.state])
 
     function round(value) {
-      return  Number(Math.round((value + Number.EPSILON) * 100) / 100);
-       // return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+        return Number(Math.round((value + Number.EPSILON) * 100) / 100);
     }
 
-    const applyTax = (taxPerc, item,  index) => {
-        let tempItem = [...items];
-        let tax = Number(item.price) - (Number(item.price) * (100 / (100 + Number(taxPerc))))
-        tempItem[index].taxPerc = taxPerc;
-        tempItem[index].tax = tax * Number(item.quantity);
-        tempItem[index].priceperunit = Number(item.price) - Number(tax);
-        SetItems(tempItem)
-    }
     return (
 
         <div className="row-border invoice-row-start">
@@ -51,13 +49,13 @@ function Invoice() {
                         <div className="col">
                             {
                                 location.state &&
-                                location.state.saleDate
+                                sales.date
                             }
                         </div>
                     </div>
                     <div className="row unset-p-m border-b">
                         <div className="col border-r">Invoice No</div>
-                        <div className="col">{invoiceNo}</div>
+                        <div className="col">{sales.invoiceNo}</div>
                     </div>
                 </div>
             </div>
@@ -103,7 +101,7 @@ function Invoice() {
             </div>
             {
                 location.state &&
-                items.map((doc, index) => {
+                sales.items.map((doc, index) => {
                     return (
                         <div className="row unset-p-m border-t border-b" key={index}>
                             <div className="col-1 border-r">
@@ -113,17 +111,16 @@ function Invoice() {
                                 {doc.name}
                             </div>
                             <div className="col-1 border-r">
-                             
                                 {round(doc.priceperunit)}
                             </div>
                             <div className="col-1 border-r">
                                 {doc.quantity}
                             </div>
                             <div className="col-1 border-r">
-                                <input className="remove-b" type={'number'} onChange={(e) => applyTax(e.target.value, doc, index)}></input>
+                                {doc.gst}
                             </div>
                             <div className="col-1 border-r">
-                            {round(doc.tax)}
+                                {round(doc.gstValue)}
                             </div>
                             <div className="col-2">
                                 {Number(doc.price) * Number(doc.quantity)}
@@ -132,6 +129,30 @@ function Invoice() {
                     )
                 })
             }
+            <div className="row unset-p-m invoice-item-h border-b">
+                <div className="col-7"></div>
+                <div className="col-3">ICST</div>
+                <div className="col-2">0</div>
+            </div>
+            <div className="row unset-p-m invoice-item-h border-b">
+                <div className="col-7"></div>
+                <div className="col-3">CGST</div>
+                <div className="col-2">{round(sales.gst / 2)}</div>
+            </div>
+            <div className="row unset-p-m invoice-item-h border-b">
+                <div className="col-7"></div>
+                <div className="col-3">SGST</div>
+                <div className="col-2">{round(sales.gst / 2)}</div>
+            </div>
+            <div className="row unset-p-m invoice-item-h border-b">
+                <div className="col-7"></div>
+                <div className="col-3">GST</div>
+                <div className="col-2">{sales.gst}</div>
+            </div>
+            <div className="row unset-p-m invoice-item-h border-b">
+            </div>
+            <div className="row unset-p-m invoice-item-h border-b">
+            </div>
             <div className="row unset-p-m invoice-item-h border-b">
                 <div className="col-7"></div>
                 <div className="col-3">Total</div>

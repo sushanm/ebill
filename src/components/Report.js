@@ -201,6 +201,11 @@ function Report() {
     history('/invoice', { state: details });
   }
 
+  const generateInvoicePrint = (details, index) => {
+    details.lineItem = index + 1
+    history('/printinvoice', { state: details });
+  }
+
   const seGst = (value, id) => {
     LocalStorageServices.addTaxInformation(id, value);
     let tempGstData=[...productsWithoutGST];
@@ -237,7 +242,7 @@ function Report() {
             <div className="col-1">
               SL No.
             </div>
-            <div className="col-9">
+            <div className="col-8">
               <div className="row">
                 <div className="col-6">
                   Name
@@ -254,16 +259,19 @@ function Report() {
             <div className="col-2">
               Total Price
             </div>
+            <div className="col-1">
+              Action
+            </div>
           </div>
           {
             transactioByDate &&
             transactioByDate.map((doc, index) => {
               return (
-                <div className='row product-name-row' key={doc.id} onClick={() => generateInvoice(doc, index)} >
+                <div className='row product-name-row' key={doc.id}  >
                   <div className="col-1" >
                     {index + 1}
                   </div>
-                  <div className="col-9">
+                  <div className="col-8">
                     {
                       doc.items.map((b, i) => {
                         return (
@@ -285,6 +293,16 @@ function Report() {
                   <div className="col-2">
                     {Number(doc.totalPrice) - Number(doc.discount)}
                   </div>
+                  <div className="col-1">
+                   <div className="row">
+                    <div className="col unset-p-m">
+                    <img onClick={() => generateInvoice(doc, index)} className='print-icon' alt='edit' src='../../assets/digital.png' />
+                    </div>
+                    <div className="col unset-p-m">
+                    <img onClick={() => generateInvoicePrint(doc, index)} className='print-icon' alt='edit' src='../../assets/print.png' />
+                    </div>
+                   </div>
+                  </div>
                 </div>
               )
             })
@@ -293,7 +311,7 @@ function Report() {
             <div className="col-1">
 
             </div>
-            <div className="col-9">
+            <div className="col-8">
               <div className="row">
                 <div className="col-6">
 
@@ -304,11 +322,15 @@ function Report() {
                 <div className="col-3">
                   Total
                 </div>
+                
               </div>
             </div>
 
             <div className="col-2">
               {transactioByDateTotalPrice}
+            </div>
+            <div className="col-1">
+          
             </div>
           </div>
 

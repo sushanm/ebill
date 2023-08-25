@@ -85,17 +85,53 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         return formattedToday;
     }
 
+    function round(value) {
+        return Number(Math.round((value + Number.EPSILON) * 100) / 100);
+    }
+
     const addTransation = async () => {
         try {
             if (saledata.length > 0) {
                 const cloneSaleData = [...saledata];
+                if (discount == 0) {
+                    cloneSaleData.forEach(item => {
+                        let tax = Number(item.price) - (Number(item.price) * (100 / (100 + Number(item.gst))))
+                        item.priceperunit = round(Number(item.price) - Number(tax));
+                        item.gstValue = round(tax * Number(item.quantity));
+                        item.discounted = false
+                    });
+                } else {
+                    let discountedItemID = "";
+                    let sortedCloneSaleData = cloneSaleData.sort((a, b) => Number(b.gst) - Number(a.gst))
+                    if (sortedCloneSaleData.length > 0) {
+
+                        for (let i = 0; i < sortedCloneSaleData.length; i++) {
+                            if (Number(sortedCloneSaleData[i].price) > discount) {
+                                discountedItemID = sortedCloneSaleData[i].id;
+                                break;
+                            }
+                        }
+                    }
+                    let index = cloneSaleData.findIndex(item => item.id === discountedItemID);
+                    cloneSaleData[index].price = Number(cloneSaleData[index].price) - Number(discount)
+                    cloneSaleData[index].discounted = true;
+
+                    cloneSaleData.forEach(item => {
+                        let tax = Number(item.price) - (Number(item.price) * (100 / (100 + Number(item.gst))))
+                        item.priceperunit = round(Number(item.price) - Number(tax));
+                        item.gstValue = round(tax * Number(item.quantity));
+                        if(!item.discounted){
+                            item.discounted = false
+                        }
+                    });
+                }
                 const newTransaction = {
                     items: cloneSaleData,
                     saleDate: getDate(),
                     totalPrice: Number(totalPrice),
-                    discount: Number(discount)
+                    discount: Number(discount),
                 };
-               // await TransactionDataService.addNewTransation(newTransaction);
+                console.log(newTransaction)
                 await TransactionsDataService.addNewTransation(newTransaction);
                 let tempArray = new Array();
 
@@ -220,7 +256,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                         saledata &&
                         <button disabled={isDisabled} onClick={handleShow} className='btn btn-primary'> Add Sale </button>
                     }
-{/* <button onClick={handleMigrate}>Migrate</button> */}
+                    {/* <button onClick={handleMigrate}>Migrate</button> */}
                 </div>
             </div><div className="row">
                 <Modal show={show} onHide={handleClose} centered size="lg">
