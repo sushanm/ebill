@@ -147,7 +147,7 @@ function Invoice() {
             <div className="row unset-p-m invoice-item-h border-b">
                 <div className="col-7"></div>
                 <div className="col-3">GST</div>
-                <div className="col-2">{sales.gst}</div>
+                <div className="col-2">{round(sales.gst)}</div>
             </div>
             <div className="row unset-p-m invoice-item-h border-b">
             </div>
