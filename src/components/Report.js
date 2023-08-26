@@ -393,7 +393,7 @@ function Report() {
               transactioByMonth &&
               transactioByMonth.map((b, i) => {
                 return (
-                  <div className="row">
+                  <div className="row border-b">
                     <div className="col-2">{i + 1}</div>
                     <div className="col">{b.id}</div>
                     <div className="col">{b.totalAmount}</div>
