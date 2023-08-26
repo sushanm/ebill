@@ -72,22 +72,32 @@ function Report() {
         let gst5 = 0;
         let gst12 = 0;
         let gst18 = 0;
+        let gst5Value = 0;
+        let gst12Value = 0;
+        let gst18Value = 0;
         monthTrans.transactions.forEach(trans => {
           trans.items.forEach(item => {
             if (item.gst == 5) {
               gst5 = Number(gst5) + Number(item.gstValue);
+              gst5Value = Number(gst5Value) + Number(item.price);
             }
             if (item.gst == 12) {
               gst12 = Number(gst12) + Number(item.gstValue);
+              gst12Value = Number(gst12Value) + Number(item.price);
             }
             if (item.gst == 18) {
               gst18 = Number(gst18) + Number(item.gstValue);
+              gst18Value = Number(gst18Value) + Number(item.price);
             }
           });
         });
         monthTrans.gst5 = gst5;
         monthTrans.gst12 = gst12;
         monthTrans.gst18 = gst18;
+
+        monthTrans.gst5Value = gst5Value;
+        monthTrans.gst12Value = gst12Value;
+        monthTrans.gst18Value = gst18Value;
       });
       console.log(tempData)
       SetTransactionByMonth(data)
@@ -387,9 +397,30 @@ function Report() {
                     <div className="col-2">{i + 1}</div>
                     <div className="col">{b.id}</div>
                     <div className="col">{b.totalAmount}</div>
-                    <div className="col">{b.gst5}</div>
-                    <div className="col">{b.gst12}</div>
-                    <div className="col">{b.gst18}</div>
+                    <div className="col">
+                      <div className="row border-b">
+                        {b.gst5}
+                      </div>
+                      <div className="row">
+                        {b.gst5Value}
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="row border-b">
+                        {b.gst12}
+                      </div>
+                      <div className="row">
+                        {b.gst12Value}
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="row border-b">
+                        {b.gst18}
+                      </div>
+                      <div className="row">
+                        {b.gst18Value}
+                      </div>
+                    </div>
                   </div>
                 )
               })
