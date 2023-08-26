@@ -17,6 +17,7 @@ function Report() {
   const [totalQuantity, SetTotalQuantity] = useState();
   const [totalPrice, SetTotalPrice] = useState();
   const [transactioByMonth, SetTransactionByMonth] = useState([]);
+  const [transactionByMonthForGST, SetTransactionByMonthForGST] = useState([]);
   const [transactioByDate, SetTransactionByDate] = useState([]);
   const [transactionsByItems, SetTransactionsByItems] = useState([]);
   const [transactioByDateTotalPrice, SetTransactionByDateTotalPrice] = useState();
@@ -39,8 +40,9 @@ function Report() {
       })
       SetTotalPrice(tempValue);
       setProducts(allProducts);
+
       SetproductsCopy(allProducts);
-      setProductsWithoutGST(allProducts.filter(item => item.gst == null || item.gst== -1));
+      setProductsWithoutGST(allProducts.filter(item => item.gst == null || item.gst == -1));
       SetTotalQuantity(tempQantity);
 
       let temp = allProducts;
@@ -64,7 +66,32 @@ function Report() {
 
   const getAllTransactions = async () => {
     await TransactionsDataService.getAllTransactions().then((data) => {
+      let tempData = [...data];
+
+      tempData.forEach(monthTrans => {
+        let gst5 = 0;
+        let gst12 = 0;
+        let gst18 = 0;
+        monthTrans.transactions.forEach(trans => {
+          trans.items.forEach(item => {
+            if (item.gst == 5) {
+              gst5 = Number(gst5) + Number(item.gstValue);
+            }
+            if (item.gst == 12) {
+              gst12 = Number(gst12) + Number(item.gstValue);
+            }
+            if (item.gst == 18) {
+              gst18 = Number(gst18) + Number(item.gstValue);
+            }
+          });
+        });
+        monthTrans.gst5 = gst5;
+        monthTrans.gst12 = gst12;
+        monthTrans.gst18 = gst18;
+      });
+      console.log(tempData)
       SetTransactionByMonth(data)
+      SetTransactionByMonthForGST(data)
       let allData = [];
       if (data) {
         data.forEach(element => {
@@ -160,9 +187,15 @@ function Report() {
   }, [])
 
   useEffect(() => {
+    if (transactionByMonthForGST.length > 0) {
+
+    }
+  }, [transactionByMonthForGST])
+
+  useEffect(() => {
     setTimeout(() => {
       transactionsByDate((new Date()).toISOString().substring(0, 10))
-    }, "1000");
+    }, "100");
   }, [transactioByMonth])
 
   const filterByDate = (val) => {
@@ -208,14 +241,14 @@ function Report() {
 
   const seGst = (value, id) => {
     LocalStorageServices.addTaxInformation(id, value);
-    let tempGstData=[...productsWithoutGST];
-    const index=tempGstData.findIndex(item=>item.id===id)
-    tempGstData[index].gst=value;
+    let tempGstData = [...productsWithoutGST];
+    const index = tempGstData.findIndex(item => item.id === id)
+    tempGstData[index].gst = value;
     setProductsWithoutGST(tempGstData);
 
-    let tempGstData1=[...productsCopy];
-    const index1=tempGstData1.findIndex(item=>item.id===id)
-    tempGstData1[index1].gst=value;
+    let tempGstData1 = [...productsCopy];
+    const index1 = tempGstData1.findIndex(item => item.id === id)
+    tempGstData1[index1].gst = value;
     SetproductsCopy(tempGstData1);
   }
 
@@ -294,14 +327,14 @@ function Report() {
                     {Number(doc.totalPrice) - Number(doc.discount)}
                   </div>
                   <div className="col-1">
-                   <div className="row">
-                    <div className="col unset-p-m">
-                    <img onClick={() => generateInvoice(doc, index)} className='print-icon' alt='edit' src='../../assets/digital.png' />
+                    <div className="row">
+                      <div className="col unset-p-m">
+                        <img onClick={() => generateInvoice(doc, index)} className='print-icon' alt='edit' src='../../assets/digital.png' />
+                      </div>
+                      <div className="col unset-p-m">
+                        <img onClick={() => generateInvoicePrint(doc, index)} className='print-icon' alt='edit' src='../../assets/print.png' />
+                      </div>
                     </div>
-                    <div className="col unset-p-m">
-                    <img onClick={() => generateInvoicePrint(doc, index)} className='print-icon' alt='edit' src='../../assets/print.png' />
-                    </div>
-                   </div>
                   </div>
                 </div>
               )
@@ -322,7 +355,7 @@ function Report() {
                 <div className="col-3">
                   Total
                 </div>
-                
+
               </div>
             </div>
 
@@ -330,7 +363,7 @@ function Report() {
               {transactioByDateTotalPrice}
             </div>
             <div className="col-1">
-          
+
             </div>
           </div>
 
@@ -342,6 +375,9 @@ function Report() {
               <div className="col-2">SL. No</div>
               <div className="col">YYY-MM</div>
               <div className="col">Total Value</div>
+              <div className="col">GST 5%</div>
+              <div className="col">GST 12%</div>
+              <div className="col">GST 18%</div>
             </div>
             {
               transactioByMonth &&
@@ -351,6 +387,9 @@ function Report() {
                     <div className="col-2">{i + 1}</div>
                     <div className="col">{b.id}</div>
                     <div className="col">{b.totalAmount}</div>
+                    <div className="col">{b.gst5}</div>
+                    <div className="col">{b.gst12}</div>
+                    <div className="col">{b.gst18}</div>
                   </div>
                 )
               })
@@ -541,11 +580,11 @@ function Report() {
                       </div>
                       <div className="col-2">
                         <select className='report-ddl' value={b.gst} onChange={(e) => { seGst(e.target.value, b.id) }}>
-                          <option value="-1" selected={b.gst===-1 || b.gst==null}>--Select--</option>
-                          <option value="0" selected={b.gst===0}>0</option>
-                          <option value="5" selected={b.gst===5}>5</option>
-                          <option value="12" selected={b.gst===12}>12</option>
-                          <option value="18" selected={b.gst===18}>18</option>
+                          <option value="-1" selected={b.gst === -1 || b.gst == null}>--Select--</option>
+                          <option value="0" selected={b.gst === 0}>0</option>
+                          <option value="5" selected={b.gst === 5}>5</option>
+                          <option value="12" selected={b.gst === 12}>12</option>
+                          <option value="18" selected={b.gst === 18}>18</option>
                         </select>
                       </div>
                     </div>

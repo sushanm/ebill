@@ -167,10 +167,6 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         }
     }
 
-    // const handleMigrate=async ()=>{
-    //     await TransactionsDataService.handleMigrate();
-    // }
-
     const AddOrEditBatch = async (productId, batch) => {
 
         const docSnap = await StockDataService.getProduct(productId);
