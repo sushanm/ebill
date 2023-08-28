@@ -293,13 +293,10 @@ function Report() {
     let id = saleDateArray[2] + "-" + saleDateArray[1];
     TransactionsDataService.editTransactionRemove(id, trans, item)
     SetTransactionByDate(temp)
-    SetReload(true)
-    //window.location.reload();
 
     setTimeout(() => {
       SetShoLoading(false)
-      window.location.reload();
-    }, "3000");
+    }, "5000");
   }
 
   function round(value) {
