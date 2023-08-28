@@ -16,7 +16,7 @@ root.render(
   <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route index path="/" element={<Home />} />
           <Route path="invoice" element={<Invoice />} />
           <Route path="printinvoice" element={<PrintInvoice />} />
         </Route>

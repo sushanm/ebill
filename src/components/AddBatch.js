@@ -3,6 +3,7 @@ import StockDataService from "../services/stock.services"
 import LocalStorageServices from '../services/localStorage.services';
 import { useEffect, useState } from 'react';
 import AddSale from './AddSale';
+import { useLocation } from 'react-router-dom';
 
 function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName, callbackaftersalesFromBatch, usedFor, gst }) {
     const [batch, SetBatch] = useState([]);
@@ -19,6 +20,14 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     const [productNameEdit, SetProductNameEdit] = useState(false);
     const [editMode, SetEditMode] = useState(false);
 
+
+    const location = useLocation();
+    useEffect(() => {
+        if (location.state) {
+           // console.log(location.state.items)
+            //SetSales(location.state.items)
+        }
+    }, [location.state])
 
     const getProduct = async (id) => {
         try {
@@ -136,6 +145,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
             quantity: 1,
             batchId: batch.id
         }
+        console.log([...sales, saleData])
         SetSales([...sales, saleData])
 
     }

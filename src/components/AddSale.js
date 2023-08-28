@@ -89,8 +89,17 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         return Number(Math.round((value + Number.EPSILON) * 100) / 100);
     }
 
+    function guid() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+          (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+      }
+
+      const [isDisabledSaveSales, SetisDisabledSaveSales]=useState(false);
+
     const addTransation = async () => {
         try {
+            SetisDisabledSaveSales(true);
             if (saledata.length > 0) {
                 const cloneSaleData = [...saledata];
                 if (discount == 0) {
@@ -126,12 +135,13 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                     });
                 }
                 const newTransaction = {
+                    id: guid(),
                     items: cloneSaleData,
                     saleDate: getDate(),
                     totalPrice: Number(totalPrice),
                     discount: Number(discount),
                 };
-                console.log(newTransaction)
+
                 await TransactionsDataService.addNewTransation(newTransaction);
                 let tempArray = new Array();
 
@@ -162,7 +172,13 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 SetDiscount(0);
                 handleClose();
             }
+            setTimeout(() => {
+                SetisDisabledSaveSales(false);
+              }, "1000");
         } catch (error) {
+            setTimeout(() => {
+                SetisDisabledSaveSales(false);
+              }, "1000");
             console.log(error.message);
         }
     }
@@ -308,7 +324,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                         <Button variant="secondary" onClick={handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" onClick={() => addTransation()}>
+                        <Button variant="primary" disabled={isDisabledSaveSales} onClick={() => addTransation()}>
                             Save Sales
                         </Button>
                     </Modal.Footer>

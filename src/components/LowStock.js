@@ -69,7 +69,6 @@ function LowStock() {
                     product.addedToPO = false;
                 }
             });
-            console.log(tempProducts)
             SetProductsCopy(tempProducts)
         }
     }

@@ -15,7 +15,7 @@ import purchaseorderServices from "./services/purchaseorder.services";
 import PurchaseOrder from "./components/PurchaseOrder";
 import transactionsServices from "./services/transactions.services";
 
-function App() {
+function App(changeTab) {
 
   const [diplay, SetDisplay] = useState(1);
   const [showLoading, SetShowLoading] = useState(false);
@@ -41,6 +41,10 @@ function App() {
     purchaseorderServices.forceRefresh();
     transactionsServices.forceRefresh();
   }, [])
+
+  useEffect(() => {
+    SetDisplay(0)
+  }, [changeTab])
 
   const refresh = () => {
     SetShowLoading(true)

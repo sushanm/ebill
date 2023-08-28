@@ -26,9 +26,9 @@ function Report() {
   const [byMonth, SetByMonth] = useState(3)
   const [byQuantity, SetByQantity] = useState(3)
 
-  const getAllProducts = async () => {
+  const getAllProducts = async (force) => {
     let allProducts = LocalStorageServices.getAllProducts();
-    if (allProducts) {
+    if (allProducts || force) {
       let tempQantity = 0;
       let tempValue = 0;
       SetTotalNumberOfProducts(allProducts.length)
@@ -66,62 +66,62 @@ function Report() {
 
   const getAllTransactions = async () => {
     await TransactionsDataService.getAllTransactions().then((data) => {
-      let tempData = [...data];
+      if (data) {
+        let tempData = [...data];
+        tempData.forEach(monthTrans => {
+          let gst5 = 0;
+          let gst12 = 0;
+          let gst18 = 0;
+          let gst5Value = 0;
+          let gst12Value = 0;
+          let gst18Value = 0;
+          monthTrans.transactions.forEach(trans => {
+            trans.items.forEach(item => {
+              if (item.gst == 5) {
+                gst5 = Number(gst5) + Number(item.gstValue);
+                gst5Value = Number(gst5Value) + Number(item.price);
+              }
+              if (item.gst == 12) {
+                gst12 = Number(gst12) + Number(item.gstValue);
+                gst12Value = Number(gst12Value) + Number(item.price);
+              }
+              if (item.gst == 18) {
+                gst18 = Number(gst18) + Number(item.gstValue);
+                gst18Value = Number(gst18Value) + Number(item.price);
+              }
+            });
+          });
+          monthTrans.gst5 = gst5;
+          monthTrans.gst12 = gst12;
+          monthTrans.gst18 = gst18;
 
-      tempData.forEach(monthTrans => {
-        let gst5 = 0;
-        let gst12 = 0;
-        let gst18 = 0;
-        let gst5Value = 0;
-        let gst12Value = 0;
-        let gst18Value = 0;
-        monthTrans.transactions.forEach(trans => {
-          trans.items.forEach(item => {
-            if (item.gst == 5) {
-              gst5 = Number(gst5) + Number(item.gstValue);
-              gst5Value = Number(gst5Value) + Number(item.price);
-            }
-            if (item.gst == 12) {
-              gst12 = Number(gst12) + Number(item.gstValue);
-              gst12Value = Number(gst12Value) + Number(item.price);
-            }
-            if (item.gst == 18) {
-              gst18 = Number(gst18) + Number(item.gstValue);
-              gst18Value = Number(gst18Value) + Number(item.price);
+          monthTrans.gst5Value = gst5Value;
+          monthTrans.gst12Value = gst12Value;
+          monthTrans.gst18Value = gst18Value;
+        });
+        SetTransactionByMonth(data)
+        SetTransactionByMonthForGST(data)
+        let allData = [];
+        if (data) {
+          data.forEach(element => {
+            if (element.transactions) {
+              element.transactions.forEach(trans => {
+                let saleDate = trans.saleDate;
+                let monthDiff = monthDifference(saleDate)
+                trans.items.forEach(items => {
+                  let newObj = {
+                    ...items,
+                    saleDate: saleDate,
+                    monthDiff: monthDiff
+                  }
+                  allData.push(newObj)
+                });
+              });
             }
           });
-        });
-        monthTrans.gst5 = gst5;
-        monthTrans.gst12 = gst12;
-        monthTrans.gst18 = gst18;
-
-        monthTrans.gst5Value = gst5Value;
-        monthTrans.gst12Value = gst12Value;
-        monthTrans.gst18Value = gst18Value;
-      });
-      console.log(tempData)
-      SetTransactionByMonth(data)
-      SetTransactionByMonthForGST(data)
-      let allData = [];
-      if (data) {
-        data.forEach(element => {
-          if (element.transactions) {
-            element.transactions.forEach(trans => {
-              let saleDate = trans.saleDate;
-              let monthDiff = monthDifference(saleDate)
-              trans.items.forEach(items => {
-                let newObj = {
-                  ...items,
-                  saleDate: saleDate,
-                  monthDiff: monthDiff
-                }
-                allData.push(newObj)
-              });
-            });
-          }
-        });
+        }
+        SetTransactionsByItems(allData);
       }
-      SetTransactionsByItems(allData);
     })
   }
 
@@ -191,10 +191,16 @@ function Report() {
     }
   }
 
+  const [reload, SetReload] = useState(false);
   useEffect(() => {
     getAllProducts();
     getAllTransactions();
   }, [])
+
+  useEffect(() => {
+    getAllProducts();
+    getAllTransactions();
+  }, [reload])
 
   useEffect(() => {
     if (transactionByMonthForGST.length > 0) {
@@ -273,317 +279,320 @@ function Report() {
 
   }
 
+  const editSales = (transaction, index) => {
+    let temp = [...transactioByDate];
+    temp[index].editMode = true;
+    SetTransactionByDate(temp)
+  }
+  const [showLoading, SetShoLoading] = useState(false);
+  const deleteTransaction = (trans, item, index) => {
+    SetShoLoading(true)
+    let temp = [...transactioByDate];
+    temp[index].editMode = false;
+    let saleDateArray = trans.saleDate.split('-');
+    let id = saleDateArray[2] + "-" + saleDateArray[1];
+    TransactionsDataService.editTransactionRemove(id, trans, item)
+    SetTransactionByDate(temp)
+    SetReload(true)
+    //window.location.reload();
+
+    setTimeout(() => {
+      SetShoLoading(false)
+      window.location.reload();
+    }, "3000");
+  }
+
+  function round(value) {
+    return Number(Math.round((value + Number.EPSILON) * 100) / 100);
+  }
+
   return (
-    <div className="div">
-      <div className="row">
-        <div className="col col-report row-border">
-          <div className="row row-report ">
-            <div className="col"><h4 className='report-title'>Transactions</h4></div>
-            <div className="col"><input type={'date'} value={transactionFilterDate} onChange={(e) => filterByDate(e.target.value)}></input></div>
-          </div>
-          <div className="row row-h">
-            <div className="col-1">
-              SL No.
+    <div>
+      {
+        showLoading &&
+        <div className="row row-loader">
+          <div className="loader"></div>
+        </div>
+      }
+
+      <div className="div">
+
+        <div className="row">
+          <div className="col col-report row-border">
+            <div className="row row-report ">
+              <div className="col"><h4 className='report-title'>Transactions</h4></div>
+              <div className="col"><input type={'date'} value={transactionFilterDate} onChange={(e) => filterByDate(e.target.value)}></input></div>
             </div>
-            <div className="col-8">
-              <div className="row">
-                <div className="col-6">
-                  Name
-                </div>
-                <div className="col-3">
-                  Price
-                </div>
-                <div className="col-3">
-                  Quantity
-                </div>
+            <div className="row row-h">
+              <div className="col-1">
+                SL No.
               </div>
-            </div>
-
-            <div className="col-2">
-              Total Price
-            </div>
-            <div className="col-1">
-              Action
-            </div>
-          </div>
-          {
-            transactioByDate &&
-            transactioByDate.map((doc, index) => {
-              return (
-                <div className='row product-name-row' key={doc.id}  >
-                  <div className="col-1" >
-                    {index + 1}
-                  </div>
-                  <div className="col-8">
-                    {
-                      doc.items.map((b, i) => {
-                        return (
-                          <div className="row">
-                            <div className="col-6">
-                              {b.name}
-                            </div>
-                            <div className="col-3">
-                              {b.price}
-                            </div>
-                            <div className="col-3">
-                              {b.quantity}
-                            </div>
-                          </div>
-                        )
-                      })
-                    }
-                  </div>
-                  <div className="col-2">
-                    {Number(doc.totalPrice) - Number(doc.discount)}
-                  </div>
-                  <div className="col-1">
-                    <div className="row">
-                      <div className="col unset-p-m">
-                        <img onClick={() => generateInvoice(doc, index)} className='print-icon' alt='edit' src='../../assets/digital.png' />
-                      </div>
-                      <div className="col unset-p-m">
-                        <img onClick={() => generateInvoicePrint(doc, index)} className='print-icon' alt='edit' src='../../assets/print.png' />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )
-            })
-          }
-          <div className="row row-h">
-            <div className="col-1">
-
-            </div>
-            <div className="col-8">
-              <div className="row">
-                <div className="col-6">
-
-                </div>
-                <div className="col-3">
-
-                </div>
-                <div className="col-3">
-                  Total
-                </div>
-
-              </div>
-            </div>
-
-            <div className="col-2">
-              {transactioByDateTotalPrice}
-            </div>
-            <div className="col-1">
-
-            </div>
-          </div>
-
-        </div>
-        <div className="col col-report">
-          <div className="row row-report">
-            <h4 className='report-title'>Transaction By Month</h4>
-            <div className="row row-h">
-              <div className="col-2">SL. No</div>
-              <div className="col">YYY-MM</div>
-              <div className="col">Total Value</div>
-              <div className="col">GST 5%</div>
-              <div className="col">GST 12%</div>
-              <div className="col">GST 18%</div>
-            </div>
-            {
-              transactioByMonth &&
-              transactioByMonth.map((b, i) => {
-                return (
-                  <div className="row border-b">
-                    <div className="col-2">{i + 1}</div>
-                    <div className="col">{b.id}</div>
-                    <div className="col">{b.totalAmount}</div>
-                    <div className="col">
-                      <div className="row border-b">
-                        {b.gst5}
-                      </div>
-                      <div className="row">
-                        {b.gst5Value}
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className="row border-b">
-                        {b.gst12}
-                      </div>
-                      <div className="row">
-                        {b.gst12Value}
-                      </div>
-                    </div>
-                    <div className="col">
-                      <div className="row border-b">
-                        {b.gst18}
-                      </div>
-                      <div className="row">
-                        {b.gst18Value}
-                      </div>
-                    </div>
-                  </div>
-                )
-              })
-            }
-
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col col-report">
-          <div className="row row-report">
-            <h4 className='report-title'>Total Products and value</h4>
-            <div className="row row-h">
-              <div className="col">Total Products</div>
-              <div className="col">Total Quantity</div>
-              <div className="col">Total Value</div>
-            </div>
-            <div className="row">
-              <div className="col">{totalNumberOfProducts}</div>
-              <div className="col">{totalQuantity}</div>
-              <div className="col">{totalPrice}</div>
-            </div>
-          </div>
-        </div>
-        <div className="col">
-          <div className="row row-report">
-            <h4 className='report-title'>Duplicate Products Added</h4>
-            <div className="row row-h">
-              <div className="col-6">Name</div>
-              <div className="col-5">
-                <div className="row">Batch Details</div>
+              <div className="col-8">
                 <div className="row">
-                  <div className="col-4">
+                  <div className="col-6">
+                    Name
+                  </div>
+                  <div className="col-3">
                     Price
                   </div>
-                  <div className="col-4">
+                  <div className="col-2">
                     Quantity
-                  </div>
-                  <div className="col-4">
-                    Expiry
                   </div>
                 </div>
               </div>
-              <div className="col-1">Action</div>
+
+              <div className="col-2">
+                Total Price
+              </div>
+              <div className="col-1">
+                Action
+              </div>
             </div>
-
-
             {
-              duplicateProducts &&
-              duplicateProducts.map((doc, index) => {
+              transactioByDate &&
+              transactioByDate.map((doc, index) => {
                 return (
-                  doc.duplicate &&
-                  <div className='row product-name-row' key={doc.id} >
-                    <div className="col-6" >
-                      {doc.name}
+                  <div className='row product-name-row' key={doc.id}  >
+                    <div className="col-1" >
+                      {index + 1}
                     </div>
-                    <div className="col-5">
+                    <div className="col-8">
                       {
-                        doc.batch.map((b, i) => {
+                        doc.items.map((b, i) => {
                           return (
-                            <div className='row product-name-row' key={i} style={{ backgroundColor: b.expiry === true ? b.colorCode : 'white' }}  >
-                              <div className="col-4">
+
+                            <div className="row">
+                              <div className="col-6">
+                                {b.name}
+                              </div>
+                              <div className="col-3">
                                 {b.price}
                               </div>
-                              <div className="col-4">  {b.quantity}</div>
-                              <div className="col-4">  {b.expiryDate}</div>
+                              <div className="col-2">
+                                {b.quantity}
+                              </div>
+                              {
+                                doc.editMode &&
+                                <div className="col-1">
+                                  <button onClick={() => deleteTransaction(doc, b, index)}>X</button>
+                                </div>
+                              }
                             </div>
                           )
                         })
                       }
                     </div>
+                    <div className="col-2">
+                      {Number(doc.totalPrice) - Number(doc.discount)}
+                    </div>
                     <div className="col-1">
-                      <button onClick={() => removeHandler(doc.id)}>Remove</button>
+                      <div className="row">
+                        <div className="col unset-p-m">
+                          <img onClick={() => generateInvoice(doc, index)} className='print-icon' alt='edit' src='../../assets/digital.png' />
+                        </div>
+                        <div className="col unset-p-m">
+                          <img onClick={() => generateInvoicePrint(doc, index)} className='print-icon' alt='edit' src='../../assets/print.png' />
+                        </div>
+                        <div className="col unset-p-m">
+                          <img onClick={() => editSales(doc, index)} className='print-icon' alt='edit' src='../../assets/edit.png' />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )
               })
             }
-
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col col-report row-border">
-          <div className="row row-report">
-            <div className="row ">
-              <div className="col-4"><h4 className='report-title'>Transactions</h4></div>
-              <div className="col">
-                <strong>Months</strong>
-                <select className='report-ddl' onChange={(e) => { SetByMonth(e.target.value); filterItemsByMonthAndQuantity(e.target.value, byQuantity) }}>
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3" selected>3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                </select>
-              </div>
-              <div className="col">
-                <strong>Quantity</strong>
-                <select className='report-ddl' onChange={(e) => { SetByQantity(e.target.value); filterItemsByMonthAndQuantity(byMonth, e.target.value) }}>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3" selected>3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                </select>
-              </div>
-            </div>
             <div className="row row-h">
-              <div className="col-2">
-                SL No.
+              <div className="col-1">
+
               </div>
               <div className="col-8">
-                Name
+                <div className="row">
+                  <div className="col-6">
+
+                  </div>
+                  <div className="col-3">
+
+                  </div>
+                  <div className="col-3">
+                    Total
+                  </div>
+
+                </div>
               </div>
+
               <div className="col-2">
-                Total Qantity
+                {transactioByDateTotalPrice}
+              </div>
+              <div className="col-1">
+
               </div>
             </div>
 
-            {
-              transactionsByItemsDisplay &&
-              transactionsByItemsDisplay.map((b, i) => {
-                return (
-                  <div className="row">
-                    <div className="col-2">
-                      {i + 1}
+          </div>
+          <div className="col col-report">
+            <div className="row row-report">
+              <h4 className='report-title'>Transaction By Month</h4>
+              <div className="row row-h">
+                <div className="col-2">SL. No</div>
+                <div className="col">YYY-MM</div>
+                <div className="col">Total Value</div>
+                <div className="col">GST 5%</div>
+                <div className="col">GST 12%</div>
+                <div className="col">GST 18%</div>
+              </div>
+              {
+                transactioByMonth &&
+                transactioByMonth.map((b, i) => {
+                  return (
+                    <div className="row border-b">
+                      <div className="col-2">{i + 1}</div>
+                      <div className="col">{b.id}</div>
+                      <div className="col">{b.totalAmount}</div>
+                      <div className="col">
+                        <div className="row border-b">
+                          {round(b.gst5)}
+                        </div>
+                        <div className="row">
+                          {round(b.gst5Value)}
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="row border-b">
+                          {round(b.gst12)}
+                        </div>
+                        <div className="row">
+                          {round(b.gst12Value)}
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="row border-b">
+                          {round(b.gst18)}
+                        </div>
+                        <div className="row">
+                          {round(b.gst18Value)}
+                        </div>
+                      </div>
                     </div>
-                    <div className="col-8">
-                      {b.name}
-                    </div>
-                    <div className="col-2">
-                      {b.totalQunatity}
-                    </div>
-                  </div>
-                )
-              })
-            }
+                  )
+                })
+              }
 
+            </div>
           </div>
         </div>
-        <div className="col col-report row-border">
+        <div className="row">
+          <div className="col col-report">
+            <div className="row row-report">
+              <h4 className='report-title'>Total Products and value</h4>
+              <div className="row row-h">
+                <div className="col">Total Products</div>
+                <div className="col">Total Quantity</div>
+                <div className="col">Total Value</div>
+              </div>
+              <div className="row">
+                <div className="col">{totalNumberOfProducts}</div>
+                <div className="col">{totalQuantity}</div>
+                <div className="col">{totalPrice}</div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="row row-report">
+              <h4 className='report-title'>Duplicate Products Added</h4>
+              <div className="row row-h">
+                <div className="col-6">Name</div>
+                <div className="col-5">
+                  <div className="row">Batch Details</div>
+                  <div className="row">
+                    <div className="col-4">
+                      Price
+                    </div>
+                    <div className="col-4">
+                      Quantity
+                    </div>
+                    <div className="col-4">
+                      Expiry
+                    </div>
+                  </div>
+                </div>
+                <div className="col-1">Action</div>
+              </div>
+
+
+              {
+                duplicateProducts &&
+                duplicateProducts.map((doc, index) => {
+                  return (
+                    doc.duplicate &&
+                    <div className='row product-name-row' key={doc.id} >
+                      <div className="col-6" >
+                        {doc.name}
+                      </div>
+                      <div className="col-5">
+                        {
+                          doc.batch.map((b, i) => {
+                            return (
+                              <div className='row product-name-row' key={i} style={{ backgroundColor: b.expiry === true ? b.colorCode : 'white' }}  >
+                                <div className="col-4">
+                                  {b.price}
+                                </div>
+                                <div className="col-4">  {b.quantity}</div>
+                                <div className="col-4">  {b.expiryDate}</div>
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
+                      <div className="col-1">
+                        <button onClick={() => removeHandler(doc.id)}>Remove</button>
+                      </div>
+                    </div>
+                  )
+                })
+              }
+
+            </div>
+          </div>
+        </div>
+        <div className="row">
           <div className="col col-report row-border">
             <div className="row row-report">
               <div className="row ">
-                <div className="col-4"><h4 className='report-title'>Tax updation</h4></div>
-                <div className="col-4">
-                  Show All
-                  <input type="checkbox" id="showAll" name="showAll" value={ShowAllTax} onClick={(e) => ShowAllTaxInfo(e.target.value)} />
+                <div className="col-4"><h4 className='report-title'>Transactions</h4></div>
+                <div className="col">
+                  <strong>Months</strong>
+                  <select className='report-ddl' onChange={(e) => { SetByMonth(e.target.value); filterItemsByMonthAndQuantity(e.target.value, byQuantity) }}>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                  </select>
+                </div>
+                <div className="col">
+                  <strong>Quantity</strong>
+                  <select className='report-ddl' onChange={(e) => { SetByQantity(e.target.value); filterItemsByMonthAndQuantity(byMonth, e.target.value) }}>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                  </select>
                 </div>
               </div>
               <div className="row row-h">
@@ -594,15 +603,15 @@ function Report() {
                   Name
                 </div>
                 <div className="col-2">
-                  Tax %
+                  Total Qantity
                 </div>
               </div>
 
               {
-                productsWithoutGST &&
-                productsWithoutGST.map((b, i) => {
+                transactionsByItemsDisplay &&
+                transactionsByItemsDisplay.map((b, i) => {
                   return (
-                    <div className="row border-b">
+                    <div className="row">
                       <div className="col-2">
                         {i + 1}
                       </div>
@@ -610,19 +619,63 @@ function Report() {
                         {b.name}
                       </div>
                       <div className="col-2">
-                        <select className='report-ddl' value={b.gst} onChange={(e) => { seGst(e.target.value, b.id) }}>
-                          <option value="-1" selected={b.gst === -1 || b.gst == null}>--Select--</option>
-                          <option value="0" selected={b.gst === 0}>0</option>
-                          <option value="5" selected={b.gst === 5}>5</option>
-                          <option value="12" selected={b.gst === 12}>12</option>
-                          <option value="18" selected={b.gst === 18}>18</option>
-                        </select>
+                        {b.totalQunatity}
                       </div>
                     </div>
                   )
                 })
               }
 
+            </div>
+          </div>
+          <div className="col col-report row-border">
+            <div className="col col-report row-border">
+              <div className="row row-report">
+                <div className="row ">
+                  <div className="col-4"><h4 className='report-title'>Tax updation</h4></div>
+                  <div className="col-4">
+                    Show All
+                    <input type="checkbox" id="showAll" name="showAll" value={ShowAllTax} onClick={(e) => ShowAllTaxInfo(e.target.value)} />
+                  </div>
+                </div>
+                <div className="row row-h">
+                  <div className="col-2">
+                    SL No.
+                  </div>
+                  <div className="col-8">
+                    Name
+                  </div>
+                  <div className="col-2">
+                    Tax %
+                  </div>
+                </div>
+
+                {
+                  productsWithoutGST &&
+                  productsWithoutGST.map((b, i) => {
+                    return (
+                      <div className="row border-b">
+                        <div className="col-2">
+                          {i + 1}
+                        </div>
+                        <div className="col-8">
+                          {b.name}
+                        </div>
+                        <div className="col-2">
+                          <select className='report-ddl' value={b.gst} onChange={(e) => { seGst(e.target.value, b.id) }}>
+                            <option value="-1" selected={b.gst === -1 || b.gst == null}>--Select--</option>
+                            <option value="0" selected={b.gst === 0}>0</option>
+                            <option value="5" selected={b.gst === 5}>5</option>
+                            <option value="12" selected={b.gst === 12}>12</option>
+                            <option value="18" selected={b.gst === 18}>18</option>
+                          </select>
+                        </div>
+                      </div>
+                    )
+                  })
+                }
+
+              </div>
             </div>
           </div>
         </div>

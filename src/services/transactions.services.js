@@ -33,12 +33,10 @@ class TransactionsDataService {
         let id = getYearAndMonth();
         const docSnap = await this.getTransactionById(id);
         if (docSnap.data()) {
-            console.log(newTransaction)
             let existingData = docSnap.data();
             existingData.transactions.push(newTransaction)
             existingData.totalAmount = Number(existingData.totalAmount) + (Number(newTransaction.totalPrice) - Number(newTransaction.discount))
             await this.updateTransactions(id, existingData).then((res) => {
-                console.log(res)
                 this.addNewTransactionToLocal(id, newTransaction)
             })
         } else {
@@ -111,6 +109,32 @@ class TransactionsDataService {
         const transactionDoc = doc(db, "transactions", id);
         return getDoc(transactionDoc);
     };
+
+    editTransactionRemove = async (id, trans, itemDetails) => {
+        const docSnap = await this.getTransactionById(id);
+        if (docSnap.data()) {
+            let existingData = docSnap.data();
+            let findIndexOfTrans = existingData.transactions.findIndex(item => item.id == trans.id);
+            existingData.transactions[findIndexOfTrans].totalPrice = Number(existingData.transactions[findIndexOfTrans].totalPrice) - Number(itemDetails.price)
+            existingData.totalAmount = Number(existingData.totalAmount) - Number(itemDetails.price)
+
+            console.log(existingData.transactions[findIndexOfTrans].items.length)
+            if (existingData.transactions[findIndexOfTrans].items.length == 1) {
+                existingData.transactions = existingData.transactions.filter(i => i.id != trans.id);
+            } else {
+                existingData.transactions[findIndexOfTrans].items = existingData.transactions[findIndexOfTrans].items.filter(item => item.id != itemDetails.id);
+            }
+
+            await this.updateTransactions(id, existingData).then((res) => {
+                this.updateTransactionToLocal(existingData)
+            })
+        }
+    }
+
+    updateTransactionToLocal = (data) => {
+        localStorage.setItem('drkotianTransdata', JSON.stringify(data));
+    }
+
     forceRefresh = () => {
         try {
             this.getAllTransactionsFromDB().then(data => {
