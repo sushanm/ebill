@@ -431,9 +431,10 @@ function Report() {
             <div className="row row-report">
               <h4 className='report-title'>Transaction By Month</h4>
               <div className="row row-h">
-                <div className="col-2">SL. No</div>
+                <div className="col">SL. No</div>
                 <div className="col">YYY-MM</div>
                 <div className="col">Total Value</div>
+                <div className="col">Trans No's</div>
                 <div className="col">GST 5%</div>
                 <div className="col">GST 12%</div>
                 <div className="col">GST 18%</div>
@@ -443,9 +444,10 @@ function Report() {
                 transactioByMonth.map((b, i) => {
                   return (
                     <div className="row border-b">
-                      <div className="col-2">{i + 1}</div>
+                      <div className="col">{i + 1}</div>
                       <div className="col">{b.id}</div>
                       <div className="col">{b.totalAmount}</div>
+                      <div className="col">{b.transactions.length}</div>
                       <div className="col">
                         <div className="row border-b">
                           {round(b.gst5)}

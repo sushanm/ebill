@@ -284,6 +284,8 @@ margin: unset !important;
 
 .invoice-row-start-p{
   font-size: 9px !important;
+  margin: 5px !important;
+  margin-top: 10px !important;
 }
 
 .col-fix{
@@ -292,4 +294,27 @@ margin: unset !important;
 }
 .print-h{
   font-weight: bold;
+}
+
+.col-fix-left{
+  padding-left: 15px !important;
+}
+
+.font-fix{
+  font-size: 8px !important;
+}
+
+.address-fix{
+  margin-right: 40px;
+}
+
+.remove-b-p{
+  border: unset !important;
+  width: 100%;
+  padding-top: 5px !important;
+
+}
+.note-fix{
+  margin-left: 5px !important;
+  margin-right: 30px !important;
 }

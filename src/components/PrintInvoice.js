@@ -1,5 +1,8 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import swal from 'sweetalert';
+
+
 function PrintInvoice() {
 
     const location = useLocation();
@@ -25,23 +28,39 @@ function PrintInvoice() {
         return Number(Math.round((value + Number.EPSILON) * 100) / 100);
     }
 
+    const [showPrint, SetShowPrint] = useState(true);
+    const [customerName, SetCustomrName]=useState('');
+    const handlePrint = () => {
+        if(customerName.length>0){
+           
+            SetShowPrint(false)
+            setTimeout(function () {
+                window.print()
+            }, 200)
+        }else{
+            swal("Provide customer name for the invoice");
+        }
+
+    }
+
+
     return (
 
         <div className="row-border invoice-row-start-p">
             <div className="row unset-p-m border-b">
-                <div className="col-10 col-fix invoice-t-p">
+                <div className="col-10 col-fix col-fix-left invoice-t-p">
                     <strong>KOTIAN AYURVEDA - Invoice</strong>
                 </div>
             </div>
             <div className="row unset-p-m border-b invoice-co">
-            <div className="col col-fix">
-            <strong>Kotian Ayurveda</strong>
-                <p>E-61/C, Ground Floor, 18th Cross Aravinda Nagara, Mysore 570023. Ph- 9008047017.  Email: help@drkotian.com. www.drkotian.com</p>
-                <strong> GSTIN: 29CXJPK8261M1ZN</strong>
-            </div>
+                <div className="col col-fix col-fix-left address-fix">
+                    <span>
+                        <strong>Kotian Ayurveda</strong> E-61/C, Ground Floor, 18th Cross Aravinda Nagara, Mysore 570023. Ph- 9008047017.  Email: help@drkotian.com. www.drkotian.com <strong> GSTIN: 29CXJPK8261M1ZN</strong>
+                    </span>
+                </div>
             </div>
             <div className="row border-b unset-p-m">
-                <div className="col border-r col-fix">Date</div>
+                <div className="col border-r col-fix col-fix-left">Date</div>
                 <div className="col col-fix">
                     {
                         location.state &&
@@ -50,33 +69,26 @@ function PrintInvoice() {
                 </div>
             </div>
             <div className="row unset-p-m border-b">
-                <div className="col border-r col-fix">Invoice No</div>
+                <div className="col border-r col-fix col-fix-left">Invoice No</div>
                 <div className="col col-fix">{sales.invoiceNo}</div>
             </div>
             <div className="row unset-p-m border-b">
-                <div className="row unset-p-m border-b">
-                    <div className="col col-fix">
-                        Customer Name
-                    </div>
-                </div>
-                <div className="row unset-p-m unset-p-m">
-                    <div className="col col-fix">
-                        <input className="remove-b" type="text" name="" id="" />
-                    </div>
-                </div>
+                <div className="col border-r col-fix col-fix-left"> Customer Name</div>
+                <div className="col col-fix"><input className="remove-b-p " value={customerName} onChange={(e)=>SetCustomrName(e.target.value)} type="text" name="" id="" /></div>
             </div>
-            <span className='print-h col-fix'>Item Details</span>
-            <div className="row unset-p-m print-h border-t">
-                <div className="col-4 border-r col-fix">
+            <span className='print-h col-fix col-fix-left'>Item Details</span>
+            <div className="row unset-p-m print-h border-t border-b">
+                <div className="col-5 border-r col-fix col-fix-left">
                     Name
                 </div>
                 <div className="col-2 border-r col-fix">
-                   Prince
+                    Price
                 </div>
-                <div className="col-2 border-r col-fix">
+                <div className="col-1 border-r col-fix">
                     No
                 </div>
-                <div className="col-2 border-r col-fix">
+                <div className="col-1 border-r col-fix">Tax %</div>
+                <div className="col-1 border-r col-fix">
                     Tax
                 </div>
                 <div className="col-2 col-fix">
@@ -87,17 +99,20 @@ function PrintInvoice() {
                 location.state &&
                 sales.items.map((doc, index) => {
                     return (
-                        <div className="row unset-p-m border-t border-b" key={index}>
-                            <div className="col-4 border-r col-fix">
+                        <div className="row unset-p-m border-b font-fix" key={index}>
+                            <div className="col-5 border-r col-fix col-fix-left">
                                 {doc.name}
                             </div>
                             <div className="col-2 border-r col-fix">
                                 {round(doc.priceperunit)}
                             </div>
-                            <div className="col-2 border-r col-fix">
+                            <div className="col-1 border-r col-fix">
                                 {doc.quantity}
                             </div>
-                            <div className="col-2 border-r col-fix">
+                            <div className="col-1 border-r">
+                                {doc.gst}
+                            </div>
+                            <div className="col-1 border-r col-fix">
                                 {round(doc.gstValue)}
                             </div>
                             <div className="col-2 col-fix">
@@ -108,50 +123,55 @@ function PrintInvoice() {
                 })
             }
             <div className="row unset-p-m invoice-item-h border-b">
-                <div className="col">ICST</div>
+                <div className="col col-fix-left">ICST</div>
                 <div className="col">0</div>
             </div>
             <div className="row unset-p-m invoice-item-h border-b">
-                <div className="col">CGST</div>
+                <div className="col col-fix-left">CGST</div>
                 <div className="col">{round(sales.gst / 2)}</div>
             </div>
             <div className="row unset-p-m invoice-item-h border-b">
-                <div className="col">SGST</div>
+                <div className="col col-fix-left">SGST</div>
                 <div className="col">{round(sales.gst / 2)}</div>
             </div>
             <div className="row unset-p-m invoice-item-h border-b">
-                <div className="col">GST</div>
+                <div className="col col-fix-left">GST</div>
                 <div className="col">{round(sales.gst)}</div>
             </div>
             <div className="row unset-p-m invoice-item-h border-b">
             </div>
+
             <div className="row unset-p-m invoice-item-h border-b">
+
+                <div className="col col-fix-left">Total</div>
+                <div className="col col-fix-left">{location.state && location.state.totalPrice}</div>
             </div>
             <div className="row unset-p-m invoice-item-h border-b">
 
-                <div className="col">Total</div>
-                <div className="col">{location.state && location.state.totalPrice}</div>
+                <div className="col col-fix-left">Discount</div>
+                <div className="col col-fix-left">{location.state && location.state.discount}</div>
             </div>
             <div className="row unset-p-m invoice-item-h border-b">
 
-                <div className="col">Discount</div>
-                <div className="col">{location.state && location.state.discount}</div>
-            </div>
-            <div className="row unset-p-m invoice-item-h border-b">
-
-                <div className="col">Payable Amount</div>
-                <div className="col">{location.state && Number(location.state.totalPrice) - Number(location.state.discount)}</div>
+                <div className="col col-fix-left">Payable Amount</div>
+                <div className="col col-fix-left">{location.state && Number(location.state.totalPrice) - Number(location.state.discount)}</div>
             </div>
             <div className="row unset-p-m  border-b">
                 <div className="col-12">
-                    <p>
-                        Thank you for your business!
-                    </p>
-                    <p>
-                        All sales are final. Items once sold will not be taken back or exchanged. All Disputes subject to Mysore Jurisdiction only
+                    <p className=' note-fix'>
+                        Thank you for your business! All sales are final. Items once sold will not be taken back or exchanged. All Disputes subject to Mysore Jurisdiction only
                     </p>
                 </div>
             </div>
+            {
+                showPrint &&
+                <div className="row ">
+                    <div className="col ">
+                        <button onClick={handlePrint}>PRINT</button>
+                    </div>
+                </div>
+            }
+
         </div>
 
 
