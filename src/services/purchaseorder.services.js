@@ -85,7 +85,6 @@ class PurchaseOrderDataService {
             this.getAllProductsFromBD().then(data => {
                 localStorage.setItem('drkotianPOdata', JSON.stringify(data));
                 localStorage.setItem('drkotianPORefreshDate', this.getDate());
-                console.log(data)
             }).catch(err => {
                 console.log(err)
             });

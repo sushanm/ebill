@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import swal from 'sweetalert';
-
+import TransactionsDataService from "../services/transactions.services"
 
 function PrintInvoice() {
 
@@ -15,8 +15,9 @@ function PrintInvoice() {
             location.state.items.forEach(element => {
                 totalGst = totalGst + Number(element.gstValue);
             });
+            SetCustomrName(location.state.customerName)
             let data = {
-                date: location.state.saleDate, invoiceNo: invoice, items: location.state.items, gst: totalGst
+                date: location.state.saleDate, invoiceNo: invoice, items: location.state.items, gst: totalGst, transId:location.state.id
             }
 
             SetSales(data)
@@ -33,6 +34,9 @@ function PrintInvoice() {
     const handlePrint = () => {
         if(customerName.length>0){
            
+            let saleDateArray = sales.date.split('-');
+            let id = saleDateArray[2] + "-" + saleDateArray[1];
+            TransactionsDataService.addCustomerName(id,customerName,sales.transId);
             SetShowPrint(false)
             setTimeout(function () {
                 window.print()

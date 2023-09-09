@@ -13,7 +13,7 @@ const firebaseConfig = {
     appId: "1:832489079505:web:6665ba7e77bc20bd29bbf0"
 };
 
-////Testing
+//Testing
 // const firebaseConfig = {
 //     apiKey: "AIzaSyC9hXzf6zXa7Ys08oPOX6gYW1YkjH5-aP4",
 //     authDomain: "cloud-billing-ca31e.firebaseapp.com",

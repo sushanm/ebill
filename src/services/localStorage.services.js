@@ -101,7 +101,6 @@ class LocalStorageService {
             this.getAllProductsFromBD().then(data => {
                 localStorage.setItem('drkotianproductdata', JSON.stringify(data));
                 localStorage.setItem('drkotianproductRefreshDate', this.getDate());
-                console.log(data)
             }).catch(err => {
                 console.log(err)
             });

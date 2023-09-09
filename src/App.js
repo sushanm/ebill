@@ -29,7 +29,6 @@ function App(changeTab) {
         userName,
         password
       );
-      console.log(user);
     } catch (error) {
       console.log(error.message);
     }

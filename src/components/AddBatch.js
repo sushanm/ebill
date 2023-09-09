@@ -145,7 +145,6 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
             quantity: 1,
             batchId: batch.id
         }
-        console.log([...sales, saleData])
         SetSales([...sales, saleData])
 
     }
