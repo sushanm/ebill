@@ -19,12 +19,13 @@ class LocalStorageService {
         return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
     }
 
-    addNewProduct(id, name, usage, totalQuantity, batch, gst) {
+    addNewProduct(id, name, usage, totalQuantity, batch, gst,giveDiscount) {
         let dataToAdd = {
             id: id,
             name: name,
             usage: usage,
             gst: gst,
+            giveDiscount:giveDiscount,
             totalQuantity: totalQuantity,
             batch: batch
         }
@@ -33,13 +34,14 @@ class LocalStorageService {
         localStorage.setItem("drkotianproductdata", JSON.stringify(dataFromLocal));
     }
 
-    updateProductName(id, name, usage, gst) {
+    updateProductName(id, name, usage, gst,giveDiscount) {
         let dataFromLocal = JSON.parse(localStorage.getItem('drkotianproductdata'));
         for (var i = 0; i < dataFromLocal.length; i++) {
             if (id === dataFromLocal[i].id) {
                 dataFromLocal[i].name = name;
                 dataFromLocal[i].usage = usage;
                 dataFromLocal[i].gst = gst;
+                dataFromLocal[i].giveDiscount = giveDiscount;
                 break;
             }
         }

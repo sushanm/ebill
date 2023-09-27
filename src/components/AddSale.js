@@ -16,6 +16,8 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
     const [updatedTotalPrice, SetUpdatedTotalPrice] = useState(0);
     const [discount, SetDiscount] = useState(0);
 
+    const [defaultDiscount, SetDefaultDiscount] = useState(0);
+
     useEffect(() => {
         SetSaleData(sales);
         updateTotalPrice(sales)
@@ -66,11 +68,19 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
         try {
             SetIsDataUpdated(true);
             let totalPrice = 0
+            let totalDiscount = 0;
+
             salesData.forEach((item) => {
+                if (item.giveDiscount) {
+                    let disc = item.price * item.quantity * 5 / 100;
+                    totalDiscount = totalDiscount + disc;
+                }
                 totalPrice = totalPrice + item.price * item.quantity;
             })
+            SetDefaultDiscount(Number(totalDiscount))
             SetTotalPrice(totalPrice);
-            SetUpdatedTotalPrice(totalPrice);
+            SetDiscount(Number(totalDiscount))
+            SetUpdatedTotalPrice(Number(totalPrice) - Number(totalDiscount))
         } catch (error) { }
     }
 
@@ -90,12 +100,12 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
     }
 
     function guid() {
-        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-          (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         );
-      }
+    }
 
-      const [isDisabledSaveSales, SetisDisabledSaveSales]=useState(false);
+    const [isDisabledSaveSales, SetisDisabledSaveSales] = useState(false);
 
     const addTransation = async () => {
         try {
@@ -109,31 +119,58 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                         item.gstValue = round(tax * Number(item.quantity));
                         item.discounted = false
                     });
-                } else {
+                } else if (discount == defaultDiscount) {
+
+                    cloneSaleData.forEach(item => {
+                        if (item.giveDiscount) {
+                            item.price = Number(item.price) - (Number(item.price) * 5 / 100)
+                            item.discounted = true;
+                        }
+                        let tax = Number(item.price) - (Number(item.price) * (100 / (100 + Number(item.gst))))
+                        item.priceperunit = round(Number(item.price) - Number(tax));
+                        item.gstValue = round(tax * Number(item.quantity));
+                        if (!item.discounted) {
+                            item.discounted = false
+                        }
+                    });
+                }
+                else {
                     let discountedItemID = "";
                     let sortedCloneSaleData = cloneSaleData.sort((a, b) => Number(b.gst) - Number(a.gst))
                     if (sortedCloneSaleData.length > 0) {
 
                         for (let i = 0; i < sortedCloneSaleData.length; i++) {
-                            if (Number(sortedCloneSaleData[i].price) > discount) {
+                            if (Number(sortedCloneSaleData[i].price) >= discount) {
                                 discountedItemID = sortedCloneSaleData[i].id;
                                 break;
                             }
                         }
                     }
+
+                    cloneSaleData.forEach(item => {
+                        if (item.giveDiscount) {
+                            item.price = Number(item.price) - (Number(item.price) * 5 / 100)
+                            item.discounted = true;
+                        }
+                    });
+
                     let index = cloneSaleData.findIndex(item => item.id === discountedItemID);
-                    cloneSaleData[index].price = Number(cloneSaleData[index].price) - Number(discount)
+
+                    const discDiff = Number(discount) - Number(defaultDiscount);
+
+                    cloneSaleData[index].price = Number(cloneSaleData[index].price) - (Number(discDiff) / cloneSaleData[index].quantity)
                     cloneSaleData[index].discounted = true;
 
                     cloneSaleData.forEach(item => {
                         let tax = Number(item.price) - (Number(item.price) * (100 / (100 + Number(item.gst))))
                         item.priceperunit = round(Number(item.price) - Number(tax));
                         item.gstValue = round(tax * Number(item.quantity));
-                        if(!item.discounted){
+                        if (!item.discounted) {
                             item.discounted = false
                         }
                     });
                 }
+
                 const newTransaction = {
                     id: guid(),
                     items: cloneSaleData,
@@ -174,11 +211,11 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
             }
             setTimeout(() => {
                 SetisDisabledSaveSales(false);
-              }, "1000");
+            }, "1000");
         } catch (error) {
             setTimeout(() => {
                 SetisDisabledSaveSales(false);
-              }, "1000");
+            }, "1000");
             console.log(error.message);
         }
     }

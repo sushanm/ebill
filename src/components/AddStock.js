@@ -15,6 +15,7 @@ function AddStock({ saleMode }) {
     const [selectedProductName, SetSelectedProductName] = useState('');
     const [selectedProductGST, SetSelectedProductGST] = useState('');
     const [selectedProductUsedFor, SetSelectedProductUsedFor] = useState('');
+    const [selectedGiveDiscount, SetGiveDiscount] = useState('');
     const [totalFiltedCount, SetTotalFiltedCount] = useState(0);
 
 
@@ -55,18 +56,20 @@ function AddStock({ saleMode }) {
     }
 
 
-    const addNewBatch = async (id, name, usage, gst) => {
+    const addNewBatch = async (id, name, usage, gst, giveDiscount) => {
         SetIsNewProduct(false)
         SetSelectedProductId(id)
         SetSelectedProductUsedFor(usage);
+        SetGiveDiscount(giveDiscount)
         SetSelectedProductName(name)
         SetSelectedProductGST(gst)
     }
-    const newProductAdded = (id, name, usage, gst) => {
+    const newProductAdded = (id, name, usage, gst, giveDiscount) => {
         getAllProducts();
         SetIsNewProduct(false)
         SetSelectedProductName(name)
         SetSelectedProductUsedFor(usage);
+        SetGiveDiscount(giveDiscount)
         SetSelectedProductId(id)
         SetSelectedProductGST(gst)
     }
@@ -117,7 +120,7 @@ function AddStock({ saleMode }) {
                             productsForSearch &&
                             productsForSearch.map((doc, index) => {
                                 return (
-                                    <div className='row product-name-row' style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }} key={doc.id} onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst)}>
+                                    <div className='row product-name-row' style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }} key={doc.id} onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst, doc.giveDiscount)}>
                                         <div className="col-9">
                                             {doc.name}
                                         </div>
@@ -126,7 +129,7 @@ function AddStock({ saleMode }) {
                                             {doc.totalQuantity}
                                         </div>
                                         <div className="col-1">
-                                            <button className="product-btn" onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst)}>&#x226B;</button>
+                                            <button className="product-btn" onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst, doc.giveDiscount)}>&#x226B;</button>
                                         </div>
                                     </div>
                                 )
@@ -136,7 +139,7 @@ function AddStock({ saleMode }) {
                     <div className="col-8">
                         <AddBatch productId={selectedProductId} newProduct={isNewProduct} callBackMethod={newProductAdded}
                             usedFor={selectedProductUsedFor}
-                            saleMode={saleMode} productName={selectedProductName} callbackaftersalesFromBatch={callbackaftersalesFromBatch} gst={selectedProductGST} />
+                            saleMode={saleMode} productName={selectedProductName} callbackaftersalesFromBatch={callbackaftersalesFromBatch} gst={selectedProductGST} giveDiscountEdit={selectedGiveDiscount}/>
                     </div>
                 </div>
             }

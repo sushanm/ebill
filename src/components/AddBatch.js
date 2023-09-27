@@ -5,13 +5,14 @@ import { useEffect, useState } from 'react';
 import AddSale from './AddSale';
 import { useLocation } from 'react-router-dom';
 
-function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName, callbackaftersalesFromBatch, usedFor, gst }) {
+function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName, callbackaftersalesFromBatch, usedFor, gst, giveDiscountEdit }) {
     const [batch, SetBatch] = useState([]);
     const [editBatchRow, SetEditBatchRow] = useState();
 
     const [name, SetName] = useState();
     const [usage, SetUsage] = useState();
     const [newGST, SetNewGST] = useState();
+    const [giveDiscount, SetGiveDiscount] = useState(false);
     const [expiryDate, SetExpiryDate] = useState();
     const [price, SetPrice] = useState();
     const [quantity, SetQuantity] = useState();
@@ -24,7 +25,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     const location = useLocation();
     useEffect(() => {
         if (location.state) {
-           // console.log(location.state.items)
+            // console.log(location.state.items)
             //SetSales(location.state.items)
         }
     }, [location.state])
@@ -53,7 +54,6 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     }
 
     const addNewProduct = async () => {
-
         SetDisbaleAdd(true);
         setTimeout(() => {
             SetDisbaleAdd(false);
@@ -73,11 +73,12 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                 batch,
                 gst: newGST,
                 usage,
+                giveDiscount,
                 totalQuantity
             };
             await StockDataService.addNewProduct(newProduct).then(res => {
-                LocalStorageServices.addNewProduct(res.id, name, usage, totalQuantity, batch, newGST);
-                callBackMethod(res.id, name, usage, newGST);
+                LocalStorageServices.addNewProduct(res.id, name, usage, totalQuantity, batch, newGST, giveDiscount);
+                callBackMethod(res.id, name, usage, newGST, giveDiscount);
             });
         } catch (error) {
             console.log(error.message);
@@ -141,6 +142,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
             id: productId,
             name: productName,
             gst: gst,
+            giveDiscount:giveDiscountEdit,
             price: batch.price,
             quantity: 1,
             batchId: batch.id
@@ -155,11 +157,14 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     const [productNameForEdit, SetProductNameForEdit] = useState(productName);
     const [productUsageForEdit, SetProductUsageForEdit] = useState(usedFor);
     const [productGSTEdit, SetProductGSTEdit] = useState(gst);
+    const [giveDiscountForEdit, SetGiveDiscountForEdit] = useState(giveDiscountEdit);
+
     const editProductName = () => {
         SetProductNameEdit(true)
         SetProductNameForEdit(productName)
         SetProductUsageForEdit(usedFor)
         SetProductGSTEdit(gst)
+        SetGiveDiscountForEdit(giveDiscountEdit)
     }
     const saveProductName = async () => {
         const docSnap = await StockDataService.getProduct(productId);
@@ -167,12 +172,14 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
         currentData.name = productNameForEdit;
         currentData.usage = productUsageForEdit;
         currentData.gst = productGSTEdit;
+        currentData.giveDiscount = giveDiscountForEdit;
         await StockDataService.updateProduct(productId, currentData);
-        LocalStorageServices.updateProductName(productId, productNameForEdit, productUsageForEdit, productGSTEdit);
-        callBackMethod(productId, productNameForEdit, productUsageForEdit, productGSTEdit);
+        LocalStorageServices.updateProductName(productId, productNameForEdit, productUsageForEdit, productGSTEdit, giveDiscountForEdit);
+        callBackMethod(productId, productNameForEdit, productUsageForEdit, productGSTEdit, giveDiscount, giveDiscountForEdit);
         SetProductNameEdit(false)
         SetProductNameForEdit('');
         SetProductUsageForEdit('')
+        SetGiveDiscountForEdit('')
     }
 
     return (
@@ -202,6 +209,14 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                         </div>
                         <div className="row">
                             <input type={'number'} placeholder="GST" value={newGST} onChange={(evt) => SetNewGST(evt.target.value)}></input>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="row">
+                            Discount
+                        </div>
+                        <div className="row">
+                            <input type={'checkbox'} placeholder="Discount" value={giveDiscount} onChange={(evt) => { SetGiveDiscount(evt.target.checked); }}></input>
                         </div>
                     </div>
                     <div className="row">
@@ -284,14 +299,20 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                         <div className="col-1 batch-custom-col-h">
                             Name
                         </div>
-                        <div className="col-4">
+                        <div className="col-3">
                             {productName}
 
                         </div>
                         <div className="col-1 batch-custom-col-h">Usage</div>
-                        <div className="col-4 ">
+                        <div className="col-3 ">
                             {usedFor}
 
+                        </div>
+                        <div className="col-1 batch-custom-col-h">Discount</div>
+                        <div className="col-1 ">
+                        
+                            {giveDiscountEdit && <>ON</>}
+                            {/* {!giveDiscountEdit && <>OFF</>} */}
                         </div>
                         <div className="col-1 batch-custom-col-h">
                             GST
@@ -308,11 +329,14 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                 {
                     productNameEdit &&
                     <div className="row">
-                        <div className="col-4 ">
+                        <div className="col-3 ">
                             <input type="text" style={{ 'width': '100%' }} value={productNameForEdit} onChange={(e) => SetProductNameForEdit(e.target.value)} />
                         </div>
-                        <div className="col-4 ">
+                        <div className="col-3 ">
                             <input type="text" value={productUsageForEdit} style={{ 'width': '100%' }} onChange={(e) => SetProductUsageForEdit(e.target.value)} />
+                        </div>
+                        <div className="col-2 ">
+                            <input type="checkbox" value={giveDiscountForEdit} defaultChecked={giveDiscountForEdit} style={{ 'width': '100%' }} onChange={(e) => SetGiveDiscountForEdit(e.target.checked)} />
                         </div>
                         <div className="col-2 ">
                             <input type="number" value={productGSTEdit} style={{ 'width': '100%' }} onChange={(e) => SetProductGSTEdit(e.target.value)} />
