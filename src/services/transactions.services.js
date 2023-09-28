@@ -64,6 +64,7 @@ class TransactionsDataService {
 
     updateTransactions = (id, updatedTransaction) => {
         const productDoc = doc(db, "transactions", id);
+        console.log(updatedTransaction)
         return updateDoc(productDoc, updatedTransaction);
     };
 

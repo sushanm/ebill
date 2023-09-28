@@ -74,6 +74,8 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 if (item.giveDiscount) {
                     let disc = item.price * item.quantity * 5 / 100;
                     totalDiscount = totalDiscount + disc;
+                }else{
+                    item.giveDiscount=false
                 }
                 totalPrice = totalPrice + item.price * item.quantity;
             })
@@ -108,7 +110,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
     const [isDisabledSaveSales, SetisDisabledSaveSales] = useState(false);
 
     const addTransation = async () => {
-        try {
+        // try {
             SetisDisabledSaveSales(true);
             if (saledata.length > 0) {
                 const cloneSaleData = [...saledata];
@@ -212,12 +214,12 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
             setTimeout(() => {
                 SetisDisabledSaveSales(false);
             }, "1000");
-        } catch (error) {
-            setTimeout(() => {
-                SetisDisabledSaveSales(false);
-            }, "1000");
-            console.log(error.message);
-        }
+        // } catch (error) {
+        //     setTimeout(() => {
+        //         SetisDisabledSaveSales(false);
+        //     }, "1000");
+        //     console.log(error);
+        // }
     }
 
     const AddOrEditBatch = async (productId, batch) => {
@@ -290,6 +292,14 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                     </div>
                     <div className="row">
                         <div className="col">
+                            Discount
+                        </div>
+                        <div className="col">
+                            <strong>{discount}</strong>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
                             Billed Price
                         </div>
                         <div className="col">
@@ -344,6 +354,14 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                                     </div>
                                     <div className="col">
                                         {totalPrice}
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col">
+                                        Discount
+                                    </div>
+                                    <div className="col">
+                                        <strong>{discount}</strong>
                                     </div>
                                 </div>
                                 <div className="row">
