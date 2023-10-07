@@ -161,6 +161,17 @@ function Report() {
     SetTransactionsByItemsDisplay(itemsByMonthAndQantity)
   }
 
+  const [seachProduct, SetSearchProduct] = useState('');
+
+  useEffect(() => {
+    const clone = [...transactionsByItems];
+    if (seachProduct) {
+      var term = seachProduct.trim().toLowerCase();
+            var search = new RegExp(term, 'i');
+            SetTransactionsByItemsDisplay(clone.filter(item => search.test(item.name.toLowerCase())))
+    }
+  }, [seachProduct])
+
   var groupBy = function (xs, key) {
     return xs.reduce(function (rv, x) {
       (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -593,13 +604,19 @@ function Report() {
                     <option value="11">11</option>
                   </select>
                 </div>
+                <div className="col">
+                  <input type={'text'} value={seachProduct} onChange={e => SetSearchProduct(e.target.value)} placeholder="Search By Name" />
+                </div>
               </div>
               <div className="row row-h">
                 <div className="col-2">
                   SL No.
                 </div>
-                <div className="col-8">
+                <div className="col-6">
                   Name
+                </div>
+                <div className="col-2">
+                  Sale Date
                 </div>
                 <div className="col-2">
                   Total Qantity
@@ -614,8 +631,11 @@ function Report() {
                       <div className="col-2">
                         {i + 1}
                       </div>
-                      <div className="col-8">
+                      <div className="col-6">
                         {b.name}
+                      </div>
+                      <div className="col-2">
+                        {b.saleDate}
                       </div>
                       <div className="col-2">
                         {b.totalQunatity}

@@ -172,7 +172,13 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
         currentData.name = productNameForEdit;
         currentData.usage = productUsageForEdit;
         currentData.gst = productGSTEdit;
-        currentData.giveDiscount = giveDiscountForEdit;
+
+        if(giveDiscountForEdit){
+            currentData.giveDiscount = giveDiscountForEdit;
+        }else{
+            currentData.giveDiscount =false;
+        }
+       
         await StockDataService.updateProduct(productId, currentData);
         LocalStorageServices.updateProductName(productId, productNameForEdit, productUsageForEdit, productGSTEdit, giveDiscountForEdit);
         callBackMethod(productId, productNameForEdit, productUsageForEdit, productGSTEdit, giveDiscount, giveDiscountForEdit);

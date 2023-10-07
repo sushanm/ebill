@@ -15,6 +15,7 @@ import purchaseorderServices from "./services/purchaseorder.services";
 import PurchaseOrder from "./components/PurchaseOrder";
 import transactionsServices from "./services/transactions.services";
 import SwarnaPrashana from "./components/SwarnaPrashana";
+import Patient from "./components/Patient";
 
 function App(changeTab) {
 
@@ -70,6 +71,7 @@ function App(changeTab) {
             <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(3)} style={{ backgroundColor: diplay === 3 ? '#0d6efd' : '#565e64' }}>Report</button>
             <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(4)} style={{ backgroundColor: diplay === 4 ? '#0d6efd' : '#565e64' }}>Purchase Order</button>
             <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(5)} style={{ backgroundColor: diplay === 5 ? '#0d6efd' : '#565e64' }}>Swarna Prashana</button>
+            <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(6)} style={{ backgroundColor: diplay === 6 ? '#0d6efd' : '#565e64' }}>Patient</button>
             <button className="force-refresh" onClick={refresh} >Refresh</button>
           </div>
         </div>
@@ -133,6 +135,15 @@ function App(changeTab) {
                 <div className="col">
                   <h4>Swarna Prashana</h4>
                  <SwarnaPrashana />
+                </div>
+              </div>
+            }
+            {
+              diplay === 6 &&
+              <div className="row">
+                <div className="col">
+                  <h4>Patient Records</h4>
+                <Patient />
                 </div>
               </div>
             }
