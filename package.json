@@ -1,6 +1,6 @@
 {
   "homepage": "https://sushanm.github.io/ebill",
-  "name": "emedical",
+  "name": "ebill",
   "version": "0.1.0",
   "private": false,
   "dependencies": {

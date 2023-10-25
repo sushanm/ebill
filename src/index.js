@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter,HashRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout';
 import Home from './Home';
 import Invoice from './components/Invoice';
@@ -13,7 +13,7 @@ import PrintInvoice from './components/PrintInvoice';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
+  <HashRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index path="/" element={<Home />} />
@@ -21,7 +21,7 @@ root.render(
           <Route path="printinvoice" element={<PrintInvoice />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   // <React.StrictMode>
   //   <App />
   // </React.StrictMode>
