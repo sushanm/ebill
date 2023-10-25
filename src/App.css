@@ -1,7 +1,9 @@
 .App {
   text-align: center;
 }
-
+body{
+  color: black !important;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -297,7 +299,12 @@ margin: unset !important;
 }
 
 .col-fix-left{
-  padding-left: 15px !important;
+  padding-left: 2px !important;
+}
+.unset-p-m-s{
+  margin: 0px !important;
+  color: black !important;
+font-weight: bold;
 }
 
 .font-fix{

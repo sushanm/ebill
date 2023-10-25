@@ -50,7 +50,7 @@ function PrintInvoice() {
 
     return (
 
-        <div className="row-border invoice-row-start-p">
+        <div className="row-border invoice-row-start-p unset-p-m-s ">
             <div className="row unset-p-m border-b">
                 <div className="col-10 col-fix col-fix-left invoice-t-p">
                     <strong>KOTIAN AYURVEDA - Invoice</strong>
@@ -82,17 +82,17 @@ function PrintInvoice() {
             </div>
             <span className='print-h col-fix col-fix-left'>Item Details</span>
             <div className="row unset-p-m print-h border-t border-b">
-                <div className="col-5 border-r col-fix col-fix-left">
+                <div className="col-6 border-r col-fix col-fix-left">
                     Name
                 </div>
                 <div className="col-2 border-r col-fix">
                     Price
                 </div>
-                <div className="col-1 border-r col-fix">
+                {/* <div className="col-1 border-r col-fix">
                     No
-                </div>
-                <div className="col-1 border-r col-fix">Tax %</div>
-                <div className="col-1 border-r col-fix">
+                </div> */}
+                {/* <div className="col-1 border-r col-fix">Tax %</div> */}
+                <div className="col-2 border-r col-fix">
                     Tax
                 </div>
                 <div className="col-2 col-fix">
@@ -104,19 +104,19 @@ function PrintInvoice() {
                 sales.items.map((doc, index) => {
                     return (
                         <div className="row unset-p-m border-b font-fix" key={index}>
-                            <div className="col-5 border-r col-fix col-fix-left">
+                            <div className="col-6 border-r col-fix col-fix-left">
                                 {doc.name}
                             </div>
                             <div className="col-2 border-r col-fix">
                                 {round(doc.priceperunit)}
                             </div>
-                            <div className="col-1 border-r col-fix">
+                            {/* <div className="col-1 border-r col-fix">
                                 {doc.quantity}
-                            </div>
-                            <div className="col-1 border-r">
+                            </div> */}
+                            {/* <div className="col-1 border-r">
                                 {doc.gst}
-                            </div>
-                            <div className="col-1 border-r col-fix">
+                            </div> */}
+                            <div className="col-2 border-r col-fix">
                                 {round(doc.gstValue)}
                             </div>
                             <div className="col-2 col-fix">
@@ -161,10 +161,8 @@ function PrintInvoice() {
                 <div className="col col-fix-left">{location.state && Number(location.state.totalPrice) - Number(location.state.discount)}</div>
             </div>
             <div className="row unset-p-m  border-b">
-                <div className="col-12">
-                    <p className=' note-fix'>
-                        Thank you for your business! All sales are final. Items once sold will not be taken back or exchanged. All Disputes subject to Mysore Jurisdiction only
-                    </p>
+                <div className="col-12 col-fix-left">
+                Thank you for your business! All sales are final. Items once sold will not be taken back or exchanged. All Disputes subject to Mysore Jurisdiction only
                 </div>
             </div>
             {
