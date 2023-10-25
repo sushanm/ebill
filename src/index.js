@@ -13,7 +13,8 @@ import PrintInvoice from './components/PrintInvoice';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <HashRouter basename={process.env.PUBLIC_URL}>
+  //basename={process.env.PUBLIC_URL}
+  <HashRouter >
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index path="/" element={<Home />} />
