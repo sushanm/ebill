@@ -16,14 +16,23 @@ import PurchaseOrder from "./components/PurchaseOrder";
 import transactionsServices from "./services/transactions.services";
 import SwarnaPrashana from "./components/SwarnaPrashana";
 import Patient from "./components/Patient";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 function App(changeTab) {
 
+
   const [diplay, SetDisplay] = useState(1);
   const [showLoading, SetShowLoading] = useState(false);
+  const [showModel, SetShowModel] = useState(false);
+  const [configText, SetConfigText] = useState('');
   const login = async () => {
-    const userName = 'kotianayurveda@gmail.com';
-    const password = 'drK@t1an';
+
+    let dataFromLocal = JSON.parse(localStorage.getItem('getDrKotianConnection'));
+    const arryData = dataFromLocal.split(';');
+    const userName = arryData[6];
+    const password = arryData[7];
 
     try {
       const user = await signInWithEmailAndPassword(
@@ -35,6 +44,17 @@ function App(changeTab) {
       console.log(error.message);
     }
   }
+
+  useEffect(() => {
+    let dataFromLocal = JSON.parse(localStorage.getItem('getDrKotianConnection'));
+    if (!dataFromLocal) {
+      console.log(dataFromLocal)
+      SetShowModel(true)
+    } else {
+      SetShowModel(false)
+    }
+  })
+
 
   useEffect(() => {
     login();
@@ -58,8 +78,40 @@ function App(changeTab) {
     }, "2000");
   }
 
+  const handleClose = () => {
+    SetShowModel(false)
+  }
+
+  const saveConfig = () => {
+    SetShowModel(false)
+    localStorage.setItem("getDrKotianConnection", JSON.stringify(configText));
+  }
+
+
   return (
     <div className="App">
+
+      <Modal show={showModel} onHide={handleClose} centered size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Set Configuration</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+              <Form.Label>Enter Configuration</Form.Label>
+              <Form.Control as="textarea" rows={3} onChange={(e) => SetConfigText(e.target.value.trim())} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={saveConfig} >
+            Save Config
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <div className="container-fluid text-center">
         <div className="row">
@@ -134,7 +186,7 @@ function App(changeTab) {
               <div className="row">
                 <div className="col">
                   <h4>Swarna Prashana</h4>
-                 <SwarnaPrashana />
+                  <SwarnaPrashana />
                 </div>
               </div>
             }
@@ -143,7 +195,7 @@ function App(changeTab) {
               <div className="row">
                 <div className="col">
                   <h4>Patient Records</h4>
-                <Patient />
+                  <Patient />
                 </div>
               </div>
             }
