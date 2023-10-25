@@ -31,7 +31,7 @@ function Invoice() {
             <div className="row unset-p-m border-b">
                 <div className="col-10  invoice-t">KOTIAN AYURVEDA - Invoice</div>
                 <div className="col-2">
-                    <img className='logo-img' alt='edit' src='../../assets/logo.png' />
+                    <img className='logo-img' alt='edit' src='/ebill/assets/logo.png' />
                 </div>
             </div>
 

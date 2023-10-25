@@ -4,7 +4,14 @@ import { getFirestore } from "firebase/firestore"
 import { getAuth } from "firebase/auth"
 
 let dataFromLocal = JSON.parse(localStorage.getItem('getDrKotianConnection'));
-const arryData = dataFromLocal.split(';');
+let arryData = []
+if (dataFromLocal) {
+    arryData = dataFromLocal.split(';');
+}else{
+    let config = prompt('Provide Configuration');
+    localStorage.setItem("getDrKotianConnection", JSON.stringify(config));
+    arryData = config.split(';');
+}
 
 const firebaseConfig = {
     apiKey: arryData[0],
@@ -19,5 +26,5 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-export const auth=getAuth(app);
+export const auth = getAuth(app);
 export const db = getFirestore(app);

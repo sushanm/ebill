@@ -396,13 +396,13 @@ function Report() {
                     <div className="col-1">
                       <div className="row">
                         <div className="col unset-p-m">
-                          <img onClick={() => generateInvoice(doc, index)} className='print-icon' alt='edit' src='../../assets/digital.png' />
+                          <img onClick={() => generateInvoice(doc, index)} className='print-icon' alt='edit' src='/ebill/assets/digital.png' />
                         </div>
                         <div className="col unset-p-m">
-                          <img onClick={() => generateInvoicePrint(doc, index)} className='print-icon' alt='edit' src='../../assets/print.png' />
+                          <img onClick={() => generateInvoicePrint(doc, index)} className='print-icon' alt='edit' src='/ebill/assets/print.png' />
                         </div>
                         <div className="col unset-p-m">
-                          <img onClick={() => editSales(doc, index)} className='print-icon' alt='edit' src='../../assets/edit.png' />
+                          <img onClick={() => editSales(doc, index)} className='print-icon' alt='edit' src='/ebill/assets/edit.png' />
                         </div>
                       </div>
                     </div>

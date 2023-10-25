@@ -327,7 +327,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                             {gst}
                             {
                                 usedFor &&
-                                <img onClick={editProductName} className='edit-img' alt='edit' src='../../assets/edit.png' />
+                                <img onClick={editProductName} className='edit-img' alt='edit' src='/ebill/assets/edit.png' />
                             }
                         </div>
                     </div>

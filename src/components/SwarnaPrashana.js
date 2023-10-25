@@ -277,7 +277,7 @@ function SwarnaPrashana() {
                                                         {dateFormat(b.date)}
                                                     </div>
                                                     <div className="row sp-tile-wip-add-row">
-                                                        <img className='sp-tile-done-img' onClick={() => updateSp(b)} alt='edit' src='../../assets/add.gif' />
+                                                        <img className='sp-tile-done-img' onClick={() => updateSp(b)} alt='edit' src='/ebill/assets/add.gif' />
                                                     </div>
                                                 </div>
                                             </>
@@ -290,7 +290,7 @@ function SwarnaPrashana() {
                                                         {dateFormat(b.date)}
                                                     </div>
                                                     <div className="row">
-                                                        <img className='sp-tile-done-img' alt='edit' src='../../assets/right.png' />
+                                                        <img className='sp-tile-done-img' alt='edit' src='/ebill/assets/right.png' />
                                                     </div>
                                                 </div>
                                             </>
