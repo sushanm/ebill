@@ -41,14 +41,14 @@ body{
 }
 
 .batch-custom-row {
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .batch-custom-col-h {
   font-weight: bold;
   margin-bottom: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .row {
@@ -61,7 +61,7 @@ body{
 }
 
 .product-name-row {
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
   cursor: pointer;
 }
 
@@ -72,7 +72,7 @@ body{
 }
 
 .sale-row-h {
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
   margin-right: unset !important;
   margin-left: unset !important;
   font-weight: bold;
@@ -81,7 +81,7 @@ body{
 .product-name-row-sale {
   margin-right: unset !important;
   margin-left: unset !important;
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .quantity-sale {
@@ -92,13 +92,13 @@ body{
   font-weight: bold;
   margin-bottom: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .row-h-low-stock-col {
   margin-bottom: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .btn-right {
@@ -119,17 +119,17 @@ body{
 
 .row-h {
   font-weight: bold;
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .row-report {
-  border: 1px solid rgb(5, 0, 0);
+  border: 1px solid black;
 
 
 }
 
 .report-title {
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .col-report {
@@ -191,15 +191,15 @@ body{
 }
 
 .po-input-row {
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .row-po {
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .row-border {
-  border: 1px solid rgb(5, 0, 0);
+  border: 1px solid black;
 }
 
 .count {
@@ -209,23 +209,23 @@ body{
 }
 
 .invoice-border{
-  border: 1px solid rgb(5, 0, 0);
+  border: 1px solid black;
 }
 
 .border-r{
-  border-right: 1px solid rgb(5, 0, 0);
+  border-right: 1px solid black;
 }
 
 .border-l{
-  border-left: 1px solid rgb(5, 0, 0);
+  border-left: 1px solid black;
 }
 
 .border-t{
-  border-top: 1px solid rgb(5, 0, 0);
+  border-top: 1px solid black;
 }
 
 .border-b{
-  border-bottom: 1px solid rgb(5, 0, 0);
+  border-bottom: 1px solid black;
 }
 
 .unset-p-m{
