@@ -391,7 +391,7 @@ function Report() {
                       }
                     </div>
                     <div className="col-2">
-                      {Number(doc.totalPrice) - Number(doc.discount)}
+                      {Number(doc.totalPrice) - Number(doc.discount)} / {Number(doc.discount)}
                     </div>
                     <div className="col-1">
                       <div className="row">

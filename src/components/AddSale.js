@@ -74,8 +74,8 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 if (item.giveDiscount) {
                     let disc = item.price * item.quantity * 5 / 100;
                     totalDiscount = totalDiscount + disc;
-                }else{
-                    item.giveDiscount=false
+                } else {
+                    item.giveDiscount = false
                 }
                 totalPrice = totalPrice + item.price * item.quantity;
             })
@@ -111,29 +111,39 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
 
     const addTransation = async () => {
         // try {
-            SetisDisabledSaveSales(true);
-            if (saledata.length > 0) {
-                const cloneSaleData = [...saledata];
-                if (discount == 0) {
-                    cloneSaleData.forEach(item => {
-                        let tax = Number(item.price) - (Number(item.price) * (100 / (100 + Number(item.gst))))
-                        item.priceperunit = round(Number(item.price) - Number(tax));
-                        item.gstValue = round(tax * Number(item.quantity));
-                        item.discounted = false
-                    });
-                } else if (discount == defaultDiscount) {
+        SetisDisabledSaveSales(true);
+        if (saledata.length > 0) {
+            const cloneSaleData = [...saledata];
+            if (discount == 0) {
+                cloneSaleData.forEach(item => {
+                    let tax = Number(item.price) - (Number(item.price) * (100 / (100 + Number(item.gst))))
+                    item.priceperunit = round(Number(item.price) - Number(tax));
+                    item.gstValue = round(tax * Number(item.quantity));
+                    item.discounted = false
+                });
+            } else if (discount == defaultDiscount) {
 
+                cloneSaleData.forEach(item => {
+                    if (item.giveDiscount) {
+                        item.price = Number(item.price) - (Number(item.price) * 5 / 100)
+                        item.discounted = true;
+                    }
+                    let tax = Number(item.price) - (Number(item.price) * (100 / (100 + Number(item.gst))))
+                    item.priceperunit = round(Number(item.price) - Number(tax));
+                    item.gstValue = round(tax * Number(item.quantity));
+                    if (!item.discounted) {
+                        item.discounted = false
+                    }
+                });
+            }
+            else {
+                if (Number(discount) === Number(totalPrice)) {
                     cloneSaleData.forEach(item => {
-                        if (item.giveDiscount) {
-                            item.price = Number(item.price) - (Number(item.price) * 5 / 100)
-                            item.discounted = true;
-                        }
-                        let tax = Number(item.price) - (Number(item.price) * (100 / (100 + Number(item.gst))))
-                        item.priceperunit = round(Number(item.price) - Number(tax));
-                        item.gstValue = round(tax * Number(item.quantity));
-                        if (!item.discounted) {
-                            item.discounted = false
-                        }
+                        item.priceperunit = 0;
+                        item.gstValue = 0;
+                        item.gst = 0;
+                        item.price = 0;
+                        item.discounted = true
                     });
                 }
                 else {
@@ -172,48 +182,50 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                         }
                     });
                 }
+            }
 
-                const newTransaction = {
-                    id: guid(),
-                    items: cloneSaleData,
-                    saleDate: getDate(),
-                    totalPrice: Number(totalPrice),
-                    discount: Number(discount),
-                };
 
-                await TransactionsDataService.addNewTransation(newTransaction);
-                let tempArray = new Array();
+            const newTransaction = {
+                id: guid(),
+                items: cloneSaleData,
+                saleDate: getDate(),
+                totalPrice: Number(totalPrice),
+                discount: Number(discount),
+            };
 
-                cloneSaleData.forEach(item => {
-                    const index = tempArray.findIndex(t => t.id === item.id);
-                    if (index >= 0) {
-                        tempArray[index].batch.push({
+            await TransactionsDataService.addNewTransation(newTransaction);
+            let tempArray = new Array();
+
+            cloneSaleData.forEach(item => {
+                const index = tempArray.findIndex(t => t.id === item.id);
+                if (index >= 0) {
+                    tempArray[index].batch.push({
+                        batchId: item.batchId,
+                        quantity: item.quantity
+                    })
+                } else {
+                    tempArray.push({
+                        id: item.id,
+                        batch: [{
                             batchId: item.batchId,
                             quantity: item.quantity
-                        })
-                    } else {
-                        tempArray.push({
-                            id: item.id,
-                            batch: [{
-                                batchId: item.batchId,
-                                quantity: item.quantity
-                            }]
-                        })
-                    }
-                });
-                tempArray.forEach(item => {
-                    AddOrEditBatch(item.id, item.batch);
-                })
-                SetSaleData([]);
-                callbackSalesUpdate([]);
-                callbackaftersales(true);
-                SetUpdatedTotalPrice(0);
-                SetDiscount(0);
-                handleClose();
-            }
-            setTimeout(() => {
-                SetisDisabledSaveSales(false);
-            }, "1000");
+                        }]
+                    })
+                }
+            });
+            tempArray.forEach(item => {
+                AddOrEditBatch(item.id, item.batch);
+            })
+            SetSaleData([]);
+            callbackSalesUpdate([]);
+            callbackaftersales(true);
+            SetUpdatedTotalPrice(0);
+            SetDiscount(0);
+            handleClose();
+        }
+        setTimeout(() => {
+            SetisDisabledSaveSales(false);
+        }, "1000");
         // } catch (error) {
         //     setTimeout(() => {
         //         SetisDisabledSaveSales(false);
