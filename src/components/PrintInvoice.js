@@ -32,6 +32,13 @@ function PrintInvoice() {
     const [showPrint, SetShowPrint] = useState(true);
     const [customerName, SetCustomrName]=useState('');
     const handlePrint = () => {
+
+
+
+    
+           
+          
+
         if(customerName.length>0){
            
             let saleDateArray = sales.date.split('-');
@@ -39,7 +46,9 @@ function PrintInvoice() {
             TransactionsDataService.addCustomerName(id,customerName,sales.transId);
             SetShowPrint(false)
             setTimeout(function () {
-                window.print()
+                // eslint-disable-next-line no-restricted-globals
+                window.onload=function(){self.print();} 
+               // window.print()
             }, 200)
         }else{
             swal("Provide customer name for the invoice");

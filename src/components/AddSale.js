@@ -6,6 +6,7 @@ import StockDataService from "../services/stock.services"
 import LocalStorageServices from '../services/localStorage.services';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useNavigate } from 'react-router-dom';
 
 function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
 
@@ -194,6 +195,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
             };
 
             await TransactionsDataService.addNewTransation(newTransaction);
+            generateInvoicePrint(newTransaction,1)
             let tempArray = new Array();
 
             cloneSaleData.forEach(item => {
@@ -263,6 +265,13 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const history = useNavigate();
+
+    const generateInvoicePrint = (details, index) => {
+        details.lineItem = index + 1
+        history('/printinvoice', { state: details });
+      }
 
     return (
         <div className='sale-row'>

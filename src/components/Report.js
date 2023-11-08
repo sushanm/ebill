@@ -263,6 +263,7 @@ function Report() {
 
   const generateInvoicePrint = (details, index) => {
     details.lineItem = index + 1
+    console.log(details)
     history('/printinvoice', { state: details });
   }
 
