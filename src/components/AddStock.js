@@ -92,7 +92,7 @@ function AddStock({ saleMode }) {
             {
                 !showLoading &&
                 <div className="row">
-                    <div className="col-3 col-3-scroll">
+                    <div className="col-3 ">
                         <div className="row">
                             <div className="col">
                                 <div className="row">
@@ -116,6 +116,7 @@ function AddStock({ saleMode }) {
                                 </div>
                             </div>
                         }
+                        <div className="row col-3-scroll">
                         {
                             productsForSearch &&
                             productsForSearch.map((doc, index) => {
@@ -135,6 +136,8 @@ function AddStock({ saleMode }) {
                                 )
                             })
                         }
+                        </div>
+
                     </div>
                     <div className="col-8">
                         <AddBatch productId={selectedProductId} newProduct={isNewProduct} callBackMethod={newProductAdded}
@@ -143,7 +146,6 @@ function AddStock({ saleMode }) {
                     </div>
                 </div>
             }
-
         </div>
     )
 }
