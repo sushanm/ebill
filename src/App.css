@@ -362,3 +362,18 @@ cursor: pointer;
   position: relative;
   top: 45px;
 }
+.menu-row{
+  position: fixed;
+    z-index: 100;
+    background-color: #d5d5d5;
+
+    width: 100%;
+    padding: 5px;
+}
+.m-btn{
+  margin-right: 15px !important;
+}
+.main-body{
+  position: relative;
+    top: 40px;
+}

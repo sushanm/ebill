@@ -114,17 +114,17 @@ function App(changeTab) {
       </Modal>
 
       <div className="container-fluid text-center">
-        <div className="row">
+        <div className="row menu-row">
           <div className="col">
             {/* <button onClick={login} >Login</button> */}
-            <button type="button" className="btn btn-secondary m-4" onClick={() => SetDisplay(0)} style={{ backgroundColor: diplay === 0 ? '#0d6efd' : '#565e64' }}>Stock & Sale</button>
-            <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(1)} style={{ backgroundColor: diplay === 1 ? '#0d6efd' : '#565e64' }}>Near To Expiry</button>
-            <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(2)} style={{ backgroundColor: diplay === 2 ? '#0d6efd' : '#565e64' }}>Low Stock</button>
-            <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(3)} style={{ backgroundColor: diplay === 3 ? '#0d6efd' : '#565e64' }}>Report</button>
-            <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(4)} style={{ backgroundColor: diplay === 4 ? '#0d6efd' : '#565e64' }}>Purchase Order</button>
-            <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(5)} style={{ backgroundColor: diplay === 5 ? '#0d6efd' : '#565e64' }}>Swarna Prashana</button>
-            <button type="button" className="btn btn-secondary  m-4" onClick={() => SetDisplay(6)} style={{ backgroundColor: diplay === 6 ? '#0d6efd' : '#565e64' }}>Patient</button>
-            <button className="btn btn-secondary force-refresh" onClick={refresh} >Refresh</button>
+            <button type="button" className="btn btn-secondary m-btn" onClick={() => SetDisplay(0)} style={{ backgroundColor: diplay === 0 ? '#0d6efd' : '#565e64' }}>Stock & Sale</button>
+            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(1)} style={{ backgroundColor: diplay === 1 ? '#0d6efd' : '#565e64' }}>Near To Expiry</button>
+            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(2)} style={{ backgroundColor: diplay === 2 ? '#0d6efd' : '#565e64' }}>Low Stock</button>
+            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(3)} style={{ backgroundColor: diplay === 3 ? '#0d6efd' : '#565e64' }}>Report</button>
+            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(4)} style={{ backgroundColor: diplay === 4 ? '#0d6efd' : '#565e64' }}>Purchase Order</button>
+            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(5)} style={{ backgroundColor: diplay === 5 ? '#0d6efd' : '#565e64' }}>Swarna Prashana</button>
+            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(6)} style={{ backgroundColor: diplay === 6 ? '#0d6efd' : '#565e64' }}>Patient</button>
+            <button type="button" className="btn btn-secondary  m-btn force-refresh" onClick={refresh} >Refresh</button>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ function App(changeTab) {
           </div>
         }
         {!showLoading &&
-          <div className="div">
+          <div className="div main-body">
 
 
             {
