@@ -46,9 +46,7 @@ function PrintInvoice() {
             TransactionsDataService.addCustomerName(id,customerName,sales.transId);
             SetShowPrint(false)
             setTimeout(function () {
-                // eslint-disable-next-line no-restricted-globals
-                window.onload=function(){self.print();} 
-               // window.print()
+                window.print()
             }, 200)
         }else{
             swal("Provide customer name for the invoice");
