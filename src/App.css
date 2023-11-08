@@ -377,3 +377,7 @@ cursor: pointer;
   position: relative;
     top: 40px;
 }
+
+.batch-custom-col input{
+  width: 100%;
+}

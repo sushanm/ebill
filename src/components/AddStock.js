@@ -7,6 +7,7 @@ import AddBatch from './AddBatch';
 
 function AddStock({ saleMode }) {
 
+    const[searchText, SetSearchText]=useState('');
     const [showLoading, SetShowLoading] = useState(true);
     const [products, setProducts] = useState([]);
     const [productsForSearch, setProductsForSearch] = useState([]);
@@ -44,8 +45,10 @@ function AddStock({ saleMode }) {
 
 
     const searchProducts = (val) => {
+       
         try {
             let searchValue = val.target.value.trim();
+            SetSearchText(searchValue)
             if (searchValue.length > 0) {
                 setProductsForSearch(products.filter(product => product.name.toLowerCase().includes(searchValue.toLowerCase()) || product.usage.toLowerCase().includes(searchValue.toLowerCase())))
             }
@@ -81,6 +84,10 @@ function AddStock({ saleMode }) {
 
         }
     }
+    const onSearchFocus =()=>{
+        SetSearchText('')
+        getAllProducts();
+    }
     return (
         <div>
             {
@@ -99,7 +106,7 @@ function AddStock({ saleMode }) {
                                     Search Product
                                 </div>
                                 <div className="row">
-                                    <input type={'text'} onChange={searchProducts} ></input>
+                                    <input type={'text'} value={searchText} onFocus={onSearchFocus} onChange={searchProducts} ></input>
                                 </div>
                             </div>
                         </div>

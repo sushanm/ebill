@@ -137,14 +137,14 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
         SetEditMode(false);
     }
 
-    const addToSale = (batch) => {
+    const addToSale = (batch, quantity) => {
         let saleData = {
             id: productId,
             name: productName,
             gst: gst,
             giveDiscount:giveDiscountEdit,
             price: batch.price,
-            quantity: 1,
+            quantity: quantity,
             batchId: batch.id
         }
         SetSales([...sales, saleData])
@@ -246,18 +246,18 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                 !newProduct &&
                 <>
                     <div className="row">
-                        <div className="col batch-custom-col-h">Price</div>
-                        <div className="col batch-custom-col-h"> Quantity</div>
-                        <div className="col batch-custom-col-h">Expiry Date</div>
-                        <div className="col batch-custom-col-h"> Action </div>
+                        <div className="col-2 batch-custom-col-h">Price</div>
+                        <div className="col-1 batch-custom-col-h"> Quantity</div>
+                        <div className="col-2 batch-custom-col-h">Expiry Date</div>
+                        <div className="col-7 batch-custom-col-h"> Action </div>
                     </div>
                     {
                         !editMode &&
                         <div className="row">
-                            <div className="col batch-custom-col"><input type={'number'} placeholder="Price" value={price} onChange={(evt) => SetPrice(evt.target.value)}></input></div>
-                            <div className="col batch-custom-col"> <input type={'number'} placeholder="Quantity" value={quantity} onChange={(evt) => SetQuantity(evt.target.value)}></input></div>
-                            <div className="col batch-custom-col"><input type={'month'} placeholder="Expiry Date" value={expiryDate} onChange={(evt) => SetExpiryDate(evt.target.value)}></input></div>
-                            <div className="col batch-custom-col"> <button onClick={() => AddOrEditBatch(false, -1)} disabled={disableAdd} >Add</button></div>
+                            <div className="col-2 batch-custom-col"><input type={'number'} placeholder="Price" value={price} onChange={(evt) => SetPrice(evt.target.value)}></input></div>
+                            <div className="col-1 batch-custom-col"> <input type={'number'} placeholder="Quantity" value={quantity} onChange={(evt) => SetQuantity(evt.target.value)}></input></div>
+                            <div className="col-2 batch-custom-col"><input type={'month'} placeholder="Expiry Date" value={expiryDate} onChange={(evt) => SetExpiryDate(evt.target.value)}></input></div>
+                            <div className="col-7 batch-custom-col"> <button onClick={() => AddOrEditBatch(false, -1)} disabled={disableAdd} >Add</button></div>
                         </div>
                     }
 
@@ -267,24 +267,36 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                                 <div key={index} className="row batch-custom-row">
                                     {
                                         editBatchRow === index ? <>
-                                            <div className="col batch-custom-col"><input type={'number'} value={price} placeholder="Price" onChange={(evt) => SetPrice(evt.target.value)}></input></div>
-                                            <div className="col batch-custom-col"> <input type={'number'} value={quantity} placeholder="Quantity" onChange={(evt) => SetQuantity(evt.target.value)}></input></div>
-                                            <div className="col batch-custom-col"><input type={'month'} placeholder="Expiry Date" value={expiryDate} onChange={(evt) => SetExpiryDate(evt.target.value)}></input></div>
+                                            <div className="col-2 batch-custom-col"><input type={'number'} value={price} placeholder="Price" onChange={(evt) => SetPrice(evt.target.value)}></input></div>
+                                            <div className="col-1 batch-custom-col"> <input type={'number'} value={quantity} placeholder="Quantity" onChange={(evt) => SetQuantity(evt.target.value)}></input></div>
+                                            <div className="col-2 batch-custom-col"><input type={'month'} placeholder="Expiry Date" value={expiryDate} onChange={(evt) => SetExpiryDate(evt.target.value)}></input></div>
 
-                                            <div className="col batch-custom-col"> <button onClick={() => AddOrEditBatch(true, item.id)} >Save</button></div>
+                                            <div className="col-7 batch-custom-col"> <button onClick={() => AddOrEditBatch(true, item.id)} >Save</button></div>
                                         </> : <>
-                                            <div className="col batch-custom-col">
+                                            <div className="col-2 batch-custom-col">
                                                 {item.price}
                                             </div>
-                                            <div className="col batch-custom-col">{item.quantity}</div>
-                                            <div className="col batch-custom-col">{item.expiryDate}</div>
-                                            <div className="col batch-custom-col">
+                                            <div className="col-1 batch-custom-col">{item.quantity}</div>
+                                            <div className="col-2 batch-custom-col">{item.expiryDate}</div>
+                                            <div className="col-7 batch-custom-col">
                                                 <div className="row">
-                                                    <div className="col">
+                                                    <div className="col-2">
                                                         <button onClick={() => editBatch(index, item)} >Edit</button>
                                                     </div>
-                                                    <div className="col">
-                                                        <button onClick={() => addToSale(item)} >Add To Sale</button>
+                                                    <div className="col-2">
+                                                        <button onClick={() => addToSale(item,1)} >Sale 1</button>
+                                                    </div>
+                                                    <div className="col-2">
+                                                        <button onClick={() => addToSale(item,2)} >Sale 2</button>
+                                                    </div>
+                                                    <div className="col-2">
+                                                        <button onClick={() => addToSale(item,3)} >Sale 3</button>
+                                                    </div>
+                                                    <div className="col-2">
+                                                        <button onClick={() => addToSale(item,4)} >Sale 4</button>
+                                                    </div>
+                                                    <div className="col-2">
+                                                        <button onClick={() => addToSale(item,5)} >Sale 5</button>
                                                     </div>
                                                 </div>
                                             </div>
