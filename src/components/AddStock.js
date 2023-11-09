@@ -45,10 +45,9 @@ function AddStock({ saleMode }) {
 
 
     const searchProducts = (val) => {
-       
+        SetSearchText(val.target.value)
         try {
             let searchValue = val.target.value.trim();
-            SetSearchText(searchValue)
             if (searchValue.length > 0) {
                 setProductsForSearch(products.filter(product => product.name.toLowerCase().includes(searchValue.toLowerCase()) || product.usage.toLowerCase().includes(searchValue.toLowerCase())))
             }
