@@ -355,7 +355,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 <div className="col-3 btn-right">
                     {
                         saledata &&
-                        <button disabled={isDisabled} onClick={handleShow} className='btn btn-primary'> Add Sale </button>
+                        <button disabled={isDisabled} onClick={handleShow} tabIndex={'2'} className='btn btn-primary'> Add Sale </button>
                     }
                     {/* <button onClick={handleMigrate}>Migrate</button> */}
                 </div>
@@ -421,7 +421,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                         <Button variant="secondary" onClick={handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" disabled={isDisabledSaveSales} onClick={() => addTransation()}>
+                        <Button variant="primary" disabled={isDisabledSaveSales} tabIndex={'3'} onClick={() => addTransation()}>
                             Save Sales
                         </Button>
                     </Modal.Footer>

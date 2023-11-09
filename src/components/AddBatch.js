@@ -285,12 +285,12 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                                                     </div>
                                                     <div className="col-2">
                                                         {
-                                                            item.quantity >= 1 && <button onClick={() => addToSale(item, 1)} >Sale 1</button>
+                                                            item.quantity >= 1 && <button onClick={() => addToSale(item, 1)}  className="order-2">Sale 1</button>
                                                         }
                                                     </div>
                                                     <div className="col-2">
                                                         {
-                                                            item.quantity >= 2 && <button onClick={() => addToSale(item, 2)} >Sale 2</button>
+                                                            item.quantity >= 2 && <button onClick={() => addToSale(item, 2)}  className="order-3">Sale 2</button>
                                                         }
 
                                                     </div>
@@ -373,7 +373,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                             <input type="number" value={productGSTEdit} style={{ 'width': '100%' }} onChange={(e) => SetProductGSTEdit(e.target.value)} />
                         </div>
                         <div className="col-2 ">
-                            <button onClick={saveProductName}>Save</button>
+                            <button onClick={saveProductName} >Save</button>
                         </div>
                     </div>
                 }

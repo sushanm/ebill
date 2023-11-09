@@ -105,7 +105,7 @@ function AddStock({ saleMode }) {
                                     Search Product
                                 </div>
                                 <div className="row">
-                                    <input type={'text'} value={searchText} onFocus={onSearchFocus} onChange={searchProducts} ></input>
+                                    <input type={'text'} value={searchText} className="order-1" tabIndex={'1'} onFocus={onSearchFocus} onChange={searchProducts} ></input>
                                 </div>
                             </div>
                         </div>
