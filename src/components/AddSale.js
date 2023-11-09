@@ -280,6 +280,16 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
 
     return (
         <div className='sale-row'>
+         <div className="row">
+                <div className="col-9"></div>
+                <div className="col-3 btn-right">
+                    {
+                        saledata &&
+                        <button disabled={isDisabled} onClick={handleShow} tabIndex={'2'} className='btn btn-primary'> Save Sales </button>
+                    }
+                    {/* <button onClick={handleMigrate}>Migrate</button> */}
+                </div>
+            </div>
             <div className="row sale-row-h">
                 <div className="col-5">Product Name</div>
                 <div className="col-2">Unit Price</div>
@@ -350,16 +360,8 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                     </div>
                 </div>
             </div>
+           
             <div className="row">
-                <div className="col-9"></div>
-                <div className="col-3 btn-right">
-                    {
-                        saledata &&
-                        <button disabled={isDisabled} onClick={handleShow} tabIndex={'2'} className='btn btn-primary'> Add Sale </button>
-                    }
-                    {/* <button onClick={handleMigrate}>Migrate</button> */}
-                </div>
-            </div><div className="row">
                 <Modal show={show} onHide={handleClose} centered size="lg">
                     <Modal.Header closeButton>
                         <Modal.Title>Preview the sale</Modal.Title>
