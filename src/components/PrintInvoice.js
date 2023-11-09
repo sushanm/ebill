@@ -15,9 +15,11 @@ function PrintInvoice() {
             location.state.items.forEach(element => {
                 totalGst = totalGst + Number(element.gstValue);
             });
-            SetCustomrName(location.state.customerName)
+
+
+            //  SetCustomrName(location.state.customerName)
             let data = {
-                date: location.state.saleDate, invoiceNo: invoice, items: location.state.items, gst: totalGst, transId:location.state.id
+                date: location.state.saleDate, invoiceNo: invoice, items: location.state.items, gst: totalGst, transId: location.state.id, customerName: location.state.customerName
             }
 
             SetSales(data)
@@ -30,28 +32,15 @@ function PrintInvoice() {
     }
 
     const [showPrint, SetShowPrint] = useState(true);
-    const [customerName, SetCustomrName]=useState('');
+
     const handlePrint = () => {
-
-
-
-    
-           
-          
-
-        if(customerName.length>0){
-           
-            let saleDateArray = sales.date.split('-');
-            let id = saleDateArray[2] + "-" + saleDateArray[1];
-            TransactionsDataService.addCustomerName(id,customerName,sales.transId);
-            SetShowPrint(false)
-            setTimeout(function () {
-                window.print()
-            }, 200)
-        }else{
-            swal("Provide customer name for the invoice");
-        }
-
+        let saleDateArray = sales.date.split('-');
+        let id = saleDateArray[2] + "-" + saleDateArray[1];
+        // TransactionsDataService.addCustomerName(id, customerName, sales.transId);
+        SetShowPrint(false)
+        setTimeout(function () {
+            window.print()
+        }, 200)
     }
 
 
@@ -85,7 +74,10 @@ function PrintInvoice() {
             </div>
             <div className="row unset-p-m border-b">
                 <div className="col border-r col-fix col-fix-left"> Customer Name</div>
-                <div className="col col-fix"><input className="remove-b-p " value={customerName} onChange={(e)=>SetCustomrName(e.target.value)} type="text" name="" id="" /></div>
+                <div className="col col-fix">
+                    {sales.customerName}
+                    {/* <input className="remove-b-p " value={customerName} onChange={(e)=>SetCustomrName(e.target.value)} type="text" name="" id="" /> */}
+                </div>
             </div>
             <span className='print-h col-fix col-fix-left'>Item Details</span>
             <div className="row unset-p-m print-h border-t border-b">
@@ -169,7 +161,7 @@ function PrintInvoice() {
             </div>
             <div className="row unset-p-m  border-b">
                 <div className="col-12 col-fix-left">
-                Thank you for your business! All sales are final. Items once sold will not be taken back or exchanged. All Disputes subject to Mysore Jurisdiction only
+                    Thank you for your business! All sales are final. Items once sold will not be taken back or exchanged. All Disputes subject to Mysore Jurisdiction only
                 </div>
             </div>
             {

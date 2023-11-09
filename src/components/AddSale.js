@@ -19,6 +19,9 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
 
     const [defaultDiscount, SetDefaultDiscount] = useState(0);
 
+    const [customerName, SetCustomerName] = useState('');
+    const [customerNo, SetCustomerNo] = useState('');
+
     useEffect(() => {
         SetSaleData(sales);
         updateTotalPrice(sales)
@@ -192,6 +195,8 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 saleDate: getDate(),
                 totalPrice: Number(totalPrice),
                 discount: Number(discount),
+                customerName: customerName,
+                mobile: customerNo 
             };
 
             await TransactionsDataService.addNewTransation(newTransaction);
@@ -325,6 +330,22 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                         </div>
                         <div className="col">
                             <input type={'number'} value={updatedTotalPrice} onChange={(e) => changeTotalPrice(e.target.value)}></input>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            Customer Name
+                        </div>
+                        <div className="col">
+                            <input type={'text'} value={customerName} onChange={(e) => SetCustomerName(e.target.value)}></input>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            Mobile Number
+                        </div>
+                        <div className="col">
+                            <input type={'text'} value={customerNo} onChange={(e) => SetCustomerNo(e.target.value)}></input>
                         </div>
                     </div>
                 </div>

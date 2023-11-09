@@ -142,7 +142,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
             id: productId,
             name: productName,
             gst: gst,
-            giveDiscount:giveDiscountEdit,
+            giveDiscount: giveDiscountEdit,
             price: batch.price,
             quantity: quantity,
             batchId: batch.id
@@ -173,12 +173,12 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
         currentData.usage = productUsageForEdit;
         currentData.gst = productGSTEdit;
 
-        if(giveDiscountForEdit){
+        if (giveDiscountForEdit) {
             currentData.giveDiscount = giveDiscountForEdit;
-        }else{
-            currentData.giveDiscount =false;
+        } else {
+            currentData.giveDiscount = false;
         }
-       
+
         await StockDataService.updateProduct(productId, currentData);
         LocalStorageServices.updateProductName(productId, productNameForEdit, productUsageForEdit, productGSTEdit, giveDiscountForEdit);
         callBackMethod(productId, productNameForEdit, productUsageForEdit, productGSTEdit, giveDiscount, giveDiscountForEdit);
@@ -284,19 +284,32 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                                                         <button onClick={() => editBatch(index, item)} >Edit</button>
                                                     </div>
                                                     <div className="col-2">
-                                                        <button onClick={() => addToSale(item,1)} >Sale 1</button>
+                                                        {
+                                                            item.quantity >= 1 && <button onClick={() => addToSale(item, 1)} >Sale 1</button>
+                                                        }
                                                     </div>
                                                     <div className="col-2">
-                                                        <button onClick={() => addToSale(item,2)} >Sale 2</button>
+                                                        {
+                                                            item.quantity >= 2 && <button onClick={() => addToSale(item, 2)} >Sale 2</button>
+                                                        }
+
                                                     </div>
                                                     <div className="col-2">
-                                                        <button onClick={() => addToSale(item,3)} >Sale 3</button>
+                                                        {
+                                                            item.quantity >= 3 && <button onClick={() => addToSale(item, 3)} >Sale 3</button>
+                                                        }
+
                                                     </div>
                                                     <div className="col-2">
-                                                        <button onClick={() => addToSale(item,4)} >Sale 4</button>
+                                                        {
+                                                            item.quantity >= 4 && <button onClick={() => addToSale(item, 4)} >Sale 4</button>
+                                                        }
+
                                                     </div>
                                                     <div className="col-2">
-                                                        <button onClick={() => addToSale(item,5)} >Sale 5</button>
+                                                        {
+                                                            item.quantity >= 5 && <button onClick={() => addToSale(item, 5)} >Sale 5</button>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -328,7 +341,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                         </div>
                         <div className="col-1 batch-custom-col-h">Discount</div>
                         <div className="col-1 ">
-                        
+
                             {giveDiscountEdit && <>ON</>}
                             {/* {!giveDiscountEdit && <>OFF</>} */}
                         </div>
