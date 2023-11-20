@@ -2,6 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import TransactionsDataService from "../services/transactions.services"
+import { useNavigate } from 'react-router-dom';
 
 function PrintInvoice() {
 
@@ -26,6 +27,13 @@ function PrintInvoice() {
         }
 
     }, [location.state])
+
+    const history = useNavigate();
+    useEffect(() => {
+        setTimeout(() => {
+            history('/');
+          }, "10000");
+    }, [])
 
     function round(value) {
         return Number(Math.round((value + Number.EPSILON) * 100) / 100);
