@@ -7,7 +7,7 @@ import AddBatch from './AddBatch';
 
 function AddStock({ saleMode }) {
 
-    const[searchText, SetSearchText]=useState('');
+    const [searchText, SetSearchText] = useState('');
     const [showLoading, SetShowLoading] = useState(true);
     const [products, setProducts] = useState([]);
     const [productsForSearch, setProductsForSearch] = useState([]);
@@ -28,7 +28,7 @@ function AddStock({ saleMode }) {
             }, 1000)
         }
         else {
-            data.sort(function(a, b) {
+            data.sort(function (a, b) {
                 var textA = a.name.toUpperCase();
                 var textB = b.name.toUpperCase();
                 return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
@@ -52,9 +52,20 @@ function AddStock({ saleMode }) {
     const searchProducts = (val) => {
         SetSearchText(val.target.value)
         try {
-            let searchValue = val.target.value.trim();
+            let searchValue = val.target.value.trim().toLowerCase();
             if (searchValue.length > 0) {
-                setProductsForSearch(products.filter(product => product.name.toLowerCase().includes(searchValue.toLowerCase()) || product.usage.toLowerCase().includes(searchValue.toLowerCase())))
+                if (searchValue.startsWith("p")) {
+                    let searchArray = searchValue.split('p');
+                    if (searchArray.length > 1) {
+                        if (isNumeric(searchArray[1])) {
+                            setProductsForSearch(products.filter(product => product.name.toLowerCase().endsWith("p" + searchArray[1])))
+                        } else {
+                            setProductsForSearch(products.filter(product => product.name.toLowerCase().includes(searchValue) || product.usage.toLowerCase().includes(searchValue)))
+                        }
+                    }
+                } else {
+                    setProductsForSearch(products.filter(product => product.name.toLowerCase().includes(searchValue) || product.usage.toLowerCase().includes(searchValue)))
+                }
             }
             else {
                 getAllProducts();
@@ -62,6 +73,9 @@ function AddStock({ saleMode }) {
         } catch (error) { }
     }
 
+    function isNumeric(num) {
+        return !isNaN(num)
+    }
 
     const addNewBatch = async (id, name, usage, gst, giveDiscount) => {
         SetIsNewProduct(false)
@@ -88,7 +102,7 @@ function AddStock({ saleMode }) {
 
         }
     }
-    const onSearchFocus =()=>{
+    const onSearchFocus = () => {
         SetSearchText('')
         getAllProducts();
     }
@@ -122,35 +136,35 @@ function AddStock({ saleMode }) {
                                 </div>
                                 <div className="col-3"></div>
                                 <div className="col-3 count"><p>
-                                {totalFiltedCount}
+                                    {totalFiltedCount}
                                 </p>
                                 </div>
                             </div>
                         }
                         <div className="row col-3-scroll">
-                        {
-                            productsForSearch &&
-                            productsForSearch.map((doc, index) => {
-                                return (
-                                    <div className='row product-name-row' style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }} key={doc.id} onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst, doc.giveDiscount)}>
-                                        <div className="col-10">
-                                            {doc.name}
-                                        </div>
+                            {
+                                productsForSearch &&
+                                productsForSearch.map((doc, index) => {
+                                    return (
+                                        <div className='row product-name-row' style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }} key={doc.id} onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst, doc.giveDiscount)}>
+                                            <div className="col-10">
+                                                {doc.name}
+                                            </div>
 
-                                        <div className="col-2">
-                                            {doc.totalQuantity}
+                                            <div className="col-2">
+                                                {doc.totalQuantity}
+                                            </div>
                                         </div>
-                                    </div>
-                                )
-                            })
-                        }
+                                    )
+                                })
+                            }
                         </div>
 
                     </div>
                     <div className="col-8">
                         <AddBatch productId={selectedProductId} newProduct={isNewProduct} callBackMethod={newProductAdded}
                             usedFor={selectedProductUsedFor}
-                            saleMode={saleMode} productName={selectedProductName} callbackaftersalesFromBatch={callbackaftersalesFromBatch} gst={selectedProductGST} giveDiscountEdit={selectedGiveDiscount}/>
+                            saleMode={saleMode} productName={selectedProductName} callbackaftersalesFromBatch={callbackaftersalesFromBatch} gst={selectedProductGST} giveDiscountEdit={selectedGiveDiscount} />
                     </div>
                 </div>
             }
