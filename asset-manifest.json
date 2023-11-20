@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/ebill/static/css/main.33696511.css",
-    "main.js": "/ebill/static/js/main.83d2137b.js",
+    "main.js": "/ebill/static/js/main.9a2d4804.js",
     "static/js/787.ec1511e9.chunk.js": "/ebill/static/js/787.ec1511e9.chunk.js",
     "index.html": "/ebill/index.html",
     "main.33696511.css.map": "/ebill/static/css/main.33696511.css.map",
-    "main.83d2137b.js.map": "/ebill/static/js/main.83d2137b.js.map",
+    "main.9a2d4804.js.map": "/ebill/static/js/main.9a2d4804.js.map",
     "787.ec1511e9.chunk.js.map": "/ebill/static/js/787.ec1511e9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.33696511.css",
-    "static/js/main.83d2137b.js"
+    "static/js/main.9a2d4804.js"
   ]
 }
