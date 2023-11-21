@@ -30,12 +30,8 @@ function PrintInvoice() {
 
     const history = useNavigate();
     useEffect(() => {
-        setTimeout(function () {
-            window.print()
-        }, 500)
-        setTimeout(() => {
-            history('/');
-          }, "1000");
+        window.print()
+        history('/');
     }, [])
 
     function round(value) {
