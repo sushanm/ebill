@@ -30,9 +30,12 @@ function PrintInvoice() {
 
     const history = useNavigate();
     useEffect(() => {
+        setTimeout(function () {
+            window.print()
+        }, 500)
         setTimeout(() => {
             history('/');
-          }, "10000");
+          }, "1000");
     }, [])
 
     function round(value) {
@@ -176,7 +179,7 @@ function PrintInvoice() {
                 showPrint &&
                 <div className="row ">
                     <div className="col ">
-                        <button onClick={handlePrint}>PRINT</button>
+                        {/* <button onClick={handlePrint}>PRINT</button> */}
                     </div>
                 </div>
             }
