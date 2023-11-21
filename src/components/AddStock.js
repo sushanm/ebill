@@ -131,10 +131,10 @@ function AddStock({ saleMode }) {
                         {
                             !saleMode &&
                             <div className="row">
-                                <div className="col-6">
+                                <div className="col-9">
                                     <button className='btn btn-primary' onClick={() => SetIsNewProduct(true)} >Add New Product</button>
                                 </div>
-                                <div className="col-3"></div>
+                               
                                 <div className="col-3 count"><p>
                                     {totalFiltedCount}
                                 </p>
