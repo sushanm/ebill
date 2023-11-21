@@ -113,7 +113,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
 
     const [isDisabledSaveSales, SetisDisabledSaveSales] = useState(false);
 
-    const addTransation = async () => {
+    const addTransation = async (printEnable) => {
         // try {
         SetisDisabledSaveSales(true);
         if (saledata.length > 0) {
@@ -196,11 +196,13 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                 totalPrice: Number(totalPrice),
                 discount: Number(discount),
                 customerName: customerName,
-                mobile: customerNo 
+                mobile: customerNo
             };
 
             await TransactionsDataService.addNewTransation(newTransaction);
-            generateInvoicePrint(newTransaction,1)
+            if (printEnable) {
+                generateInvoicePrint(newTransaction, 1)
+            }
             let tempArray = new Array();
 
             cloneSaleData.forEach(item => {
@@ -276,11 +278,11 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
     const generateInvoicePrint = (details, index) => {
         details.lineItem = index + 1
         history('/printinvoice', { state: details });
-      }
+    }
 
     return (
         <div className='sale-row'>
-         <div className="row">
+            <div className="row">
                 <div className="col-9"></div>
                 <div className="col-3 btn-right">
                     {
@@ -360,7 +362,7 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                     </div>
                 </div>
             </div>
-           
+
             <div className="row">
                 <Modal show={show} onHide={handleClose} centered size="lg">
                     <Modal.Header closeButton>
@@ -423,7 +425,10 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
                         <Button variant="secondary" onClick={handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" disabled={isDisabledSaveSales} tabIndex={'3'} onClick={() => addTransation()}>
+                        <Button variant="success" disabled={isDisabledSaveSales} tabIndex={'3'} onClick={() => addTransation(true)}>
+                            Save Sales and Print
+                        </Button>
+                        <Button variant="primary" disabled={isDisabledSaveSales} tabIndex={'3'} onClick={() => addTransation(false)}>
                             Save Sales
                         </Button>
                     </Modal.Footer>
