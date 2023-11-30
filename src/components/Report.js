@@ -393,7 +393,14 @@ function Report() {
                     </div>
                     <div className="col-2">
                       {Number(doc.totalPrice) - Number(doc.discount)} / {Number(doc.discount)}
+                      <div className="row">
+                        {doc.customerName}
+                      </div>
+                      <div className="row">
+                        {doc.mobile}
+                      </div>
                     </div>
+                   
                     <div className="col-1">
                       <div className="row">
                         <div className="col unset-p-m">

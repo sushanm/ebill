@@ -23,15 +23,18 @@ function PrintInvoice() {
                 date: location.state.saleDate, invoiceNo: invoice, items: location.state.items, gst: totalGst, transId: location.state.id, customerName: location.state.customerName
             }
 
-            SetSales(data)
+            SetSales(data);
         }
 
     }, [location.state])
 
     const history = useNavigate();
     useEffect(() => {
-        window.print()
-        history('/');
+        setTimeout(() => {
+            window.print()
+            history('/');
+        }, "100");
+
     }, [])
 
     function round(value) {
