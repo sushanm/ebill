@@ -397,3 +397,8 @@ cursor: pointer;
 .order-4 {
   order: 4; 
 }
+
+.product-name-row-zero{
+  background-color: red !important;
+  color: white !important;
+}

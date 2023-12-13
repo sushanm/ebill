@@ -146,7 +146,7 @@ function AddStock({ saleMode }) {
                                 productsForSearch &&
                                 productsForSearch.map((doc, index) => {
                                     return (
-                                        <div className='row product-name-row' style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }} key={doc.id} onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst, doc.giveDiscount)}>
+                                        <div  className={`row product-name-row ${doc.totalQuantity == 0 ? 'product-name-row-zero' : ''}`} style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }}  key={doc.id} onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst, doc.giveDiscount)}>
                                             <div className="col-10">
                                                 {doc.name}
                                             </div>
