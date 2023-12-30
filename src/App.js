@@ -19,6 +19,7 @@ import Patient from "./components/Patient";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Manage from "./components/Manage";
 
 function App(changeTab) {
 
@@ -27,12 +28,15 @@ function App(changeTab) {
   const [showLoading, SetShowLoading] = useState(false);
   const [showModel, SetShowModel] = useState(false);
   const [configText, SetConfigText] = useState('');
+  const [adminOrUser, SetadminOrUser] = useState("");
   const login = async () => {
 
     let dataFromLocal = JSON.parse(localStorage.getItem('getDrKotianConnection'));
     const arryData = dataFromLocal.split(';');
     const userName = arryData[6];
     const password = arryData[7];
+    SetadminOrUser(arryData[8])
+  
 
     try {
       const user = await signInWithEmailAndPassword(
@@ -45,10 +49,35 @@ function App(changeTab) {
     }
   }
 
+  function validateToken() {
+    let dataFromLocal = JSON.parse(localStorage.getItem('getDrKotianConnection'));
+    if (dataFromLocal) {
+      let expiryDataFromLocal = JSON.parse(localStorage.getItem('getDrKotianTokenExpiry'));
+      if(!expiryDataFromLocal){
+        var dateObj = new Date();
+        localStorage.setItem("getDrKotianTokenExpiry", JSON.stringify(dateObj.getTime()));
+
+        //prompt for token
+      }
+    }
+  }
+
+  function isTokenExpired() {
+    var dateObj = new Date();
+    const currentTime = dateObj.getTime()
+    // localStorage.setItem("getDrKotianTokenExpiry", JSON.stringify(dateObj.getTime()));
+    var endDate = new Date();
+    let dataFromLocal = JSON.parse(localStorage.getItem('getDrKotianTokenExpiry'));
+    console.log(dataFromLocal)
+    var seconds = (endDate.getTime() - dataFromLocal) / 1000;
+    console.log(seconds)
+  }
+
   useEffect(() => {
+    isTokenExpired()
+    validateToken()
     let dataFromLocal = JSON.parse(localStorage.getItem('getDrKotianConnection'));
     if (!dataFromLocal) {
-      console.log(dataFromLocal)
       SetShowModel(true)
     } else {
       SetShowModel(false)
@@ -83,8 +112,8 @@ function App(changeTab) {
   }
 
   const saveConfig = () => {
-    SetShowModel(false)
-    localStorage.setItem("getDrKotianConnection", JSON.stringify(configText));
+    //SetShowModel(false)
+    //;'p0localStorage.setItem("getDrKotianConnection", JSON.stringify(configText));
   }
 
 
@@ -118,12 +147,19 @@ function App(changeTab) {
           <div className="col">
             {/* <button onClick={login} >Login</button> */}
             <button type="button" className="btn btn-secondary m-btn" onClick={() => SetDisplay(0)} style={{ backgroundColor: diplay === 0 ? '#0d6efd' : '#565e64' }}>Stock & Sale</button>
-            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(1)} style={{ backgroundColor: diplay === 1 ? '#0d6efd' : '#565e64' }}>Near To Expiry</button>
-            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(2)} style={{ backgroundColor: diplay === 2 ? '#0d6efd' : '#565e64' }}>Low Stock</button>
+            {
+              adminOrUser==='admin' && <>
+              <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(1)} style={{ backgroundColor: diplay === 1 ? '#0d6efd' : '#565e64' }}>Near To Expiry</button>
+              <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(2)} style={{ backgroundColor: diplay === 2 ? '#0d6efd' : '#565e64' }}>Low Stock</button>
+              </>
+            }
+            
+            
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(3)} style={{ backgroundColor: diplay === 3 ? '#0d6efd' : '#565e64' }}>Report</button>
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(4)} style={{ backgroundColor: diplay === 4 ? '#0d6efd' : '#565e64' }}>Purchase Order</button>
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(5)} style={{ backgroundColor: diplay === 5 ? '#0d6efd' : '#565e64' }}>Swarna Prashana</button>
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(6)} style={{ backgroundColor: diplay === 6 ? '#0d6efd' : '#565e64' }}>Patient</button>
+            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(7)} style={{ backgroundColor: diplay === 7 ? '#0d6efd' : '#565e64' }}>Manage</button>
             <button type="button" className="btn btn-secondary  m-btn force-refresh" onClick={refresh} >Refresh</button>
           </div>
         </div>
@@ -196,6 +232,15 @@ function App(changeTab) {
                 <div className="col">
                   <h4>Patient Records</h4>
                   <Patient />
+                </div>
+              </div>
+            }
+            {
+              diplay === 7 &&
+              <div className="row">
+                <div className="col">
+                  <h4>Manage</h4>
+                  <Manage />
                 </div>
               </div>
             }
