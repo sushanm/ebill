@@ -30,6 +30,10 @@ function Manage() {
         }
     }
 
+    const profitCalculator = (sales, expense) => {
+return(Number(sales)-Number(expense))
+    }
+
     const reset = () => {
         SetTransactionAmount(0);
         SetTransactionFor("");
@@ -89,9 +93,10 @@ function Manage() {
                                 <Accordion.Item eventKey={index} key={index}>
                                     <Accordion.Header>
                                         <div className="row manager-row">
-                                            <div className="col-4">{doc.id}</div>
-                                            <div className="col-4">Total Sales -  <strong>{expenseByMonth(doc.id)}</strong> </div>
-                                            <div className="col-4">Total Expense -  <strong>{doc.totalAmount}</strong> </div>
+                                            <div className="col-3">{doc.id}</div>
+                                            <div className="col-3">Total Sales -  <strong>{expenseByMonth(doc.id)}</strong> </div>
+                                            <div className="col-3">Total Expense -  <strong>{doc.totalAmount}</strong> </div>
+                                            <div className="col-3">Profit -  <strong>{profitCalculator(expenseByMonth(doc.id),doc.totalAmount)}</strong> </div>
                                         </div>
                                     </Accordion.Header>
                                     <Accordion.Body>
