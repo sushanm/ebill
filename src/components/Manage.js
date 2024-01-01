@@ -9,18 +9,28 @@ function Manage() {
     const [expenseMonthlyData, SetExpenseMonthlyData] = useState([]);
     useEffect(() => {
         if (expenseMonthlyData.length == 0) {
+
             getAllTransactions();
         }
     }, [])
 
     const getAllTransactions = async () => {
         await ExpenseDataService.getAllTransactions().then((data) => {
-            console.log(data)
             SetExpenseMonthlyData(data)
         });
     }
 
-    const reset =  () => {
+    const expenseByMonth = (id) => {
+        let monthlySalesData = JSON.parse(localStorage.getItem('drkotianTransactionDataByMonth'))
+        let filterData = monthlySalesData.filter(item => item.id === id);
+        if (filterData) {
+            if (filterData.length > 0) {
+                return (monthlySalesData.filter(item => item.id === id)[0].totalAmount)
+            }
+        }
+    }
+
+    const reset = () => {
         SetTransactionAmount(0);
         SetTransactionFor("");
     }
@@ -39,7 +49,7 @@ function Manage() {
         await ExpenseDataService.addNewTransation(newTransaction);
         setTimeout(function () {
             reset();
-          }, 1000)
+        }, 1000)
     }
     return (
         <>
@@ -79,8 +89,9 @@ function Manage() {
                                 <Accordion.Item eventKey={index} key={index}>
                                     <Accordion.Header>
                                         <div className="row manager-row">
-                                            <div className="col-6">{doc.id}</div>
-                                            <div className="col-6">Total Amount -  <strong>{doc.totalAmount}</strong> </div>
+                                            <div className="col-4">{doc.id}</div>
+                                            <div className="col-4">Total Sales -  <strong>{expenseByMonth(doc.id)}</strong> </div>
+                                            <div className="col-4">Total Expense -  <strong>{doc.totalAmount}</strong> </div>
                                         </div>
                                     </Accordion.Header>
                                     <Accordion.Body>

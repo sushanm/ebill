@@ -100,6 +100,7 @@ function Report() {
           monthTrans.gst18Value = gst18Value;
         });
         SetTransactionByMonth(data)
+        localStorage.setItem('drkotianTransactionDataByMonth', JSON.stringify(data));
         SetTransactionByMonthForGST(data)
         let allData = [];
         if (data) {
