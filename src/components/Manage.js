@@ -94,9 +94,9 @@ return(Number(sales)-Number(expense))
                                     <Accordion.Header>
                                         <div className="row manager-row">
                                             <div className="col-3">{doc.id}</div>
-                                            <div className="col-3">Total Sales -  <strong>{expenseByMonth(doc.id)}</strong> </div>
-                                            <div className="col-3">Total Expense -  <strong>{doc.totalAmount}</strong> </div>
-                                            <div className="col-3">Profit -  <strong>{profitCalculator(expenseByMonth(doc.id),doc.totalAmount)}</strong> </div>
+                                            <div className="col-3">Total Sales :  <strong>{expenseByMonth(doc.id)}</strong> </div>
+                                            <div className="col-3">Total Expense :  <strong>{doc.totalAmount}</strong> </div>
+                                            <div className="col-3">Profit :  <strong>{profitCalculator(expenseByMonth(doc.id),doc.totalAmount)}</strong> </div>
                                         </div>
                                     </Accordion.Header>
                                     <Accordion.Body>
