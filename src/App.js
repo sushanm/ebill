@@ -101,6 +101,8 @@ function App(changeTab) {
     LocalStorageServices.forceRefresh();
     purchaseorderServices.forceRefresh();
     transactionsServices.forceRefresh();
+    localStorage.removeItem("drkotianExpensedata");
+    localStorage.removeItem("drkotianExpenseRefreshDate");
     setTimeout(() => {
       window.location.reload();
       SetShowLoading(false)
