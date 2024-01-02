@@ -88,7 +88,7 @@ return(Number(sales)-Number(expense))
 
                     {
                         expenseMonthlyData &&
-                        expenseMonthlyData.map((doc, index) => {
+                        expenseMonthlyData.reverse().map((doc, index) => {
                             return (
                                 <Accordion.Item eventKey={index} key={index}>
                                     <Accordion.Header>
@@ -103,7 +103,7 @@ return(Number(sales)-Number(expense))
 
                                         {
                                             doc.transactions &&
-                                            doc.transactions.map((trans, index1) => {
+                                            doc.transactions.reverse().map((trans, index1) => {
                                                 return (
                                                     <div className="row border-b" key={index1}>
                                                         <div className="col border-r">

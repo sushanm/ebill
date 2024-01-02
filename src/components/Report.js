@@ -461,7 +461,7 @@ function Report() {
               </div>
               {
                 transactioByMonth &&
-                transactioByMonth.map((b, i) => {
+                transactioByMonth.reverse().map((b, i) => {
                   return (
                     <div className="row border-b">
                       <div className="col">{i + 1}</div>
