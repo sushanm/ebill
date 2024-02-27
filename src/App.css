@@ -435,7 +435,34 @@ cursor: pointer;
 }
 
 @keyframes blink {
-0%{background-color: #d70be9;}
-50%{background-color: white;}
-100%{background-color: #d70be9;}
+0%{background-color: #d70be9; }
+50%{background-color: white; }
+100%{background-color: #d70be9; }
+}
+
+
+@media only screen and (max-device-width: 480px) {
+  html{
+    width: 100%;
+  }
+  .main-body{
+    top:150px;
+  }
+  .col{
+    margin: 0px;
+    padding: 0px;
+  }
+  .row{
+    margin: 0px;
+    padding: 0px;
+  }
+
+  .stock-row > .col-3{
+    width: 46% !important;
+  }
+
+  .stock-row > .col-8{
+    width: 46% !important;
+  }
+ 
 }
