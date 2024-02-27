@@ -39,6 +39,7 @@ function AddStock({ saleMode }) {
                     let monthdiffValue = isNearToExpiry(item.expiryDate)
                     if(monthdiffValue){
                         if(monthdiffValue < 7 ){
+                            item.nearToExpiry=true;
                             product.nearToExpiry=true;
                         }
                     }

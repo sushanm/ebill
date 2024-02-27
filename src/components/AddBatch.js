@@ -34,13 +34,55 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
         try {
             const docSnap = await StockDataService.getProduct(id);
             if (docSnap.data()) {
-                SetBatch(docSnap.data().batch);
+                let data=docSnap.data();
+                data.batch.forEach(product => {
+                        let monthdiffValue = isNearToExpiry(product.expiryDate)
+                        console.log(monthdiffValue)
+                        if(monthdiffValue){
+                            if(monthdiffValue < 7 ){
+                                product.nearToExpiry=true;
+                            }
+                        }
+                    });
+               console.log()
+                SetBatch(data.batch);
             }
         } catch (error) {
             console.log(error.message);
         }
 
     }
+    let today = new Date();
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth() + 1;
+    function isNearToExpiry(date) {
+        let monthYear = date.split('-');
+        let batchYear = Number(monthYear[0]);
+        let batchMonth = Number(monthYear[1]);
+
+        const yearDiff = Number(currentYear) - Number(batchYear);
+        let monthDiff = Number(batchMonth) - Number(currentMonth);
+        if (yearDiff === 0) {
+            let monthDiffToShare = 11;
+            monthDiff = Number(batchMonth) - Number(currentMonth);
+            if (Number(monthDiff) < 7) {
+                monthDiffToShare = Number(monthDiff)
+
+                return monthDiffToShare;
+            }
+        }
+        else if (yearDiff === 1) {
+            let tempCurrMonth = currentMonth + 13;
+            let temp1 = Number(batchMonth) - Number(tempCurrMonth)
+            return temp1;
+        }
+        else if (yearDiff === -1) {
+            let tempCurrMonth =  currentMonth - 13;
+            let temp1 = Number(batchMonth) - Number(tempCurrMonth)
+            return temp1;
+        }
+    }
+
     useEffect(() => {
         SetProductNameEdit(false)
         getProduct(productId)
@@ -264,7 +306,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                     {
                         batch.map((item, index) => {
                             return (
-                                <div key={index} className="row batch-custom-row">
+                                <div key={index} className={`row batch-custom-row  ${item.nearToExpiry== true ? 'blink' : ''}`} >
                                     {
                                         editBatchRow === index ? <>
                                             <div className="col-2 batch-custom-col"><input type={'number'} value={price} placeholder="Price" onChange={(evt) => SetPrice(evt.target.value)}></input></div>
