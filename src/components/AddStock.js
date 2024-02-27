@@ -33,6 +33,19 @@ function AddStock({ saleMode }) {
                 var textB = b.name.toUpperCase();
                 return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
             });
+
+
+            data.forEach(product => {
+                product.batch.forEach(item => {
+                    let monthdiffValue = isNearToExpiry(item.expiryDate)
+                    if(monthdiffValue){
+                        if(monthdiffValue < 7 ){
+                            product.nearToExpiry=true;
+                        }
+                    }
+                });
+            });
+console.log(data)
             setProducts(data);
             setProductsForSearch(data)
             SetTotalFiltedCount(data.length)
@@ -48,6 +61,36 @@ function AddStock({ saleMode }) {
         SetTotalFiltedCount(productsForSearch.length)
     }, [productsForSearch])
 
+    let today = new Date();
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth() + 1;
+
+    function isNearToExpiry(date) {
+        let monthYear = date.split('-');
+        let batchYear = Number(monthYear[0]);
+        let batchMonth = Number(monthYear[1]);
+
+        const yearDiff = Number(currentYear) - Number(batchYear);
+        let monthDiff = Number(batchMonth) - Number(currentMonth);
+        if (yearDiff === 0) {
+            let monthDiffToShare = 11;
+            monthDiff = Number(batchMonth) - Number(currentMonth);
+            if (Number(monthDiff) < 7) {
+                monthDiffToShare = Number(monthDiff)
+                return monthDiffToShare;
+            }
+        }
+        else if (yearDiff === 1) {
+            currentMonth = currentMonth + 13;
+            let temp1 = Number(batchMonth) - Number(currentMonth)
+            return temp1;
+        }
+        else if (yearDiff === -1) {
+            currentMonth = currentMonth - 13;
+            let temp1 = Number(batchMonth) - Number(currentMonth)
+            return temp1;
+        }
+    }
 
     const searchProducts = (val) => {
         SetSearchText(val.target.value)
@@ -134,7 +177,7 @@ function AddStock({ saleMode }) {
                                 <div className="col-9">
                                     <button className='btn btn-primary' onClick={() => SetIsNewProduct(true)} >Add New Product</button>
                                 </div>
-                               
+
                                 <div className="col-3 count"><p>
                                     {totalFiltedCount}
                                 </p>
@@ -146,7 +189,7 @@ function AddStock({ saleMode }) {
                                 productsForSearch &&
                                 productsForSearch.map((doc, index) => {
                                     return (
-                                        <div  className={`row product-name-row ${doc.totalQuantity == 0 ? 'product-name-row-zero' : ''}`} style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }}  key={doc.id} onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst, doc.giveDiscount)}>
+                                        <div className={`row product-name-row ${doc.totalQuantity == 0 ? 'product-name-row-zero' : ''} ${doc.nearToExpiry== true ? 'blink' : ''}`} style={{ backgroundColor: selectedProductId === doc.id ? '#bdbdbd' : 'white' }} key={doc.id} onClick={() => addNewBatch(doc.id, doc.name, doc.usage, doc.gst, doc.giveDiscount)}>
                                             <div className="col-10">
                                                 {doc.name}
                                             </div>
