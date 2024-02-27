@@ -34,7 +34,6 @@ function AddStock({ saleMode }) {
                 return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
             });
 
-
             data.forEach(product => {
                 product.batch.forEach(item => {
                     let monthdiffValue = isNearToExpiry(item.expiryDate)
@@ -45,7 +44,7 @@ function AddStock({ saleMode }) {
                     }
                 });
             });
-console.log(data)
+
             setProducts(data);
             setProductsForSearch(data)
             SetTotalFiltedCount(data.length)
@@ -56,6 +55,8 @@ console.log(data)
     useEffect(() => {
         getAllProducts();
     }, [])
+
+
 
     useEffect(() => {
         SetTotalFiltedCount(productsForSearch.length)
@@ -77,17 +78,18 @@ console.log(data)
             monthDiff = Number(batchMonth) - Number(currentMonth);
             if (Number(monthDiff) < 7) {
                 monthDiffToShare = Number(monthDiff)
+
                 return monthDiffToShare;
             }
         }
         else if (yearDiff === 1) {
-            currentMonth = currentMonth + 13;
-            let temp1 = Number(batchMonth) - Number(currentMonth)
+            let tempCurrMonth = currentMonth + 13;
+            let temp1 = Number(batchMonth) - Number(tempCurrMonth)
             return temp1;
         }
         else if (yearDiff === -1) {
-            currentMonth = currentMonth - 13;
-            let temp1 = Number(batchMonth) - Number(currentMonth)
+            let tempCurrMonth =  currentMonth - 13;
+            let temp1 = Number(batchMonth) - Number(tempCurrMonth)
             return temp1;
         }
     }
