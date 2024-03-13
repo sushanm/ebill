@@ -25,6 +25,8 @@ function Report() {
   const [transactionsByItemsDisplay, SetTransactionsByItemsDisplay] = useState([]);
   const [byMonth, SetByMonth] = useState(3)
   const [byQuantity, SetByQantity] = useState(3)
+  const [searchByPstName, SetSearchByPstName] = useState();
+  const [searchByPstMobile, SetSearchByPstMobile] = useState();
 
   const getAllProducts = async (force) => {
     let allProducts = LocalStorageServices.getAllProducts();
@@ -168,8 +170,8 @@ function Report() {
     const clone = [...transactionsByItems];
     if (seachProduct) {
       var term = seachProduct.trim().toLowerCase();
-            var search = new RegExp(term, 'i');
-            SetTransactionsByItemsDisplay(clone.filter(item => search.test(item.name.toLowerCase())))
+      var search = new RegExp(term, 'i');
+      SetTransactionsByItemsDisplay(clone.filter(item => search.test(item.name.toLowerCase())))
     }
   }, [seachProduct])
 
@@ -316,6 +318,39 @@ function Report() {
     return Number(Math.round((value + Number.EPSILON) * 100) / 100);
   }
 
+  const [transactionByPst, SetTransactionByPst] = useState([]);
+  function SearchByPstName(event) {
+    event.preventDefault();
+    SetSearchByPstName(event.target.value);
+    let tempData = [];
+    transactioByMonth.forEach(month => {
+      month.transactions.forEach(trans => {
+        if (trans.customerName) {
+          if (trans.customerName.toLowerCase().includes(event.target.value.toLowerCase())) {
+            tempData.push(trans)
+          }
+        }
+      });
+    });
+    SetTransactionByPst(tempData)
+  }
+
+  function SearchByPstMobile(event) {
+    event.preventDefault();
+    SetSearchByPstMobile(event.target.value);
+    let tempData = [];
+    transactioByMonth.forEach(month => {
+      month.transactions.forEach(trans => {
+        if (trans.mobile) {
+          if (trans.mobile.toLowerCase().includes(event.target.value.toLowerCase())) {
+            tempData.push(trans)
+          }
+        }
+      });
+    });
+    SetTransactionByPst(tempData)
+  }
+
   return (
     <div>
       {
@@ -326,6 +361,126 @@ function Report() {
       }
 
       <div className="div">
+
+        <div className="row">
+          <div className="col col-report row-border">
+            <div className="row row-report ">
+              <div className="col"><h4 className='report-title'>Transactions</h4></div>
+              <div className="col">
+              Search By Name : 
+                <input type="text" value={searchByPstName} onChange={(e) => SearchByPstName(e)}></input>
+              </div>
+              <div className="col">
+              Search By Mobile : 
+                <input type="text" value={searchByPstMobile} onChange={(e) => SearchByPstMobile(e)}></input>
+              </div>
+            </div>
+            <div className="row row-h">
+              <div className="col-1">
+                SL No.
+              </div>
+              <div className="col-8">
+                <div className="row">
+                  <div className="col-6">
+                    Name
+                  </div>
+                  <div className="col-3">
+                    Price
+                  </div>
+                  <div className="col-2">
+                    Quantity
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-2">
+                Total Price
+              </div>
+              <div className="col-1">
+                Date
+              </div>
+            </div>
+            {
+              transactionByPst &&
+              transactionByPst.map((doc, index) => {
+                return (
+                  <div className='row product-name-row' key={doc.id}  >
+                    <div className="col-1" >
+                      {index + 1}
+                    </div>
+                    <div className="col-8">
+                      {
+                        doc.items.map((b, i) => {
+                          return (
+
+                            <div className="row">
+                              <div className="col-6">
+                                {b.name}
+                              </div>
+                              <div className="col-3">
+                                {b.price}
+                              </div>
+                              <div className="col-2">
+                                {b.quantity}
+                              </div>
+                              {
+                                doc.editMode &&
+                                <div className="col-1">
+                                  <button onClick={() => deleteTransaction(doc, b, index)}>X</button>
+                                </div>
+                              }
+                            </div>
+                          )
+                        })
+                      }
+                    </div>
+                    <div className="col-2">
+                      {Number(doc.totalPrice) - Number(doc.discount)} / {Number(doc.discount)}
+                      <div className="row">
+                        {doc.customerName}
+                      </div>
+                      <div className="row">
+                        {doc.mobile}
+                      </div>
+                    </div>
+
+                    <div className="col-1">
+                      {doc.saleDate}
+                    </div>
+                  </div>
+                )
+              })
+            }
+            <div className="row row-h">
+              <div className="col-1">
+
+              </div>
+              <div className="col-8">
+                <div className="row">
+                  <div className="col-6">
+
+                  </div>
+                  <div className="col-3">
+
+                  </div>
+                  <div className="col-3">
+                    Total
+                  </div>
+
+                </div>
+              </div>
+
+              <div className="col-2">
+                {transactioByDateTotalPrice}
+              </div>
+              <div className="col-1">
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
 
         <div className="row">
           <div className="col col-report row-border">
@@ -401,7 +556,7 @@ function Report() {
                         {doc.mobile}
                       </div>
                     </div>
-                   
+
                     <div className="col-1">
                       <div className="row">
                         <div className="col unset-p-m">
