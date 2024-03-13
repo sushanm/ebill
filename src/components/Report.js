@@ -450,34 +450,7 @@ function Report() {
                   </div>
                 )
               })
-            }
-            <div className="row row-h">
-              <div className="col-1">
-
-              </div>
-              <div className="col-8">
-                <div className="row">
-                  <div className="col-6">
-
-                  </div>
-                  <div className="col-3">
-
-                  </div>
-                  <div className="col-3">
-                    Total
-                  </div>
-
-                </div>
-              </div>
-
-              <div className="col-2">
-                {transactioByDateTotalPrice}
-              </div>
-              <div className="col-1">
-
-              </div>
-            </div>
-
+            }        
           </div>
 
         </div>
