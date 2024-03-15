@@ -28,6 +28,8 @@ function Report() {
   const [searchByPstName, SetSearchByPstName] = useState();
   const [searchByPstMobile, SetSearchByPstMobile] = useState();
 
+  const [adminOrUser, SetadminOrUser] = useState("");
+
   const getAllProducts = async (force) => {
     let allProducts = LocalStorageServices.getAllProducts();
     if (allProducts || force) {
@@ -209,6 +211,9 @@ function Report() {
   useEffect(() => {
     getAllProducts();
     getAllTransactions();
+    let dataFromLocal = JSON.parse(localStorage.getItem('getDrKotianConnection'));
+    const arryData = dataFromLocal.split(';');
+    SetadminOrUser(arryData[8])
   }, [])
 
   useEffect(() => {
@@ -575,7 +580,10 @@ function Report() {
             </div>
 
           </div>
-          <div className="col col-report">
+
+{
+  adminOrUser === 'admin' && <>
+  <div className="col col-report">
             <div className="row row-report">
               <h4 className='report-title'>Transaction By Month</h4>
               <div className="row row-h">
@@ -627,6 +635,10 @@ function Report() {
 
             </div>
           </div>
+  </>
+}
+
+
         </div>
         <div className="row">
           <div className="col col-report">
