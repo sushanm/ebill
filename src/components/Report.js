@@ -72,6 +72,7 @@ function Report() {
     await TransactionsDataService.getAllTransactions().then((data) => {
       if (data) {
         let tempData = [...data];
+        console.log(tempData);
         tempData.forEach(monthTrans => {
           let gst5 = 0;
           let gst12 = 0;
