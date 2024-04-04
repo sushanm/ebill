@@ -153,11 +153,11 @@ function App(changeTab) {
             {
               adminOrUser === 'admin' && <>
                 <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(1)} style={{ backgroundColor: diplay === 1 ? '#0d6efd' : '#565e64' }}>Near To Expiry</button>
-                <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(2)} style={{ backgroundColor: diplay === 2 ? '#0d6efd' : '#565e64' }}>Low Stock</button>
+                
               </>
             }
 
-
+            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(2)} style={{ backgroundColor: diplay === 2 ? '#0d6efd' : '#565e64' }}>Low Stock</button>
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(3)} style={{ backgroundColor: diplay === 3 ? '#0d6efd' : '#565e64' }}>Report</button>
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(5)} style={{ backgroundColor: diplay === 5 ? '#0d6efd' : '#565e64' }}>Swarna Prashana</button>
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(4)} style={{ backgroundColor: diplay === 4 ? '#0d6efd' : '#565e64' }}>Purchase Order</button>

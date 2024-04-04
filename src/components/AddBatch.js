@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import AddSale from './AddSale';
 import { useLocation } from 'react-router-dom';
 
+
 function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName, callbackaftersalesFromBatch, usedFor, gst, giveDiscountEdit }) {
     const [batch, SetBatch] = useState([]);
     const [editBatchRow, SetEditBatchRow] = useState();
@@ -21,6 +22,7 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
     const [productNameEdit, SetProductNameEdit] = useState(false);
     const [editMode, SetEditMode] = useState(false);
 
+    const [adminOrUser, SetadminOrUser] = useState("");
 
     const location = useLocation();
     useEffect(() => {
@@ -87,6 +89,14 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
         SetProductNameEdit(false)
         getProduct(productId)
     }, [productId])
+
+    useEffect(() => {
+        let dataFromLocal = JSON.parse(localStorage.getItem('getDrKotianConnection'));
+        const arryData = dataFromLocal.split(';');
+        SetadminOrUser(arryData[8])
+    }, [])
+
+
 
     const callbackaftersales = (val) => {
         setTimeout(() => {
@@ -323,7 +333,9 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                                             <div className="col-7 batch-custom-col">
                                                 <div className="row">
                                                     <div className="col-2">
-                                                        <button onClick={() => editBatch(index, item)} >Edit</button>
+                                                    {
+                                                        adminOrUser === 'admin' &&  <button onClick={() => editBatch(index, item)} >Edit</button>
+                                                    }
                                                     </div>
                                                     <div className="col-2">
                                                         {
