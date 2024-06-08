@@ -20,6 +20,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Manage from "./components/Manage";
+import Audit from "./components/Audit";
 
 function App(changeTab) {
 
@@ -94,7 +95,7 @@ function App(changeTab) {
   }, [])
 
   useEffect(() => {
-    SetDisplay(0)
+    SetDisplay(8)
   }, [changeTab])
 
   const refresh = () => {
@@ -161,6 +162,7 @@ function App(changeTab) {
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(3)} style={{ backgroundColor: diplay === 3 ? '#0d6efd' : '#565e64' }}>Report</button>
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(5)} style={{ backgroundColor: diplay === 5 ? '#0d6efd' : '#565e64' }}>Swarna Prashana</button>
             <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(4)} style={{ backgroundColor: diplay === 4 ? '#0d6efd' : '#565e64' }}>Purchase Order</button>
+            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(8)} style={{ backgroundColor: diplay === 8 ? '#0d6efd' : '#565e64' }}>Audit</button>
             {
               adminOrUser === 'admin' && <>
                
@@ -250,6 +252,15 @@ function App(changeTab) {
                 <div className="col">
                   <h4>Manage</h4>
                   <Manage />
+                </div>
+              </div>
+            }
+            {
+              diplay === 8 &&
+              <div className="row">
+                <div className="col">
+                  <h4>Audit</h4>
+                  <Audit />
                 </div>
               </div>
             }
