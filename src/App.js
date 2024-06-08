@@ -95,7 +95,7 @@ function App(changeTab) {
   }, [])
 
   useEffect(() => {
-    SetDisplay(8)
+    SetDisplay(0)
   }, [changeTab])
 
   const refresh = () => {
