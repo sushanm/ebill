@@ -124,7 +124,10 @@ function Audit() {
     return (
         <>
             <div className="row border-b">
-                <div className="col-4">
+                <div className="col-1">
+                    <strong>SL. No</strong>
+                </div>
+                <div className="col-3">
                     <strong>Item Name</strong>
                 </div>
                 <div className="col-2">
@@ -148,7 +151,10 @@ function Audit() {
                 products.filter((product => product.isAuditPassed === false)).map((item, indexp) => {
                     return (
                         <div className="row border-b" key={item.id}>
-                            <div className="col-4">
+                        <div className="col-1">
+                            {indexp + 1}
+                        </div>
+                            <div className="col-3">
                                 {item.name}
                             </div>
                             <div className="col-8">
