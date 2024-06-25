@@ -21,6 +21,10 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Manage from "./components/Manage";
 import Audit from "./components/Audit";
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Container from 'react-bootstrap/Container';
 
 function App(changeTab) {
 
@@ -147,32 +151,41 @@ function App(changeTab) {
       </Modal>
 
       <div className="container-fluid text-center">
+
+
+
         <div className="row menu-row">
-          <div className="col">
-            {/* <button onClick={login} >Login</button> */}
-            <button type="button" className="btn btn-secondary m-btn" onClick={() => SetDisplay(0)} style={{ backgroundColor: diplay === 0 ? '#0d6efd' : '#565e64' }}>Stock & Sale</button>
-            {
-              adminOrUser === 'admin' && <>
-                <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(1)} style={{ backgroundColor: diplay === 1 ? '#0d6efd' : '#565e64' }}>Near To Expiry</button>
-                
-              </>
-            }
+          
+        <Navbar expand="lg" className="bg-body-tertiary">
+          <Container>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link onClick={() => SetDisplay(0)} style={{ backgroundColor: diplay === 0 ? '#0d6efd' : '#565e64' }}>Stock & Sale</Nav.Link>
 
-            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(2)} style={{ backgroundColor: diplay === 2 ? '#0d6efd' : '#565e64' }}>Low Stock</button>
-            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(3)} style={{ backgroundColor: diplay === 3 ? '#0d6efd' : '#565e64' }}>Report</button>
-            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(5)} style={{ backgroundColor: diplay === 5 ? '#0d6efd' : '#565e64' }}>Swarna Prashana</button>
-            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(4)} style={{ backgroundColor: diplay === 4 ? '#0d6efd' : '#565e64' }}>Purchase Order</button>
-            <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(8)} style={{ backgroundColor: diplay === 8 ? '#0d6efd' : '#565e64' }}>Audit</button>
-            {
-              adminOrUser === 'admin' && <>
-               
-                <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(6)} style={{ backgroundColor: diplay === 6 ? '#0d6efd' : '#565e64' }}>Patient</button>
-                <button type="button" className="btn btn-secondary  m-btn" onClick={() => SetDisplay(7)} style={{ backgroundColor: diplay === 7 ? '#0d6efd' : '#565e64' }}>Manage</button>
-              </>
-            }
+                {
+                  adminOrUser === 'admin' && <>
+                    <Nav.Link onClick={() => SetDisplay(1)} style={{ backgroundColor: diplay === 1 ? '#0d6efd' : '#565e64' }}>Near To Expiry</Nav.Link>
+                  </>
+                }
+                <Nav.Link onClick={() => SetDisplay(2)} style={{ backgroundColor: diplay === 2 ? '#0d6efd' : '#565e64' }}>Low Stock</Nav.Link>
+                <Nav.Link onClick={() => SetDisplay(3)} style={{ backgroundColor: diplay === 3 ? '#0d6efd' : '#565e64' }}>Report</Nav.Link>
+                <Nav.Link onClick={() => SetDisplay(5)} style={{ backgroundColor: diplay === 5 ? '#0d6efd' : '#565e64' }}>Swarna Prashana</Nav.Link>
+                <Nav.Link onClick={() => SetDisplay(4)} style={{ backgroundColor: diplay === 4 ? '#0d6efd' : '#565e64' }}>Purchase Order</Nav.Link>
+                <Nav.Link onClick={() => SetDisplay(8)} style={{ backgroundColor: diplay === 8 ? '#0d6efd' : '#565e64' }}>Audit</Nav.Link>
+                {
+                  adminOrUser === 'admin' && <>
 
-            <button type="button" className="btn btn-secondary  m-btn force-refresh" onClick={refresh} >Refresh</button>
-          </div>
+                    <Nav.Link onClick={() => SetDisplay(6)} style={{ backgroundColor: diplay === 6 ? '#0d6efd' : '#565e64' }}>Patient</Nav.Link>
+                    <Nav.Link onClick={() => SetDisplay(7)} style={{ backgroundColor: diplay === 7 ? '#0d6efd' : '#565e64' }}>Manage</Nav.Link>
+                  </>
+                }
+
+                <button type="button" className="btn btn-secondary  m-btn force-refresh" onClick={refresh} >Refresh</button>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
         </div>
 
         {

@@ -373,11 +373,11 @@ function Report() {
             <div className="row row-report ">
               <div className="col"><h4 className='report-title'>Transactions</h4></div>
               <div className="col">
-              Search By Name : 
+                Search By Name :
                 <input type="text" value={searchByPstName} onChange={(e) => SearchByPstName(e)}></input>
               </div>
               <div className="col">
-              Search By Mobile : 
+                Search By Mobile :
                 <input type="text" value={searchByPstMobile} onChange={(e) => SearchByPstMobile(e)}></input>
               </div>
             </div>
@@ -456,13 +456,13 @@ function Report() {
                   </div>
                 )
               })
-            }        
+            }
           </div>
 
         </div>
 
         <div className="row">
-          <div className="col col-report row-border">
+          <div className="col col-report row-border col-sm-12 col-m-12">
             <div className="row row-report ">
               <div className="col"><h4 className='report-title'>Transactions</h4></div>
               <div className="col"><input type={'date'} value={transactionFilterDate} onChange={(e) => filterByDate(e.target.value)}></input></div>
@@ -582,62 +582,62 @@ function Report() {
 
           </div>
 
-{
-  adminOrUser === 'admin' && <>
-  <div className="col col-report">
-            <div className="row row-report">
-              <h4 className='report-title'>Transaction By Month</h4>
-              <div className="row row-h">
-                <div className="col">SL. No</div>
-                <div className="col">YYY-MM</div>
-                <div className="col">Total Value</div>
-                <div className="col">Trans No's</div>
-                <div className="col">GST 5%</div>
-                <div className="col">GST 12%</div>
-                <div className="col">GST 18%</div>
-              </div>
-              {
-                transactioByMonth &&
-                transactioByMonth.reverse().map((b, i) => {
-                  return (
-                    <div className="row border-b">
-                      <div className="col">{i + 1}</div>
-                      <div className="col">{b.id}</div>
-                      <div className="col">{b.totalAmount}</div>
-                      <div className="col">{b.transactions.length}</div>
-                      <div className="col">
+          {
+            adminOrUser === 'admin' && <>
+              <div className="col col-report col-sm-12 col-m-12">
+                <div className="row row-report">
+                  <h4 className='report-title'>Transaction By Month</h4>
+                  <div className="row row-h">
+                    <div className="col">SL. No</div>
+                    <div className="col">YYY-MM</div>
+                    <div className="col">Total Value</div>
+                    <div className="col">Trans No's</div>
+                    <div className="col">GST 5%</div>
+                    <div className="col">GST 12%</div>
+                    <div className="col">GST 18%</div>
+                  </div>
+                  {
+                    transactioByMonth &&
+                    transactioByMonth.reverse().map((b, i) => {
+                      return (
                         <div className="row border-b">
-                          {round(b.gst5)}
+                          <div className="col">{i + 1}</div>
+                          <div className="col">{b.id}</div>
+                          <div className="col">{b.totalAmount}</div>
+                          <div className="col">{b.transactions.length}</div>
+                          <div className="col">
+                            <div className="row border-b">
+                              {round(b.gst5)}
+                            </div>
+                            <div className="row">
+                              {round(b.gst5Value)}
+                            </div>
+                          </div>
+                          <div className="col">
+                            <div className="row border-b">
+                              {round(b.gst12)}
+                            </div>
+                            <div className="row">
+                              {round(b.gst12Value)}
+                            </div>
+                          </div>
+                          <div className="col">
+                            <div className="row border-b">
+                              {round(b.gst18)}
+                            </div>
+                            <div className="row">
+                              {round(b.gst18Value)}
+                            </div>
+                          </div>
                         </div>
-                        <div className="row">
-                          {round(b.gst5Value)}
-                        </div>
-                      </div>
-                      <div className="col">
-                        <div className="row border-b">
-                          {round(b.gst12)}
-                        </div>
-                        <div className="row">
-                          {round(b.gst12Value)}
-                        </div>
-                      </div>
-                      <div className="col">
-                        <div className="row border-b">
-                          {round(b.gst18)}
-                        </div>
-                        <div className="row">
-                          {round(b.gst18Value)}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })
-              }
+                      )
+                    })
+                  }
 
-            </div>
-          </div>
-  </>
-}
+                </div>
+              </div>
+            </>
+          }
 
 
         </div>

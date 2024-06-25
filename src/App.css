@@ -375,7 +375,7 @@ cursor: pointer;
 }
 .main-body{
   position: relative;
-    top: 40px;
+    top: 60px;
 }
 
 .batch-custom-col input{
@@ -494,4 +494,14 @@ font-weight: bold;
 .pst-therapy-active{
   background-color: green;
   color: white;
+}
+
+.navbar-nav a{
+  color: white;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.bg-body-tertiary {
+  background-color: #d5d5d5 !important;
 }
