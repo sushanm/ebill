@@ -445,9 +445,7 @@ cursor: pointer;
   html{
     width: 100%;
   }
-  .main-body{
-    top:150px;
-  }
+  
   .col{
     margin: 0px;
     padding: 0px;
@@ -504,4 +502,9 @@ font-weight: bold;
 
 .bg-body-tertiary {
   background-color: #d5d5d5 !important;
+}
+
+.col-md-6 .col-lg-6 .col-xl-6
+{
+  margin: 0px !important;
 }
