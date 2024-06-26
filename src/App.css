@@ -504,7 +504,20 @@ font-weight: bold;
   background-color: #d5d5d5 !important;
 }
 
-.col-md-6 .col-lg-6 .col-xl-6
+.col-md-6 
 {
   margin: 0px !important;
+}
+ .col-lg-6
+{
+  margin: 0px !important;
+}
+
+.col-xl-6
+{
+  margin: 0px !important;
+}
+
+.trans-till-date{
+  color: rgb(218, 17, 124);
 }

@@ -72,7 +72,6 @@ function Report() {
     await TransactionsDataService.getAllTransactions().then((data) => {
       if (data) {
         let tempData = [...data];
-        console.log(tempData);
         tempData.forEach(monthTrans => {
           let gst5 = 0;
           let gst12 = 0;
@@ -103,6 +102,24 @@ function Report() {
           monthTrans.gst5Value = gst5Value;
           monthTrans.gst12Value = gst12Value;
           monthTrans.gst18Value = gst18Value;
+        });
+
+        const today = new Date();
+        let todayDate = today.getDate();
+
+        data.forEach(element => {
+          let transAmountTillDate = 0;
+          element.transactions.forEach(trans => {
+            if (trans.saleDate) {
+
+
+              let trnsDate = trans.saleDate.split('-')[0];
+              if (trnsDate <= todayDate) {
+                transAmountTillDate = Number(transAmountTillDate) + Number(trans.totalPrice) - Number(trans.discount)
+              }
+            }
+            element.tranTillDate = transAmountTillDate;
+          });
         });
         SetTransactionByMonth(data)
         localStorage.setItem('drkotianTransactionDataByMonth', JSON.stringify(data));
@@ -272,7 +289,6 @@ function Report() {
 
   const generateInvoicePrint = (details, index) => {
     details.lineItem = index + 1
-    console.log(details)
     history('/printinvoice', { state: details });
   }
 
@@ -592,20 +608,37 @@ function Report() {
                     <div className="col">YYY-MM</div>
                     <div className="col">Total Value</div>
                     <div className="col">Trans No's</div>
-                    <div className="col">GST 5%</div>
-                    <div className="col">GST 12%</div>
-                    <div className="col">GST 18%</div>
+                    <div className="col-1">GST 5%</div>
+                    <div className="col-1">GST 12%</div>
+                    <div className="col-1">GST 18%</div>
                   </div>
                   {
                     transactioByMonth &&
                     transactioByMonth.reverse().map((b, i) => {
                       return (
                         <div className="row border-b">
-                          <div className="col">{i + 1}</div>
-                          <div className="col">{b.id}</div>
-                          <div className="col">{b.totalAmount}</div>
-                          <div className="col">{b.transactions.length}</div>
                           <div className="col">
+                            <div className="row">
+                              <div className="col">{i + 1}</div>
+                              <div className="col">{b.id}</div>
+                              <div className="col">{b.totalAmount}</div>
+                              <div className="col">{b.transactions.length}</div>
+                            </div>
+                            <div className="row">
+                            <div className="col">
+                              Till Date Amount
+                            </div>
+                            <div className="col trans-till-date">
+                              <strong >
+                                {
+                                  b.tranTillDate}
+                              </strong>
+                            </div>
+                            </div>
+                          </div>
+
+
+                          <div className="col-1">
                             <div className="row border-b">
                               {round(b.gst5)}
                             </div>
@@ -613,7 +646,7 @@ function Report() {
                               {round(b.gst5Value)}
                             </div>
                           </div>
-                          <div className="col">
+                          <div className="col-1">
                             <div className="row border-b">
                               {round(b.gst12)}
                             </div>
@@ -621,7 +654,7 @@ function Report() {
                               {round(b.gst12Value)}
                             </div>
                           </div>
-                          <div className="col">
+                          <div className="col-1">
                             <div className="row border-b">
                               {round(b.gst18)}
                             </div>

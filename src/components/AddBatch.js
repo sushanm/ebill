@@ -320,10 +320,10 @@ function AddBatch({ productId, newProduct, callBackMethod, saleMode, productName
                                     {
                                         editBatchRow === index ? <>
                                             <div className="col-2 batch-custom-col"><input type={'number'} value={price} placeholder="Price" onChange={(evt) => SetPrice(evt.target.value)}></input></div>
-                                            <div className="col-1 batch-custom-col"> <input type={'number'} value={quantity} placeholder="Quantity" onChange={(evt) => SetQuantity(evt.target.value)}></input></div>
-                                            <div className="col-2 batch-custom-col"><input type={'month'} placeholder="Expiry Date" value={expiryDate} onChange={(evt) => SetExpiryDate(evt.target.value)}></input></div>
+                                            <div className="col-2 batch-custom-col"> <input type={'number'} value={quantity} placeholder="Quantity" onChange={(evt) => SetQuantity(evt.target.value)}></input></div>
+                                            <div className="col-4 batch-custom-col"><input type={'month'} placeholder="Expiry Date" value={expiryDate} onChange={(evt) => SetExpiryDate(evt.target.value)}></input></div>
 
-                                            <div className="col-7 batch-custom-col"> <button onClick={() => AddOrEditBatch(true, item.id)} >Save</button></div>
+                                            <div className="col-4 batch-custom-col"> <button onClick={() => AddOrEditBatch(true, item.id)} >Save</button></div>
                                         </> : <>
                                             <div className="col-2 batch-custom-col">
                                                 {item.price}
