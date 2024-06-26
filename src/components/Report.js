@@ -614,7 +614,7 @@ function Report() {
                   </div>
                   {
                     transactioByMonth &&
-                    transactioByMonth.reverse().map((b, i) => {
+                    transactioByMonth.slice(0).map((b, i) => {
                       return (
                         <div className="row border-b">
                           <div className="col">
