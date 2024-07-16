@@ -481,7 +481,13 @@ function Report() {
           <div className="col-12 col-report row-border col-md-6 col-lg-6 col-xl-6">
             <div className="row row-report ">
               <div className="col"><h4 className='report-title'>Transactions</h4></div>
-              <div className="col"><input type={'date'} value={transactionFilterDate} onChange={(e) => filterByDate(e.target.value)}></input></div>
+              <div className="col">
+              {
+                adminOrUser === 'admin' && 
+                <input type={'date'} value={transactionFilterDate} onChange={(e) => filterByDate(e.target.value)}></input>
+              }
+              
+              </div>
             </div>
             <div className="row row-h">
               <div className="col-1">
@@ -589,7 +595,7 @@ function Report() {
               </div>
 
               <div className="col-2">
-                {transactioByDateTotalPrice}
+                {adminOrUser === 'admin' && transactioByDateTotalPrice}
               </div>
               <div className="col-1">
 
