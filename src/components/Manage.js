@@ -70,6 +70,11 @@ function Manage() {
             reset();
         }, 1000)
     }
+
+    function round2(value, precision) {
+        var multiplier = Math.pow(10, precision || 0);
+        return Math.round(value * multiplier) / multiplier;
+      }
     return (
         <>
             <div className="row">
@@ -109,10 +114,10 @@ function Manage() {
                                     <Accordion.Header>
                                         <div className="row manager-row">
                                             <div className="col-1">{doc.id}</div>
-                                            <div className="col-3">Total Sales :  <strong>{expenseByMonth(doc.id)}</strong> </div>
-                                            <div className="col-3">Total Medicene Sales :  <strong>{GstValuesSalesForMonth(doc.id)}</strong> </div>
-                                            <div className="col-3">Total Expense :  <strong>{doc.totalAmount}</strong> </div>
-                                            <div className="col-2" style={{ color: profitCalculator(expenseByMonth(doc.id), doc.totalAmount) < 0 ? '#FC5532' : '#000' }}>Profit :  <strong>{profitCalculator(expenseByMonth(doc.id), doc.totalAmount)}</strong> </div>
+                                            <div className="col-3">Total Sales :  <strong>{round2(expenseByMonth(doc.id))}</strong> </div>
+                                            <div className="col-3">Total Medicene Sales :  <strong>{round2(GstValuesSalesForMonth(doc.id))}</strong> </div>
+                                            <div className="col-3">Total Expense :  <strong>{round2(doc.totalAmount)}</strong> </div>
+                                            <div className="col-2" style={{ color: profitCalculator(round2(expenseByMonth(doc.id), doc.totalAmount)) < 0 ? '#FC5532' : '#000' }}>Profit :  <strong>{profitCalculator(round2(expenseByMonth(doc.id)), doc.totalAmount)}</strong> </div>
                                         </div>
                                     </Accordion.Header>
                                     <Accordion.Body>

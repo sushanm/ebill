@@ -340,6 +340,11 @@ function Report() {
     return Number(Math.round((value + Number.EPSILON) * 100) / 100);
   }
 
+  function round2(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+  }
+
   const [transactionByPst, SetTransactionByPst] = useState([]);
   function SearchByPstName(event) {
     event.preventDefault();
@@ -482,11 +487,11 @@ function Report() {
             <div className="row row-report ">
               <div className="col"><h4 className='report-title'>Transactions</h4></div>
               <div className="col">
-              {
-                adminOrUser === 'admin' && 
-                <input type={'date'} value={transactionFilterDate} onChange={(e) => filterByDate(e.target.value)}></input>
-              }
-              
+                {
+                  adminOrUser === 'admin' &&
+                  <input type={'date'} value={transactionFilterDate} onChange={(e) => filterByDate(e.target.value)}></input>
+                }
+
               </div>
             </div>
             <div className="row row-h">
@@ -631,41 +636,41 @@ function Report() {
                               <div className="col">{b.transactions.length}</div>
                             </div>
                             <div className="row">
-                            <div className="col">
-                              Till Date Amount
-                            </div>
-                            <div className="col trans-till-date">
-                              <strong >
-                                {
-                                  b.tranTillDate}
-                              </strong>
-                            </div>
+                              <div className="col">
+                                Till Date Amount
+                              </div>
+                              <div className="col trans-till-date">
+                                <strong >
+                                  {
+                                    b.tranTillDate}
+                                </strong>
+                              </div>
                             </div>
                           </div>
 
 
                           <div className="col-1">
                             <div className="row border-b">
-                              {round(b.gst5)}
+                              {round2(b.gst5)}
                             </div>
                             <div className="row">
-                              {round(b.gst5Value)}
+                              {round2(b.gst5Value)}
                             </div>
                           </div>
                           <div className="col-1">
                             <div className="row border-b">
-                              {round(b.gst12)}
+                              {round2(b.gst12)}
                             </div>
                             <div className="row">
-                              {round(b.gst12Value)}
+                              {round2(b.gst12Value)}
                             </div>
                           </div>
                           <div className="col-1">
                             <div className="row border-b">
-                              {round(b.gst18)}
+                              {round2(b.gst18)}
                             </div>
                             <div className="row">
-                              {round(b.gst18Value)}
+                              {round2(b.gst18Value)}
                             </div>
                           </div>
                         </div>
