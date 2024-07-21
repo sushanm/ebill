@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import ExpenseDataService from "../services/expense.services"
 
+
 function Manage() {
 
     const [expenseMonthlyData, SetExpenseMonthlyData] = useState([]);
@@ -30,8 +31,22 @@ function Manage() {
         }
     }
 
+    const GstValuesSalesForMonth = (id) => {
+        let monthlySalesData = JSON.parse(localStorage.getItem('drkotianTransactionDataByMonth'))
+        let filterData = monthlySalesData.filter(item => item.id === id);
+        if (filterData) {
+            console.log(filterData)
+            if (filterData.length > 0) {
+                let sum = Number(filterData[0].gst5Value ? filterData[0].gst5Value : 0)
+                    + Number(filterData[0].gst12Value ? filterData[0].gst12Value : 0)
+                    + Number(filterData[0].gst18Value ? filterData[0].gst18Value : 0)
+                 return (sum)
+            }
+        }
+    }
+
     const profitCalculator = (sales, expense) => {
-return(Number(sales)-Number(expense))
+        return (Number(sales) - Number(expense))
     }
 
     const reset = () => {
@@ -93,10 +108,11 @@ return(Number(sales)-Number(expense))
                                 <Accordion.Item eventKey={index} key={index}>
                                     <Accordion.Header>
                                         <div className="row manager-row">
-                                            <div className="col-3">{doc.id}</div>
+                                            <div className="col-1">{doc.id}</div>
                                             <div className="col-3">Total Sales :  <strong>{expenseByMonth(doc.id)}</strong> </div>
+                                            <div className="col-3">Total Medicene Sales :  <strong>{GstValuesSalesForMonth(doc.id)}</strong> </div>
                                             <div className="col-3">Total Expense :  <strong>{doc.totalAmount}</strong> </div>
-                                            <div className="col-3" style={{ color: profitCalculator(expenseByMonth(doc.id),doc.totalAmount) < 0 ? '#FC5532' : '#000' }}>Profit :  <strong>{profitCalculator(expenseByMonth(doc.id),doc.totalAmount)}</strong> </div>
+                                            <div className="col-2" style={{ color: profitCalculator(expenseByMonth(doc.id), doc.totalAmount) < 0 ? '#FC5532' : '#000' }}>Profit :  <strong>{profitCalculator(expenseByMonth(doc.id), doc.totalAmount)}</strong> </div>
                                         </div>
                                     </Accordion.Header>
                                     <Accordion.Body>
