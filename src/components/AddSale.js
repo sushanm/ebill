@@ -230,6 +230,8 @@ function AddSale({ sales, callbackSalesUpdate, callbackaftersales }) {
             callbackaftersales(true);
             SetUpdatedTotalPrice(0);
             SetDiscount(0);
+            SetCustomerName('');
+            SetCustomerNo('');
             handleClose();
         }
         setTimeout(() => {

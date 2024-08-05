@@ -600,7 +600,7 @@ function Report() {
               </div>
 
               <div className="col-2">
-                {adminOrUser === 'admin' && transactioByDateTotalPrice}
+                { transactioByDateTotalPrice}
               </div>
               <div className="col-1">
 
