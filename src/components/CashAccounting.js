@@ -4,12 +4,26 @@ import { db } from "../firebase";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function CashAccount() {
 
     const [showModel, SetShowModel] = useState(false)
     const [onlinePayment, SetonlinePayment] = useState(0);
     const [cashAdjustment, SetCashAdjustment] = useState(0);
     const [totalSales, SetTotalSales] = useState(0);
+
+    const notify = () => toast.success('Closing Balance Saved Successfully !', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        }); 
 
     const [dailCashDenomination, SetDailCashDenomination] = useState([
         {
@@ -213,6 +227,7 @@ function CashAccount() {
         }
 
         updateCashReport(cashObj)
+        notify()
     }
 
     function getYearAndMonth() {
@@ -268,7 +283,19 @@ function CashAccount() {
 
     return (
         <>
-
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                type="success"
+            />
             <>
                 <div className="row">
                     <div className="col-7 border-r border-t border-l">
