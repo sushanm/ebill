@@ -25,6 +25,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Container from 'react-bootstrap/Container';
+import CashAccount from "./components/CashAccounting";
 
 function App(changeTab) {
 
@@ -173,6 +174,7 @@ function App(changeTab) {
                 <Nav.Link onClick={() => SetDisplay(5)} style={{ backgroundColor: diplay === 5 ? '#0d6efd' : '#565e64' }}>Swarna Prashana</Nav.Link>
                 <Nav.Link onClick={() => SetDisplay(4)} style={{ backgroundColor: diplay === 4 ? '#0d6efd' : '#565e64' }}>Purchase Order</Nav.Link>
                 <Nav.Link onClick={() => SetDisplay(8)} style={{ backgroundColor: diplay === 8 ? '#0d6efd' : '#565e64' }}>Audit</Nav.Link>
+                <Nav.Link onClick={() => SetDisplay(9)} style={{ backgroundColor: diplay === 9 ? '#0d6efd' : '#565e64' }}>Cash</Nav.Link>
                 {
                   adminOrUser === 'admin' && <>
 
@@ -274,6 +276,15 @@ function App(changeTab) {
                 <div className="col">
                   <h4>Audit</h4>
                   <Audit />
+                </div>
+              </div>
+            }
+                        {
+              diplay === 9 &&
+              <div className="row">
+                <div className="col">
+                  <h4>Cash Audit</h4>
+                  <CashAccount />
                 </div>
               </div>
             }
