@@ -343,7 +343,7 @@ function CashAccount() {
                         </div>
                         <div className="row">
                             <div className="col">
-                                <strong>Oepning Cash</strong>
+                                <strong>Opening cash</strong>
                             </div>
                             <div className="col">
                                 {dailyTotal} /-
