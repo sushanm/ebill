@@ -95,6 +95,7 @@ function LowStock() {
     );
   };
 
+  //Remove
   const removeProduct = async (data) => {
     await StockDataService.deleteProduct(data.id).then((res) => {
       getAllProducts();
