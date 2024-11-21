@@ -431,7 +431,12 @@ function SwarnaPrashana() {
                 <div className="col-1">{i + 1}</div>
                 <div className="col-2">{b.date}</div>
                 <div className="col-2">{b.numberOfSp}</div>
-                <div className="col-7">{displayKidsData(b.date)}</div>
+                <div
+                  className="col-7"
+                  style={{ display: "flex", flexWrap: "wrap" }}
+                >
+                  {displayKidsData(b.date)}
+                </div>
               </div>
             );
           })}
