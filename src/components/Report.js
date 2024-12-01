@@ -160,7 +160,10 @@ function Report() {
             }
           });
         }
-        SetMobileNumbers([...new Set(mobileNumbers)]);
+        // SetMobileNumbers([...new Set(mobileNumbers)]);
+        SetMobileNumbers([
+          ...new Set(mobileNumbers.filter((number) => number.length === 10)),
+        ]);
         SetTransactionsByItems(allData);
       }
     });
@@ -903,7 +906,9 @@ function Report() {
           <div className="row">
             <Accordion defaultActiveKey="0" flush>
               <Accordion.Item eventKey="1">
-                <Accordion.Header>Mobile Numbers</Accordion.Header>
+                <Accordion.Header>
+                  Mobile Numbers -- total numbers -- {mobileNumbers.length}
+                </Accordion.Header>
                 <Accordion.Body>
                   {mobileNumbers.map((b, i) => {
                     return (
