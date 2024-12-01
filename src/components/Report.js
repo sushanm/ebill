@@ -162,8 +162,13 @@ function Report() {
         }
         // SetMobileNumbers([...new Set(mobileNumbers)]);
         SetMobileNumbers([
-          ...new Set(mobileNumbers.filter((number) => number.length === 10)),
+          ...new Set(
+            mobileNumbers
+              .filter((number) => number.length === 10)
+              .map((number) => `91${number}`)
+          ),
         ]);
+
         SetTransactionsByItems(allData);
       }
     });
