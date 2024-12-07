@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import LocalStorageServices from "../services/localStorage.services";
 import PurchaseOrderDataService from "../services/purchaseorder.services";
 import StockDataService from "../services/stock.services";
+import DropdownButton from "./addToCart";
 
 function LowStock() {
   const [lowStockQantity, SetLowStockQantity] = useState(1);
@@ -158,9 +159,10 @@ function LowStock() {
               )}
               {!item.addedToPO && (
                 <div className="col-2">
-                  <button onClick={() => addNewPO(item.name)}>
+                  <DropdownButton newPo={item.name} />
+                  {/* <button onClick={() => addNewPO(item.name)}>
                     Add to Purchase Order
-                  </button>
+                  </button> */}
                 </div>
               )}
               <div className="col-2">

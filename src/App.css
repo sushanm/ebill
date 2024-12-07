@@ -1,7 +1,7 @@
 .App {
   text-align: center;
 }
-body{
+body {
   color: black !important;
 }
 .App-logo {
@@ -115,6 +115,7 @@ body{
 .col-3-scroll {
   overflow: scroll;
   max-height: 700px;
+  display: contents !important;
 }
 
 .row-h {
@@ -124,8 +125,6 @@ body{
 
 .row-report {
   border: 1px solid black;
-
-
 }
 
 .report-title {
@@ -208,31 +207,31 @@ body{
   font-weight: 700;
 }
 
-.invoice-border{
+.invoice-border {
   border: 1px solid black;
 }
 
-.border-r{
+.border-r {
   border-right: 1px solid black;
 }
 
-.border-l{
+.border-l {
   border-left: 1px solid black;
 }
 
-.border-t{
+.border-t {
   border-top: 1px solid black;
 }
 
-.border-b{
+.border-b {
   border-bottom: 1px solid black;
 }
 
-.unset-p-m{
+.unset-p-m {
   padding: unset !important;
-margin: unset !important;
+  margin: unset !important;
 }
-.remove-b{
+.remove-b {
   border: unset !important;
   width: 100%;
   padding-top: 5px !important;
@@ -241,7 +240,7 @@ margin: unset !important;
   margin-bottom: 5px !important;
 }
 
-.invoice-t{
+.invoice-t {
   font-size: 40px;
   font-weight: 700;
   margin: auto;
@@ -249,252 +248,257 @@ margin: unset !important;
   padding: 10px;
 }
 
-.logo-img{
+.logo-img {
   width: 100px;
   float: right;
   margin: 5px;
 }
-.div-h{
+.div-h {
   height: 50px;
 }
 
-.invoice-items-h{
+.invoice-items-h {
   text-align: center;
   font-weight: bold;
 }
 
-.invoice-item-h{
+.invoice-item-h {
   font-weight: bold;
 }
 
 @media print {
   @page {
-   margin: 0
+    margin: 0;
   }
 }
 
-.invoice-row-start{
+.invoice-row-start {
   margin: 10px;
 }
-.h4-invoice{
+.h4-invoice {
   margin-left: 10px;
 }
 
-.print-icon{
+.print-icon {
   width: 20px;
 }
 
-.invoice-row-start-p{
+.invoice-row-start-p {
   font-size: 9px !important;
   margin: 5px !important;
   margin-top: 20px !important;
 }
 
-.col-fix{
+.col-fix {
   padding: 0px !important;
   padding-left: 1px !important;
 }
-.print-h{
+.print-h {
   font-weight: bold;
 }
 
-.col-fix-left{
+.col-fix-left {
   padding-left: 2px !important;
 }
-.unset-p-m-s{
+.unset-p-m-s {
   margin: 0px !important;
   color: black !important;
-font-weight: bold;
+  font-weight: bold;
 }
 
-.font-fix{
+.font-fix {
   font-size: 8px !important;
 }
 
-.address-fix{
+.address-fix {
   margin-right: 40px;
 }
 
-.remove-b-p{
+.remove-b-p {
   border: unset !important;
   width: 100%;
   padding-top: 5px !important;
-
 }
-.note-fix{
+.note-fix {
   margin-left: 5px !important;
   margin-right: 30px !important;
 }
 
-.btn-submit{
+.btn-submit {
   position: relative;
-  top: 30px
+  top: 30px;
 }
 
-.kids-row{
+.kids-row {
   cursor: pointer;
 }
 
-.sp-tile{
+.sp-tile {
   border: 1px solid;
   margin: 5px;
   border-radius: 5px;
   background-color: rgb(241, 191, 160);
 }
 
-.sp-tile-done{
+.sp-tile-done {
   background-color: rgb(163, 228, 168);
 }
 
-.sp-tile-done-img{
+.sp-tile-done-img {
   width: 64px !important;
   margin-left: auto;
   margin-right: auto;
 }
 
-.sp-tile-wip-add-row{
+.sp-tile-wip-add-row {
   background-color: white !important;
-border-bottom-left-radius: 5px;
-border-bottom-right-radius: 5px;
-cursor: pointer;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  cursor: pointer;
 }
-.sp-set-date{
+.sp-set-date {
   position: relative;
   top: 45px;
 }
-.menu-row{
+.menu-row {
   position: fixed;
-    z-index: 100;
-    background-color: #d5d5d5;
+  z-index: 100;
+  background-color: #d5d5d5;
 
-    width: 100%;
-    padding: 5px;
+  width: 100%;
+  padding: 5px;
 }
-.m-btn{
+.m-btn {
   margin-right: 15px !important;
 }
-.main-body{
+.main-body {
   position: relative;
-    top: 60px;
+  top: 60px;
 }
 
-.batch-custom-col input{
+.batch-custom-col input {
   width: 100%;
 }
 
 .order-1 {
-  order: 1; 
+  order: 1;
 }
 
 .order-2 {
-  order: 2; 
-} 
+  order: 2;
+}
 
 .order-3 {
-  order: 3; 
+  order: 3;
 }
 
 .order-4 {
-  order: 4; 
+  order: 4;
 }
 
-.product-name-row-zero{
+.product-name-row-zero {
   background-color: red !important;
   color: white !important;
 }
 
-.btn-sub{
+.btn-sub {
   background-color: #0d6efd !important;
   color: white !important;
 }
 
-.manager-row{
+.manager-row {
   width: 100%;
 }
 
 .quadrat {
   width: 50px;
   height: 50px;
-  -webkit-animation: NAME-YOUR-ANIMATION 1s infinite;  /* Safari 4+ */
-  -moz-animation: NAME-YOUR-ANIMATION 1s infinite;  /* Fx 5+ */
-  -o-animation: NAME-YOUR-ANIMATION 1s infinite;  /* Opera 12+ */
-  animation: NAME-YOUR-ANIMATION 1s infinite;  /* IE 10+, Fx 29+ */
+  -webkit-animation: NAME-YOUR-ANIMATION 1s infinite; /* Safari 4+ */
+  -moz-animation: NAME-YOUR-ANIMATION 1s infinite; /* Fx 5+ */
+  -o-animation: NAME-YOUR-ANIMATION 1s infinite; /* Opera 12+ */
+  animation: NAME-YOUR-ANIMATION 1s infinite; /* IE 10+, Fx 29+ */
 }
 
 @-webkit-keyframes NAME-YOUR-ANIMATION {
-  0%, 49% {
+  0%,
+  49% {
     background-color: rgb(117, 209, 63);
   }
-  50%, 100% {
+  50%,
+  100% {
     background-color: #e50000;
   }
 }
 
-.blink{
+.blink {
   animation: blink 1s linear infinite;
 }
 
 @keyframes blink {
-0%{background-color: #d70be9; }
-50%{background-color: white; }
-100%{background-color: #d70be9; }
+  0% {
+    background-color: #d70be9;
+  }
+  50% {
+    background-color: white;
+  }
+  100% {
+    background-color: #d70be9;
+  }
 }
-
 
 @media only screen and (max-device-width: 480px) {
-  html{
+  html {
     width: 100%;
   }
-  
-  .col{
+
+  .col {
     margin: 0px;
     padding: 0px;
   }
-  .row{
+  .row {
     margin: 0px;
     padding: 0px;
   }
 
-  .stock-row > .col-3{
+  .stock-row > .col-3 {
     width: 46% !important;
   }
 
-  .stock-row > .col-8{
+  .stock-row > .col-8 {
     width: 46% !important;
   }
- 
 }
 
-.model-body-pst{
+.model-body-pst {
   max-height: 400px;
 }
-.pst-select-therapy{
+.pst-select-therapy {
   color: #0d6efd;
   text-decoration: underline;
 }
 
-.label-pst{
-width: 100%;
-font-weight: bold;
+.label-pst {
+  width: 100%;
+  font-weight: bold;
 }
 
-.pst-input{
+.pst-input {
   width: 60%;
 }
 
-.pst-p-t{
+.pst-p-t {
   padding-top: 30px;
 }
-.pst-btn-p{
+.pst-btn-p {
   margin-right: 20px;
 }
 
-.pst-therapy-active{
+.pst-therapy-active {
   background-color: green;
   color: white;
 }
 
-.navbar-nav a{
+.navbar-nav a {
   color: white;
   border-radius: 5px;
   margin-right: 10px;
@@ -504,20 +508,17 @@ font-weight: bold;
   background-color: #d5d5d5 !important;
 }
 
-.col-md-6 
-{
+.col-md-6 {
   margin: 0px !important;
 }
- .col-lg-6
-{
-  margin: 0px !important;
-}
-
-.col-xl-6
-{
+.col-lg-6 {
   margin: 0px !important;
 }
 
-.trans-till-date{
+.col-xl-6 {
+  margin: 0px !important;
+}
+
+.trans-till-date {
   color: rgb(218, 17, 124);
 }
