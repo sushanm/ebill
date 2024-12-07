@@ -240,11 +240,7 @@ function AddStock({ saleMode }) {
                           <>{doc.totalQuantity}</>
                         ) : (
                           <>
-                            {adminOrUser === "admin" ? (
-                              <DropdownButton newPo={doc.name} />
-                            ) : (
-                              <>{doc.totalQuantity}</>
-                            )}
+                            <DropdownButton newPo={doc.name} />
                           </>
                         )}
                       </div>
